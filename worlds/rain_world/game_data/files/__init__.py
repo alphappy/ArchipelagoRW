@@ -1,4 +1,4 @@
-__all__ = ['placed_objects', 'creatures', 'white_tokens', 'tokens_pearls']
+__all__ = ['placed_objects', 'creatures', 'white_tokens', 'tokens_pearls', 'rooms']
 
 import json
 from os.path import dirname, realpath, join
@@ -47,3 +47,19 @@ white_tokens: dict[str, dict[str, str | list[str]]] = json.load(open(join(path, 
 
 # Dictionary of tokens/pearls.  data[dlcstate] -> list of {"room": room, "blacklist": list of scugs, "type": type}.
 tokens_pearls: dict[str, list[dict[str, str | list[str]]]] = json.load(open(join(path, "tokens_pearls.json")))
+
+# Dictionary of rooms and connections.
+# (root)
+#   dlcstate (Vanilla / MSC)
+#     region code
+#       room name
+#         "connections": list of destination rooms
+#         "whitelist": list of whitelisted scugs
+#         "blacklist": list of blacklisted scugs
+#         "conditional"
+#           scugname
+#             "new": list of new connections
+#             "replace"
+#               connected room name: name of room to replace this connection
+rooms: dict[str, dict[str, dict[str, dict[str, list[str] | dict[str, dict[str, list[str] | dict[str, str]]]]]]]
+rooms = json.load(open(join(path, "rooms.json")))
