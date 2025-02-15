@@ -20,8 +20,6 @@ class TokenOrPearl(LocationData):
         self.vanilla_blacklist = vanilla_blacklist
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-        if self.full_name == "Pearl-MS-GW":
-            self.msc_blacklist = set(scugs_all).difference({"Artificer", "Spear"})
         self.generation_condition = self._gen()
         # self.access_condition = self._acc()
         return super().make(player, multiworld, options)
@@ -75,9 +73,7 @@ for obj in tokens_pearls["MSC"]:
         continue
 
     name = token_name(obj)
-    region = obj["room"].split("_")[0]
-    locations[name] = TokenOrPearl(token_name(obj), region_code_to_name[region], next_offset,
-                                   msc_blacklist=obj["blacklist"])
+    locations[name] = TokenOrPearl(token_name(obj), obj["room"], next_offset, msc_blacklist=obj["blacklist"])
     next_offset += 1
 
 
@@ -90,9 +86,7 @@ for obj in tokens_pearls["Vanilla"]:
     if name in locations.keys():
         locations[name].vanilla_blacklist = obj["blacklist"]
     else:
-        region = obj["room"].split("_")[0]
-        locations[name] = TokenOrPearl(token_name(obj), region_code_to_name[region], next_offset,
-                                       vanilla_blacklist=obj["blacklist"])
+        locations[name] = TokenOrPearl(token_name(obj), obj["room"], next_offset, vanilla_blacklist=obj["blacklist"])
         next_offset += 1
 
 

@@ -3,6 +3,7 @@ __all__ = ["RainWorldWorld", "RainWorldWebWorld"]
 from random import choice, sample
 from typing import Mapping, Any
 
+from Utils import visualize_regions
 from worlds.AutoWorld import World, WebWorld
 from BaseClasses import Tutorial, LocationProgressType
 from .options import RainWorldOptions
@@ -11,8 +12,7 @@ from .game_data.general import region_code_to_name, story_regions
 from .events import get_events
 from .utils import normalize, flounder2
 from .items import RainWorldItem, all_items, RainWorldItemData
-from . import locations
-from .regions import all_regions, all_connections
+from . import locations, regions
 from .game_data.general import (setting_to_scug_id, scug_id_to_starting_region, prioritizable_passages,
                                 setting_to_region_code, passages_all, passages_vanilla, accessible_regions,
                                 accessible_gates)
@@ -74,13 +74,18 @@ class RainWorldWorld(World):
             raise ValueError(f"Invalid YAML: {start_region_code} is not a valid starting region "
                              f"for slugcat '{self.options.starting_scug}' and dlcstate '{dlcstate}'.")
 
-        self.starting_region = region_code_to_name[start_region_code]
+        # self.starting_region = region_code_to_name[start_region_code]
 
     def create_regions(self):
-        for data in all_regions:
+        region_data, conn_data, gate_data = regions.generate(self.options)
+
+        for data in region_data:
             data.make(self.player, self.multiworld, self.options)
 
-        for data in all_connections:
+        for data in conn_data:
+            data.make(self.player, self.multiworld)
+
+        for data in gate_data:
             data.make(self.player, self.multiworld)
 
         # return for each datum is a bool for whether that location was actually generated
@@ -109,8 +114,9 @@ class RainWorldWorld(World):
 
         #################################################################
         # STARTING REGION
-        start = self.multiworld.get_region(self.starting_region, self.player)
-        self.multiworld.get_region('Starting region', self.player).connect(start)
+        self.multiworld.get_region('Menu', self.player).connect(self.multiworld.get_region("SU_S01", self.player))
+
+        visualize_regions(self.multiworld.get_region("Menu", self.player), "rain_world.puml", show_locations=False)
 
     def create_item(self, name: str) -> RainWorldItem:
         return items.all_items[name].generate_item(self.player)
@@ -121,7 +127,7 @@ class RainWorldWorld(World):
 
         pool = {
             "Karma": 8 + self.options.extra_karma_cap_increases.value,
-            **{f'GATE_{k}': 1 for k in accessible_gates[dlcstate][self.options.starting_scug]},
+            # **{f'GATE_{k}': 1 for k in accessible_gates[dlcstate][self.options.starting_scug]},
             **{f"Passage-{p}": 1 for p in (passages_all if self.options.msc_enabled else passages_vanilla)},
             "The Mark": 1,
             "The Glow": 1,

@@ -12,7 +12,7 @@ def generate(options: RainWorldOptions) -> list[EventData]:
 
     # Hunter and Sofanthiel have no alterante, and no alternate exists without MSC.
     if not alt or not options.msc_enabled or options.starting_scug in ["Red", "Inv"]:
-        return [VictoryEvent("Ascension", "Void Sea", Simple("Karma", 8))]
+        return [VictoryEvent("Ascension", "SB_L01", Simple("Karma", 8))]
 
     if options.starting_scug in ["Yellow", "White"]:
         return [VictoryEvent("Journey's End", "Outer Expanse")]
