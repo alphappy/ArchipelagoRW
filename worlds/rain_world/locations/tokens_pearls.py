@@ -3,7 +3,7 @@ from typing import Callable
 from BaseClasses import MultiWorld
 from .classes import LocationData
 from ..options import RainWorldOptions
-from ..game_data.files import tokens_pearls
+from ..game_data import static_data
 from ..game_data.general import region_code_to_name, scugs_all, scugs_vanilla
 from ..conditions.classes import AnyOf, AllOf, Simple, Condition
 
@@ -28,6 +28,8 @@ class TokenOrPearl(LocationData):
         def inner(options: RainWorldOptions) -> bool:
             if self.full_name.startswith("DevToken"):
                 return False
+            if self.full_name.startswith("Broadcast"):
+                return ((1 if options.starting_scug == "Spear" else 0) + options.checks_broadcasts.value) > 1
             if options.checks_tokens_pearls:
                 return True
             if options.msc_enabled and options.starting_scug not in (self.msc_blacklist or []):
@@ -51,43 +53,40 @@ class TokenOrPearl(LocationData):
             )
 
 
-def token_name(obj: dict) -> str:
-    _region = obj["room"].split("_")[0]
-
-    if obj["type"] == "GoldToken":  # arena level unlock
-        return f'Token-L-{obj["name"]}'
-    elif obj["type"] == "RedToken":  # safari level unlock
-        return f'Token-S-{obj["name"]}'
-    elif obj["type"] == "DevToken":
-        return f'DevToken-{obj["name"]}-{_region}'
-    elif "Token" in obj["type"]:
-        return f'Token-{obj["name"]}-{_region}'
+def token_name(name: str, kind: str, _region: str) -> str:
+    if kind == "GoldToken":  # arena level unlock
+        return f'Token-L-{name}'
+    elif kind == "RedToken":  # safari level unlock
+        return f'Token-S-{name}'
+    elif kind == "WhiteToken":
+        return f'Broadcast-{name}'
+    elif kind == "DevToken":
+        return f'DevToken-{name}-{_region}'
+    elif "Token" in kind:
+        return f'Token-{name}-{_region}'
     else:
-        return f'Pearl-{obj["name"]}-{_region}'
+        return f'Pearl-{name}-{_region}'
 
 
-for obj in tokens_pearls["MSC"]:
-    if "Pearl" in obj["type"] and (obj["name"].startswith("Misc") or obj["name"].strip() == ''):
-        continue
-    if "WhiteToken" in obj["type"]:
-        continue
-
-    name = token_name(obj)
-    locations[name] = TokenOrPearl(token_name(obj), obj["room"], next_offset, msc_blacklist=obj["blacklist"])
-    next_offset += 1
+for region, region_data in static_data["MSC"].items():
+    for room, room_data in region_data.items():
+        if "shinies" in room_data.keys():
+            for shiny_data in room_data["shinies"]:
+                name = token_name(shiny_data["name"], shiny_data["kind"], region)
+                locations[name] = TokenOrPearl(name, room, next_offset, msc_blacklist=shiny_data["blacklist"])
+                next_offset += 1
 
 
-for obj in tokens_pearls["Vanilla"]:
-    if "Pearl" in obj["type"] and (obj["name"].startswith("Misc") or obj["name"].strip() == ''):
-        continue
-
-    name = token_name(obj)
-
-    if name in locations.keys():
-        locations[name].vanilla_blacklist = obj["blacklist"]
-    else:
-        locations[name] = TokenOrPearl(token_name(obj), obj["room"], next_offset, vanilla_blacklist=obj["blacklist"])
-        next_offset += 1
+for region, region_data in static_data["Vanilla"].items():
+    for room, room_data in region_data.items():
+        if "shinies" in room_data.keys():
+            for shiny_data in room_data["shinies"]:
+                name = token_name(shiny_data["name"], shiny_data["kind"], region)
+                if name in locations.keys():
+                    locations[name].vanilla_blacklist = shiny_data["blacklist"]
+                else:
+                    locations[name] = TokenOrPearl(name, room, next_offset, vanilla_blacklist=shiny_data["blacklist"])
+                    next_offset += 1
 
 
 def generate(_: RainWorldOptions) -> list[LocationData]:

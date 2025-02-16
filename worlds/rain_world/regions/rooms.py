@@ -1,35 +1,57 @@
-from ..game_data.files import rooms as all_rooms
+from ..game_data import static_data
 from ..game_data.general import scugs_all, scugs_vanilla
 from ..options import RainWorldOptions
 from .classes import RoomData, ConnectionData, RoomConnection
 
 
 def _gate_check(name: str, region: str) -> str:
-    return f'{name.upper()}[{region}]' if name.startswith("GATE_") else name.upper()
+    return f'{name.upper()}[{region}]' if name.startswith("GATE_") or name.startswith("OFFSCREEN") else name.upper()
+
+
+def _regional_whitelist(region: str, scugs: set[str]) -> set[str]:
+    d = {
+        "LM": {"Spear", "Artificer"},
+        "DM": {"Spear"},
+        "SL": scugs.difference({"Spear", "Artificer"}),
+        "DS": scugs.difference({"Saint"}),
+        "UG": {"Saint"},
+        "CL": {"Saint"},
+        "HR": {"Saint"},
+        "SS": scugs.difference({"Saint", "Rivulet"}),
+        "RM": {"Rivulet"},
+        "MS": scugs.difference({"Spear", "Artificer"}),
+        "OE": {"Yellow", "White", "Gourmand"},
+        "LC": {"Artificer"},
+    }
+    d.setdefault(region, scugs)
+
+    return d[region]
 
 
 def generate(options: RainWorldOptions) -> tuple[list[RoomData], list[RoomConnection]]:
     rooms, conns = [], []
 
-    data = all_rooms["MSC" if options.msc_enabled else "Vanilla"]
-    scugs = set(scugs_all if options.msc_enabled else scugs_vanilla)
+    data = static_data["MSC" if options.msc_enabled else "Vanilla"]
     for region, region_data in data.items():
+        regional_whitelist = _regional_whitelist(region, set(scugs_all if options.msc_enabled else scugs_vanilla))
+
         for room, room_data in region_data.items():
-            s = scugs
+            s = regional_whitelist
             if "whitelist" in room_data.keys():
                 s = room_data["whitelist"]
             if "blacklist" in room_data.keys():
-                s = s.difference(set(room_data["blacklist"]))
+                s = s.difference(room_data["blacklist"])
 
             room = _gate_check(room, region)
             room_conns = {}
 
             rooms.append(RoomData(room, s))
 
-            for conn in room_data["connections"]:
-                conn = _gate_check(conn, region)
-                if conn != "DISCONNECTED":
-                    room_conns[conn] = RoomConnection(room, conn, s)
+            if "connections" in room_data.keys():
+                for conn in room_data["connections"]:
+                    conn = _gate_check(conn, region)
+                    if conn != "DISCONNECTED":
+                        room_conns[conn] = RoomConnection(room, conn, s)
 
             if "conditional" in room_data.keys():
                 for scug, scug_data in room_data["conditional"].items():

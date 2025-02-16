@@ -31,8 +31,9 @@ class GateData:
                 Simple([f"Scug-{s}" for s in scugs], 1)
             )
 
-            left.connect(right, rule=left_condition.check(player))
-            right.connect(left, rule=right_condition.check(player))
+            if left.populate and right.populate:
+                left.connect(right, rule=left_condition.check(player))
+                right.connect(left, rule=right_condition.check(player))
 
     def effective_names(self) -> dict[str, set[str]]:
         ret = {self.name: set(scugs_all)}

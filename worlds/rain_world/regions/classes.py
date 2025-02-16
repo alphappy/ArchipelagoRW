@@ -33,7 +33,10 @@ class RoomData(RegionData):
         self.scugs = scugs
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
-        multiworld.regions.append(Room(self.name, player, multiworld, self.generation_condition(options)))
+        multiworld.regions.append(Room(
+            self.name, player, multiworld,
+            self.generation_condition(options) and options.starting_scug in self.scugs
+        ))
 
 
 class ConnectionData:
