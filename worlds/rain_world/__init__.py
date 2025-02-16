@@ -94,7 +94,7 @@ class RainWorldWorld(World):
         # PRIORITY PASSAGES
         if num := self.options.passage_priority.value > 0:
             unprioritized_passage_locations = [
-                l for l in self.get_locations()
+                l for l in self.multiworld.get_locations(self.player)
                 if l.name.startswith("Passage-") and l.progress_type == LocationProgressType.DEFAULT
             ]
             for loc in sample(unprioritized_passage_locations, min([num, len(unprioritized_passage_locations)])):
