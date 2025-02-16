@@ -15,8 +15,6 @@ the option for alternate victory conditions is available for most Slugcats.
 
 ## What does randomization do to Rain World?
 
-A few categories of changes happen when randomized.
-
 ### Karma and Echoes
 Initial max karma is 1 by default, regardless of Slugcat.
 Raising max karma requires finding karma cap increases in the item pool rather than meeting echoes.
@@ -106,6 +104,8 @@ The food quest can be made to appear even if not playing Gourmand's campaign.
 Food quest points that cannot be earned by the selected Slugcat are never logically required
 (e.g., Survivor will never need to earn the Yellow Lizard food quest pip).
 Food quest checks require MSC to be enabled.
+
+See [the checks subpage](/tutorial/Rain%20World/checks/en) for more details.
 
 ## What items are added to the pool?
 

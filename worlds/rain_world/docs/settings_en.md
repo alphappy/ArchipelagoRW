@@ -9,16 +9,18 @@ Enabling PPWS makes it possible to earn these passages without first earning The
 
 ### Victory condition
 The default victory condition, ascension, logically requires raising max karma to 10
-and accessing Subterranean (or, for Saint, Rubicon).
-The alternate victory condition varies with slugcat, and is only applicable if MSC is enabled.
-- **Monk and Survivor**: Reach Journey's End in Outer Expanse.
-- **Gourmand**: Receive the Mark, meet Five Pebbles, and reach Journey's End in Outer Expanse.
-- **Artificer**: Receive the Mark, meet Five Pebbles, and kill the Chieftain in Metropolis.
-- **Rivulet**: Receive the Mark, receive the Rarefaction Cell and deliver it to Submerged Superstructure, 
-then reunite with Looks to the Moon.
-- **Spearmaster**: Receive the Mark, receive Spearmaster's unique pearl, have the pearl rewritten,
-then deliver it to Communications Array in Sky Islands.
-- **All other slugcats, or MSC disabled**: No alternate victory condition.
+(which requires 8 karma items) and accessing Subterranean (or, for Saint, Rubicon).
+The alternate victory condition varies by slugcat, and is only applicable if MSC is enabled.
+Each victory condition requires certain items that are placed into the item pool,
+as well as certain additional actions that must be taken to actually reach the ending:
+
+| Slugcat          | Items                                                                  | Actions                                                                                          |
+|------------------|------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| Monk or Survivor | - Karma x8                                                             | - Reach Journey's End (Outer Expanse)                                                            |
+| Gourmand         | - Mark of Communication                                                | - Meet Five Pebbles to unlock the OE gate<br/>- Reach Journey's End (Outer Expanse)              |
+| Artificer        | - Mark of Communication<br/>- Citizen ID drone                         | - Kill the chieftain scavenger in Metropolis                                                     |
+| Rivulet          | - Mark of Communication<br/>- Rarefaction cell                         | - Install the rarefaction cell in Submerged Superstructure<br/>- Reunite with Looks the the Moon |
+| Spearmaster      | - Mark of Communication<br/>- Spearmaster's pearl<br/>- Moon's message | - Deliver the pearl to Communications Array                                                      |
 
 ### Extra karma cap increases
 How many extra karma cap items are placed into the pool.

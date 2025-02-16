@@ -81,7 +81,7 @@ class RandomStartingRegion(Choice):
     option_shaded_citadel = 6
     option_the_exterior = 7
     option_five_pebbles = 8
-    option_chimney_cannopy = 9
+    option_chimney_canopy = 9
     option_sky_islands = 10
     option_farm_arrays = 11
     option_subterranean = 12
@@ -377,35 +377,40 @@ class WtTrapFlood(WtGeneric):
     """The relative weight of flood traps in the trap filler item pool."""
     display_name = "Flood"
     item_name = "Trap-Flood"
-    default = 15
+    default = 0
+    visibility = Visibility.none
 
 
 class WtTrapRain(WtGeneric):
     """The relative weight of rain traps in the trap filler item pool."""
     display_name = "Rain"
     item_name = "Trap-Rain"
-    default = 15
+    default = 0
+    visibility = Visibility.none
 
 
 class WtTrapGravity(WtGeneric):
     """The relative *weight* of gravity traps in the trap filler item pool."""
     display_name = "Gravity"
     item_name = "Trap-Gravity"
-    default = 15
+    default = 0
+    visibility = Visibility.none
 
 
 class WtTrapFog(WtGeneric):
     """The relative weight of fog traps in the trap filler item pool."""
     display_name = "Fog"
     item_name = "Trap-Fog"
-    default = 20
+    default = 0
+    visibility = Visibility.none
 
 
 class WtTrapKillSquad(WtGeneric):
     """The relative weight of kill squad traps in the trap filler item pool."""
     display_name = "KillSquad"
     item_name = "Trap-KillSquad"
-    default = 10
+    default = 0
+    visibility = Visibility.none
 
 
 class WtTrapAlarm(WtGeneric):
@@ -459,8 +464,6 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     #################################################################
     # FILLER SETTINGS
-    pct_traps: PctTraps
-
     wt_rocks: WtRock
     wt_spears: WtSpear
     wt_explosive_spears: WtExplosiveSpear
@@ -480,7 +483,6 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_glowweed: WtGlowWeed
 
     group_filler = [
-        PctTraps,
         WtRock, WtSpear, WtExplosiveSpear, WtGrenade, WtFlashbang, WtSporePuff, WtCherrybomb,
         WtLillyPuck, WtFruit, WtBubbleFruit, WtEggbugEgg, WtJellyfish, WtMushroom, WtSlimeMold,
         WtFireEgg, WtGlowWeed
@@ -488,6 +490,8 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     #################################################################
     # TRAP SETTINGS
+    pct_traps: PctTraps
+
     wt_stuns: WtTrapStun
     wt_zoomies: WtTrapZoomies
     wt_timers: WtTrapTimer
@@ -505,6 +509,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_daddylonglegs: WtTrapDaddyLongLegs
 
     group_traps = [
+        PctTraps,
         WtTrapStun, WtTrapZoomies, WtTrapTimer, WtTrapAlarm, WtTrapKillSquad,
         WtTrapGravity, WtTrapRain, WtTrapFlood, WtTrapFog,
 
@@ -519,12 +524,17 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def starting_scug(self) -> str: return setting_to_scug_id[self.which_gamestate.value]
 
     def get_nontrap_weight_dict(self) -> dict[str, float]:
-        return {a.item_name: a.value for a in [
+        ret = {a.item_name: a.value for a in [
             self.wt_rocks, self.wt_spears, self.wt_explosive_spears, self.wt_grenades,
             self.wt_flashbangs, self.wt_sporepuffs, self.wt_cherrybombs, self.wt_lilypucks,
             self.wt_fruit, self.wt_bubblefruit, self.wt_eggbugeggs, self.wt_jellyfish,
             self.wt_mushrooms, self.wt_slimemold, self.wt_fireeggs, self.wt_glowweed
         ]}
+        if not self.msc_enabled:
+            for key in ("LillyPuck", "FireEgg", "GlowWeed"):
+                ret[f"Object-{key}"] = 0
+
+        return ret
 
     def get_trap_weight_dict(self) -> dict[str, float]:
         return {a.item_name: a.value for a in [

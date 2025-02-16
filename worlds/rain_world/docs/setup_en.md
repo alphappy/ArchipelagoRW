@@ -18,29 +18,22 @@ You can also edit this file directly if you understand the format.
 
 ## 2. Enable the Randomizer mod
 
-TODO.  Right now, the randomizer may be built from the
-[`archipelago` branch of the Randomizer mod](https://github.com/SaltiestSyrup/RWRandomizer/tree/archipelago)
-or the
-[`archipelagoing` branch of this fork](https://github.com/alphappy/RWRandomizer/tree/archipelagoing).
-Once built, its assembly, along with `Archipelago.MultiClient.Net.dll` and `Newtonsoft.Json.dll`,
-should be present in a mod `plugins` folder.
+Install the Archipelago build of the Randomizer mod from GitHub:
+https://github.com/SaltiestSyrup/RWRandomizer/releases/tag/v1.1.0-ap_alpha
 
-## 3. Test that the mods are working
-
-The Randomizer mod should have a Remix menu interface with an `Archipelago` tab
-from which a connection to an Archipelago room may be established.
+Once enabled, the Randomizer mod should have a Remix menu interface with an `Archipelago` tab
+where a connection to an Archipelago room may be established.
 If this Remix menu interface appears, the mod is loaded correctly.
 
-## 4. Set Remix settings
+## 3. Set Remix and mod settings
 
-There are two Rain World Remix settings that affect logic and may be specified in your YAML:
-`Passage progress without Survivor` (enabled by default in the YAML)
-and `Disable all karma requirements` (disabled by default).
-They must also be set accordingly in your game's Rain World Remix settings.
-
+The `Passage progress without Survivor` setting in the YAML
+must match the setting you use in the Rain World Remix options in-game.
 For all other Rain World Remix settings, the choice is yours.
 
-## 5. Join an Archipelago room
+If you select a More Slugcats (MSC) gamestate in your YAML, MSC must also be enabled in-game.
+
+## 4. Join an Archipelago room
 
 When the Archipelago room is open, the Randomizer mod Remix menu interface 
 may be used to connect to a room.
