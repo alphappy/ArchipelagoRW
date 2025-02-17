@@ -20,8 +20,13 @@ class TokenOrPearl(LocationData):
         self.vanilla_blacklist = vanilla_blacklist
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+        # HARDCODE: This pearl only appears in a past-GW room.
         if self.full_name == "Pearl-MS-GW":
             self.msc_blacklist = set(scugs_all).difference({"Artificer", "Spear"})
+        # HARDCODE: This pearl isn't accessible from SU proper.
+        if self.full_name == "Pearl-SU_filt-SU":
+            self.region = "Outskirts filtration"
+
         self.generation_condition = self._gen()
         # self.access_condition = self._acc()
         return super().make(player, multiworld, options)
@@ -30,7 +35,8 @@ class TokenOrPearl(LocationData):
         def inner(options: RainWorldOptions) -> bool:
             if self.full_name.startswith("DevToken"):
                 return False
-            if options.checks_tokens_pearls:
+            # HARDCODE: This pearl only appears in a past-GW room.
+            if options.checks_tokens_pearls and self.full_name != "Pearl-MS-GW":
                 return True
             if options.msc_enabled and options.starting_scug not in (self.msc_blacklist or []):
                 return True
