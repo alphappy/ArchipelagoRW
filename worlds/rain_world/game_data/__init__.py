@@ -4,6 +4,9 @@ Static data summarizing the contents of the game world, such as the locations of
 
 from . import general
 from .data import data as static_data
+from .hardcode import apply_hardcoded_exceptions
+
+apply_hardcoded_exceptions(static_data)
 
 # static_data structure:
 # (root)
