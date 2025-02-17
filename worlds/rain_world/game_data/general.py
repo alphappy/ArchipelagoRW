@@ -101,7 +101,7 @@ gates_vanilla = {
     "SH_SL", "SB_SL", "SH_UW", "CC_UW", "SS_UW", "UW_SS", "SI_CC", "SI_LF", "LF_SB"
 }
 
-gates_msc_red = gates_vanilla.union({"HI_VS", "GW_SH", "DS_CC", "SL_VS", "SL_MS", "MS_SL", "SI_VS", "SB_VS"})
+gates_msc_red = gates_vanilla.union({"UW_SL", "HI_VS", "GW_SH", "DS_CC", "SL_VS", "SL_MS", "MS_SL", "SI_VS", "SB_VS"})
 
 accessible_gates = {
     "Vanilla": {scug: gates_vanilla for scug in ["Yellow", "White", "Red"]},
@@ -113,9 +113,15 @@ accessible_gates = {
         "Artificer": gates_vanilla.union(gates_msc_red).union({"UW_LC"}).difference({"SL_MS", "MS_SL"}),
         "Rivulet": gates_vanilla.union(gates_msc_red),
         "Spear": gates_vanilla.union(gates_msc_red).union({"SL_DM", "DM_SL"}),
-        "Saint": gates_vanilla.union(gates_msc_red).union({"SL_CL"}).difference({"SH_SL", "UW_SS", "SS_UW"}),
+        "Saint": gates_vanilla.union(gates_msc_red).union({"SL_CL"}).difference({"UW_SL", "SH_SL", "UW_SS", "SS_UW"}),
     }
 }
+
+gates_all = [
+    "SU_DS", "SU_HI", "LF_SU", "CC_UW", "DS_GW", "DS_SB", "GW_SL", "HI_CC", "HI_GW", "HI_SH", "LF_SB", "SB_SL", "SH_UW",
+    "SH_SL", "SI_CC", "SI_LF", "SS_UW", "UW_SS", "SL_MS", "MS_SL", "SB_OE", "UW_LC", "OE_SU", "SL_DM", "UW_SL", "GW_SH",
+    "DS_CC", "SL_CL", "HI_VS", "SL_VS", "SB_VS", "SI_VS", "DM_SL"
+]
 
 story_regions_msc = story_regions_vanilla.union({"VS"})
 story_regions_gourmand = story_regions_msc.union({"OE"})

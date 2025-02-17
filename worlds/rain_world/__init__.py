@@ -59,20 +59,20 @@ class RainWorldWorld(World):
 
         #################################################################
         # STARTING REGION
-        dlcstate = "MSC" if self.options.msc_enabled else "Vanilla"
-        valid_start_regions = accessible_regions[dlcstate][self.options.starting_scug]
-
-        if self.options.random_starting_region.value == -1:
-            start_region_code = choice(list(valid_start_regions))
-            print(f'Random starting region for player {self.player}: {start_region_code}')
-        elif self.options.random_starting_region.value == 0:
-            start_region_code = scug_id_to_starting_region[self.options.starting_scug]
-        else:
-            start_region_code = setting_to_region_code[self.options.random_starting_region.value]
-
-        if start_region_code not in valid_start_regions:
-            raise ValueError(f"Invalid YAML: {start_region_code} is not a valid starting region "
-                             f"for slugcat '{self.options.starting_scug}' and dlcstate '{dlcstate}'.")
+        # dlcstate = "MSC" if self.options.msc_enabled else "Vanilla"
+        # valid_start_regions = accessible_regions[dlcstate][self.options.starting_scug]
+        #
+        # if self.options.random_starting_region.value == -1:
+        #     start_region_code = choice(list(valid_start_regions))
+        #     print(f'Random starting region for player {self.player}: {start_region_code}')
+        # elif self.options.random_starting_region.value == 0:
+        #     start_region_code = scug_id_to_starting_region[self.options.starting_scug]
+        # else:
+        #     start_region_code = setting_to_region_code[self.options.random_starting_region.value]
+        #
+        # if start_region_code not in valid_start_regions:
+        #     raise ValueError(f"Invalid YAML: {start_region_code} is not a valid starting region "
+        #                      f"for slugcat '{self.options.starting_scug}' and dlcstate '{dlcstate}'.")
 
         # self.starting_region = region_code_to_name[start_region_code]
 
@@ -116,7 +116,7 @@ class RainWorldWorld(World):
         # STARTING REGION
         self.multiworld.get_region('Menu', self.player).connect(self.multiworld.get_region("SU_S01", self.player))
 
-        visualize_regions(self.multiworld.get_region("Menu", self.player), "rain_world.puml", show_locations=False)
+        # visualize_regions(self.multiworld.get_region("Menu", self.player), "rain_world.puml", show_locations=False)
 
     def create_item(self, name: str) -> RainWorldItem:
         return items.all_items[name].generate_item(self.player)
@@ -127,7 +127,7 @@ class RainWorldWorld(World):
 
         pool = {
             "Karma": 8 + self.options.extra_karma_cap_increases.value,
-            # **{f'GATE_{k}': 1 for k in accessible_gates[dlcstate][self.options.starting_scug]},
+            **{f'GATE_{k}': 1 for k in accessible_gates[dlcstate][self.options.starting_scug]},
             **{f"Passage-{p}": 1 for p in (passages_all if self.options.msc_enabled else passages_vanilla)},
             "The Mark": 1,
             "The Glow": 1,

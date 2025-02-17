@@ -23,12 +23,14 @@ class GateData:
             left_condition = AllOf(
                 self.left_extra,
                 Simple("Karma", self.left - (1 if self.left < 6 else 2)),
-                Simple([f"Scug-{s}" for s in scugs], 1)
+                Simple([f"Scug-{s}" for s in scugs], 1),
+                Simple(self.name)
             )
             right_condition = AllOf(
                 self.right_extra,
                 Simple("Karma", self.right - (1 if self.right < 6 else 2)),
-                Simple([f"Scug-{s}" for s in scugs], 1)
+                Simple([f"Scug-{s}" for s in scugs], 1),
+                Simple(self.name)
             )
 
             if left.populate and right.populate:
