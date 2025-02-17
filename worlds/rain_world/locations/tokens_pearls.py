@@ -75,7 +75,7 @@ def token_name(obj: dict) -> str:
 
 
 for obj in tokens_pearls["MSC"]:
-    if "Pearl" in obj["type"] and (obj["name"].startswith("Misc") or obj["name"].strip() == ''):
+    if "Pearl" in obj["type"] and ("Misc" in obj["name"] or obj["name"].strip() == ''):
         continue
     if "WhiteToken" in obj["type"]:
         continue
