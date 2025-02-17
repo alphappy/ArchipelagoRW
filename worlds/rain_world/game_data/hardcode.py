@@ -2,7 +2,7 @@
 
 
 bitter_aerie_other_rooms = [
-    "MS_COMMS", "MS_S07", "GATE_SL_MS", "MS_WILLSNAGGING", "MS_S10", "MS_JTRAP", "MS_PUMPS", "MS_SCAVTRADER", "MS_X02"
+    "MS_COMMS", "MS_S07", "GATE_SL_MS", "MS_WILLSNAGGING01", "MS_S10", "MS_JTRAP", "MS_PUMPS", "MS_SCAVTRADER", "MS_X02"
 ]
 
 

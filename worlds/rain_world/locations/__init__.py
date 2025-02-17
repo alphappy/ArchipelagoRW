@@ -14,7 +14,7 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
     return [
         *tokens_pearls.generate(options),
         # *unique.generate(options),
-        # *passages.generate(options),
+        *passages.generate(options),
         *echoes.locations,
         *foodquest.generate(options),
     ]

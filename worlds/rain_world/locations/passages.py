@@ -16,9 +16,7 @@ cond_friend = Simple(game_data.general.lizards_any, 1)
 def generate_cond_chieftain(options: RainWorldOptions) -> Condition:
     return AllOf(
         (
-            Simple([f"Access-{region}" for region in game_data.general.scavenger_tolls], 1)
-            if options.difficulty_chieftain else
-            Simple(["Scavenger", "ScavengerElite"], 1)
+            Simple("Toll") if options.difficulty_chieftain else Simple(["Scavenger", "ScavengerElite"], 1)
         ),
         Simple([f"Scug-{s}" for s in set(game_data.general.setting_to_scug_id.values()) - {"Artificer"}], 1)
     )
@@ -54,14 +52,14 @@ def generate_cond_monk(options: RainWorldOptions) -> Condition:
 cond_mother = AllOf(
     Simple("MSC"),
     Simple([f"Scug-{scug}" for scug in ("White", "Red", "Gourmand")], 1),
-    Simple([f"Access-{region}" for region in game_data.general.slugpup_normal_regions], 1)
+    Simple([f"{r} Shelter" for r in game_data.general.slugpup_normal_regions], 1)
 )
 
 #################################################################
 # NOMAD
 cond_nomad = AllOf(
     Simple("MSC"),
-    Simple([f"Access-{region}" for region in game_data.general.regions_all], 5)
+    Simple([f"{r} Shelter" for r in game_data.general.regions_all], 5)
 )
 
 
@@ -69,7 +67,7 @@ cond_nomad = AllOf(
 # OUTLAW
 def generate_cond_outlaw(options: RainWorldOptions) -> Condition:
     return Simple(
-        list(set(game_data.files.creatures["normal"].keys()).difference(set(game_data.general.outlaw_insignificant))),
+        list(set(game_data.general.lizards_any).difference(set(game_data.general.outlaw_insignificant))),
         options.difficulty_outlaw.value
     )
 
@@ -90,10 +88,10 @@ cond_pilgrim = AllOf(
 #################################################################
 # SCHOLAR
 cond_scholar = AnyOf(
-    Simple(["MSC", "Scug-Yellow", "Access-SL", "The Mark"]),  # Monk requires MSC to see colored pearls
+    Simple(["MSC", "Scug-Yellow", "Meet LttM", "The Mark"]),  # Monk requires MSC to see colored pearls
     AllOf(
         Simple(["Scug-White", "Scug-Gourmand"], 1),
-        Simple(["Access-SL", "The Mark"])
+        Simple(["Meet LttM", "The Mark"])
     ),
     Simple(["Scug-Red", "Scug-Rivulet"], 1),
     AllOf(
@@ -113,16 +111,16 @@ regions_rivulet = game_data.general.story_regions_rivulet
 regions_spearmaster = game_data.general.story_regions_spearmaster
 regions_saint = game_data.general.story_regions_saint
 
-cond_wanderer_vanilla = AllOf(Simple([f"Access-{r}" for r in regions]), Simple("MSC", negative=True))
+cond_wanderer_vanilla = AllOf(Simple([f"{r} Shelter" for r in regions]), Simple("MSC", negative=True))
 cond_wanderer_msc_base = AllOf(
-    Simple([f"Access-{r}" for r in regions_msc] + ["MSC"]),
+    Simple([f"{r} Shelter" for r in regions_msc] + ["MSC"]),
     Simple(["Scug-Yellow", "Scug-White", "Scug-Red"], 1)
 )
-cond_wanderer_gourmand = Simple([f"Access-{r}" for r in regions_gourmand] + ["MSC", "Scug-Gourmand"])
-cond_wanderer_artificer = Simple([f"Access-{r}" for r in regions_artificer] + ["MSC", "Scug-Artificer"])
-cond_wanderer_rivulet = Simple([f"Access-{r}" for r in regions_rivulet] + ["MSC", "Scug-Rivulet"])
-cond_wanderer_spearmaster = Simple([f"Access-{r}" for r in regions_spearmaster] + ["MSC", "Scug-Spear"])
-cond_wanderer_saint = Simple([f"Access-{r}" for r in regions_saint] + ["MSC", "Scug-Saint"])
+cond_wanderer_gourmand = Simple([f"{r} Shelter" for r in regions_gourmand] + ["MSC", "Scug-Gourmand"])
+cond_wanderer_artificer = Simple([f"{r} Shelter" for r in regions_artificer] + ["MSC", "Scug-Artificer"])
+cond_wanderer_rivulet = Simple([f"{r} Shelter" for r in regions_rivulet] + ["MSC", "Scug-Rivulet"])
+cond_wanderer_spearmaster = Simple([f"{r} Shelter" for r in regions_spearmaster] + ["MSC", "Scug-Spear"])
+cond_wanderer_saint = Simple([f"{r} Shelter" for r in regions_saint] + ["MSC", "Scug-Saint"])
 
 cond_wanderer = AnyOf(cond_wanderer_vanilla, cond_wanderer_msc_base, cond_wanderer_gourmand,
                       cond_wanderer_artificer, cond_wanderer_rivulet, cond_wanderer_spearmaster, cond_wanderer_saint)
@@ -142,17 +140,17 @@ def wanderer_regions(scug: str, msc: bool) -> set[str]:
 
 def wanderer_pip_factory(count: int) -> Condition:
     return AnyOf(
-        AllOf(Simple("MSC", negative=True), Simple([f"Access-{r}" for r in regions], count)),
+        AllOf(Simple("MSC", negative=True), Simple([f"{r} Shelter" for r in regions], count)),
         AllOf(
             Simple("MSC"),
             Simple(["Scug-Yellow", "Scug-White", "Scug-Red"], 1),
-            Simple([f"Access-{r}" for r in regions_msc], count)
+            Simple([f"{r} Shelter" for r in regions_msc], count)
         ),
-        AllOf(Simple("Scug-Gourmand"), Simple([f"Access-{r}" for r in regions_gourmand], count)),
-        AllOf(Simple("Scug-Artificer"), Simple([f"Access-{r}" for r in regions_artificer], count)),
-        AllOf(Simple("Scug-Rivulet"), Simple([f"Access-{r}" for r in regions_rivulet], count)),
-        AllOf(Simple("Scug-Spear"), Simple([f"Access-{r}" for r in regions_spearmaster], count)),
-        AllOf(Simple("Scug-Saint"), Simple([f"Access-{r}" for r in regions_saint], count)),
+        AllOf(Simple("Scug-Gourmand"), Simple([f"{r} Shelter" for r in regions_gourmand], count)),
+        AllOf(Simple("Scug-Artificer"), Simple([f"{r} Shelter" for r in regions_artificer], count)),
+        AllOf(Simple("Scug-Rivulet"), Simple([f"{r} Shelter" for r in regions_rivulet], count)),
+        AllOf(Simple("Scug-Spear"), Simple([f"{r} Shelter" for r in regions_spearmaster], count)),
+        AllOf(Simple("Scug-Saint"), Simple([f"{r} Shelter" for r in regions_saint], count)),
     )
 
 

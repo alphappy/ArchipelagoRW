@@ -28,11 +28,19 @@ def generate_events_for_one_gamestate(options: RainWorldOptions) -> list[StaticW
             try:
                 if "SWARMROOM" in room_data["tags"]:
                     ret.append(StaticWorldEvent("Fly", f'{room} Fly', room))
+                if "SCAVOUTPOST" in room_data["tags"]:
+                    ret.append(StaticWorldEvent("Toll", f'{room} Toll', room))
+                # HARDCODE
+                if "SHELTER" in room_data["tags"] and room not in ("GW_S08", "SL_S04"):
+                    ret.append(StaticWorldEvent(f"{region} Shelter", f'{room} Shelter', room))
             except KeyError:
                 pass
 
     # HARDCODE
     for room in ("SS_E07", "SL_AI", "RM_AI", "DM_AI", "LC_LAB01"):
         ret.append(StaticWorldEvent("SSOracleSwarmer", f'{room} SSOracleSwarmer', room))
+
+    if options.starting_scug in {"Yellow", "White", "Red", "Gourmand", "Rivulet", "Saint"}:
+        ret.append(StaticWorldEvent("Meet LttM", f'{room} LttM', "SL_AI"))
 
     return ret

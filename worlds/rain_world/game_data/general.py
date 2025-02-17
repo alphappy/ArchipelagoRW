@@ -198,7 +198,7 @@ lizards_any = dragonslayer_msc + ["Salamander", "EelLizard", "TrainLizard"]
 
 echoes_vanilla = ['CC', 'SI', 'LF', 'SB', 'SH', 'UW']
 
-monk_foods_vanilla = ['DangleFruit', 'BubbleFruit', 'SeedCob', 'SlimeMold']
+monk_foods_vanilla = ['DangleFruit', 'WaterNut', 'SeedCob', 'SlimeMold']
 monk_foods_msc = ['LillyPuck', 'GlowWeed', 'DandelionPeach', 'GooieDuck', 'Seed', 'FireEgg']
 
 slugpup_normal_regions = ['SU', 'HI', 'DS', 'SL', 'GW', 'SH', 'UW', 'CC', 'SI', 'LF', 'SB', 'VS', 'OE']
