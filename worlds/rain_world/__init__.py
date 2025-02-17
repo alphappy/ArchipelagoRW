@@ -93,7 +93,7 @@ class RainWorldWorld(World):
         self.location_count = sum(locs)
 
         for data in get_events(self.options):
-            data.make(self.player, self.multiworld)
+            data.make(self.player, self.multiworld, self.options)
 
         #################################################################
         # PRIORITY PASSAGES

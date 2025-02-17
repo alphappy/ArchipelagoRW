@@ -2,8 +2,9 @@ from typing import Iterable
 
 from BaseClasses import ItemClassification, MultiWorld, Item, Location, CollectionState
 from worlds.generic.Rules import add_rule
-from ..game_data.general import region_code_to_name
+from ..game_data.general import region_code_to_name, scugs_all
 from ..conditions.classes import Condition, ConditionBlank
+from ..options import RainWorldOptions
 
 
 class EventData:
@@ -16,7 +17,7 @@ class EventData:
         self.classification = classification
         self.condition = condition
 
-    def make(self, player: int, multiworld: MultiWorld):
+    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
         region = multiworld.get_region(self.region, player)
         if region.populate:
             item = Item(self.item_name, self.classification, None, player)
@@ -34,15 +35,23 @@ class VictoryEvent(EventData):
 
 
 class StaticWorldEvent:
-    def __init__(self, item_name: str, location_name: str, region: str, condition: Condition = ConditionBlank):
+    def __init__(self, item_name: str, location_name: str, region: str, condition: Condition = ConditionBlank,
+                 scugs: set[str] = scugs_all):
         self.item_name = item_name
         self.location_item = location_name
         self.region = region
         self.classification = ItemClassification.progression
         self.condition = condition
+        self.scugs = scugs
 
-    def make(self, player: int, multiworld: MultiWorld):
-        region = multiworld.get_region(self.region, player)
+    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
+        if options.starting_scug not in self.scugs:
+            return
+        try:
+            region = multiworld.get_region(self.region, player)
+        except KeyError:
+            return
+
         if region.populate:
             item = Item(self.item_name, self.classification, None, player)
             location = Location(player, self.location_item, None, region)
