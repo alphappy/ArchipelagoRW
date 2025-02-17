@@ -2,7 +2,7 @@ from BaseClasses import MultiWorld
 from .classes import ConnectionData, RegionData
 from ..options import RainWorldOptions
 from ..conditions.classes import Condition, ConditionBlank, Simple, AllOf
-from ..game_data.general import scugs_all
+from ..game_data.general import scugs_all, accessible_gates
 
 
 class GateData:
@@ -14,8 +14,12 @@ class GateData:
         self.left_extra = left_extra
         self.right_extra = right_extra
 
-    def make(self, player: int, multiworld: MultiWorld):
-        for effective_name, scugs in self.effective_names().items():
+    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
+        dlcstate = "MSC" if options.msc_enabled else "Vanilla"
+        if self.name[5:] not in accessible_gates[dlcstate][options.starting_scug]:
+            return
+
+        for effective_name, scugs in self.effective_names(options).items():
             _, left_name, right_name = effective_name.split("_")
 
             left = multiworld.get_region(f'{self.name}[{left_name}]', player)
@@ -37,8 +41,11 @@ class GateData:
                 left.connect(right, rule=left_condition.check(player))
                 right.connect(left, rule=right_condition.check(player))
 
-    def effective_names(self) -> dict[str, set[str]]:
+    def effective_names(self, options: RainWorldOptions) -> dict[str, set[str]]:
         ret = {self.name: set(scugs_all)}
+
+        if not options.msc_enabled:
+            return ret
 
         if "DS" in self.name:
             ret[self.name.replace("DS", "UG")] = {"Saint"}

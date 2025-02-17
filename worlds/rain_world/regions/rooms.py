@@ -22,6 +22,8 @@ def _regional_whitelist(region: str, scugs: set[str]) -> set[str]:
         "MS": scugs.difference({"Spear", "Artificer"}),
         "OE": {"Yellow", "White", "Gourmand"},
         "LC": {"Artificer"},
+        "SH": scugs.difference({"Saint"}),
+        "UW": scugs.difference({"Saint"}),
     }
     d.setdefault(region, scugs)
 

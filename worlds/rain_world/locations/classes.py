@@ -26,7 +26,11 @@ class LocationData:
             location_map[full_name] = self.id
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-        region = multiworld.get_region(self.region, player)
+        try:
+            region = multiworld.get_region(self.region, player)
+        except KeyError:
+            return False
+        
         if region.populate and self.generation_condition(options):
             loc = Location(player, self.short_name, self.id, region)
             region.locations.append(loc)

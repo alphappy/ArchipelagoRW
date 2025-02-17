@@ -13,5 +13,14 @@ def bitter_aerie(data: dict) -> None:
             room_data["whitelist"] = {"Rivulet"}
 
 
+def su_b14(data: dict) -> None:
+    """Duplicate tokens in SU_B14 and SU_B14SAINT cause a location overwrite.  Pretend the latter does not exist."""
+    del data["MSC"]["SU"]["SU_B14"]["conditional"]["Saint"]
+    del data["MSC"]["SU"]["SU_C01"]["conditional"]["Saint"]
+    del data["MSC"]["SU"]["GATE_SU_DS"]["conditional"]["Saint"]
+    del data["MSC"]["SU"]["SU_B14SAINT"]
+
+
 def apply_hardcoded_exceptions(data: dict) -> None:
     bitter_aerie(data)
+    su_b14(data)

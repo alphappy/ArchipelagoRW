@@ -86,7 +86,7 @@ class RainWorldWorld(World):
             data.make(self.player, self.multiworld)
 
         for data in gate_data:
-            data.make(self.player, self.multiworld)
+            data.make(self.player, self.multiworld, self.options)
 
         # return for each datum is a bool for whether that location was actually generated
         locs = [data.make(self.player, self.multiworld, self.options) for data in locations.generate(self.options)]
