@@ -176,6 +176,7 @@ class RainWorldWorld(World):
             "checks_broadcasts",  # ...whether broadcasts should be avilable
             "checks_tokens_pearls",  # ...whether all tokens should be available
             "which_victory_condition",  # ...which victory condition is a win
+            "which_gate_behavior", # ...how gates should behave
+            "random_starting_region", # ...which region (and eventually shelter) to spawn in
         )
-        d["random_starting_apregion"] = self.starting_region  # ...which region (and eventually shelter) to spawn in
         return d
