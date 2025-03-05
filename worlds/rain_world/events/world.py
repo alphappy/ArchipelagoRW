@@ -1,47 +1,45 @@
 from .classes import StaticWorldEvent
+from ..conditions import GameStateFlag
 from ..options import RainWorldOptions
 
-from ..game_data.general import scugs_all
+from ..game_data.general import scugs_all, scugs_vanilla
 from ..game_data import static_data
 from ..regions.classes import RainWorldRegion, room_to_region
-from ..utils import effective_blacklist
+from ..utils import (placed_object_effective_whitelist as POEW, creature_den_effective_whitelist as CDEW,
+                     room_effective_whitelist as REW)
 
 
 def generate_events_for_one_gamestate(options: RainWorldOptions,
                                       regions: list[RainWorldRegion]) -> list[StaticWorldEvent]:
     ret = []
+    scugs = scugs_all if options.dlcstate == "MSC" else scugs_vanilla
 
     for region in regions:
         if (rooms := region.rooms) and len(rooms) > 0:
             if region_data := static_data[options.dlcstate].get(region.code[:2], {}):
-                events = {}
+                events: dict[str, GameStateFlag] = {}
 
                 for room in rooms:
                     if room_data := region_data.get(room, {}):
                         for obj_type, obj_data in room_data.get("objects", {}).items():
-                            if len(current := events.get(obj_type, set(scugs_all))) > 0:
-                                incoming = effective_blacklist(
-                                    obj_data.get("filter", None), obj_data.get("whitelist", None), room_data
-                                )
-                                events[obj_type] = current.intersection(incoming)
+                            flag = events.setdefault(obj_type, GameStateFlag(0))
+                            flag[options.dlcstate, POEW(room_data, obj_data, scugs)] = True
 
                         for crit_type, crit_data in room_data.get("spawners", {}).get("normal", {}).items():
-                            if len(current := events.get(crit_type, set(scugs_all))) > 0:
-                                events[crit_type] = current.intersection(set(scugs_all).difference(crit_data))
+                            flag = events.setdefault(crit_type, GameStateFlag(0))
+                            flag[options.dlcstate, CDEW(room_data, crit_data, scugs)] = True
 
                         if room_tags := room_data.get("tags", []):
-                            if "SWARMROOM" in room_tags:
-                                events["Fly"] = set()
-                            if "SCAVOUTPOST" in room_tags:
-                                events["Toll"] = set()
-                            if "SHELTER" in room_tags:
-                                events["Shelter"] = set()
+                            for tagname, eventname in (
+                                    ("SWARMROOM", "Fly"), ("SCAVOUTPOST", "Toll"), ("SHELTER", "Shelter")
+                            ):
+                                if tagname in room_tags:
+                                    flag = events.setdefault(eventname, GameStateFlag(0))
+                                    flag[options.dlcstate, REW(room_data, scugs)] = True
 
-                for event_type, event_blacklist in events.items():
-                    ret.append(StaticWorldEvent(
-                        event_type, f'{region.name} {event_type}', region.name,
-                        scugs=set(scugs_all).difference(event_blacklist)
-                    ))
+                for event_type, event_flag in events.items():
+                    if options.satisfies(event_flag):
+                        ret.append(StaticWorldEvent(event_type, f'{region.name} {event_type}', region.name))
 
     # HARDCODE
     for room in ("SS_E07", "SL_AI", "RM_AI", "DM_AI", "LC_LAB01"):

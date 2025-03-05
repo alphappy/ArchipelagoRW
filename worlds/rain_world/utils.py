@@ -1,7 +1,5 @@
 from typing import TypeVar
 
-from .game_data.general import scugs_all
-
 T = TypeVar("T")
 
 
@@ -47,16 +45,31 @@ def flounder2(weights: dict[T, float], count: int) -> list[T]:
     return ret[:count]
 
 
-def effective_blacklist(po_blacklist: set[str] | None, po_whitelist: set[str] | None, room_data: dict):
-    room_blacklist = room_data.get("blacklist", set(scugs_all).difference(room_data.get("whitelist", set(scugs_all))))
-    if alted := room_data.get("alted", None):
-        if po_blacklist is None:  # exclusively in alt settings files
-            ret = set(scugs_all).difference(po_whitelist or set()).union(room_blacklist)
-        else:  # in both alt settings files and base settings file
-            ret = po_blacklist.union(alted).difference(po_whitelist or set()).union(room_blacklist)
-    else:  # no alt settings files for this room
-        ret = (po_blacklist or set()).union(room_blacklist)
+def placed_object_effective_whitelist(room_data: dict, shiny_data: dict, scuglist: set[str]):
+    return (
+        room_data.get("whitelist", set(scuglist))
+        .difference(room_data.get("blacklist", set()))
+        .difference(shiny_data.get("filter", set()))
+        .difference(room_data.get("alted", set()))
+        .union(shiny_data.get("whitelist", set()))
+        .difference({""})
+    )
 
-    return ret.difference({""})
+
+def creature_den_effective_whitelist(room_data: dict, den_data: set[str], scuglist: set[str]):
+    return (
+        room_data.get("whitelist", set(scuglist))
+        .difference(room_data.get("blacklist", set()))
+        .intersection(den_data)
+    )
+
+
+def room_effective_whitelist(room_data: dict, scuglist: set[str]):
+    return (
+        room_data.get("whitelist", set(scuglist))
+        .difference(room_data.get("blacklist", set()))
+        # .difference(room_data.get("alted", set()))  TODO this does matter but it can't be handled like this
+        .difference({""})
+    )
 
 
