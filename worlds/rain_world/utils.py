@@ -51,10 +51,12 @@ def effective_blacklist(po_blacklist: set[str] | None, po_whitelist: set[str] | 
     room_blacklist = room_data.get("blacklist", set(scugs_all).difference(room_data.get("whitelist", set(scugs_all))))
     if alted := room_data.get("alted", None):
         if po_blacklist is None:  # exclusively in alt settings files
-            return set(scugs_all).difference(po_whitelist or set()).union(room_blacklist)
+            ret = set(scugs_all).difference(po_whitelist or set()).union(room_blacklist)
         else:  # in both alt settings files and base settings file
-            return po_blacklist.union(alted).difference(po_whitelist or set()).union(room_blacklist)
+            ret = po_blacklist.union(alted).difference(po_whitelist or set()).union(room_blacklist)
     else:  # no alt settings files for this room
-        return (po_blacklist or set()).union(room_blacklist)
+        ret = (po_blacklist or set()).union(room_blacklist)
+
+    return ret.difference({""})
 
 
