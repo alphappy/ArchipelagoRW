@@ -3,9 +3,9 @@ from typing import Callable
 from BaseClasses import MultiWorld
 from .classes import LocationData
 from ..conditions import GameStateFlag
+from ..game_data.general import scugs_all, scugs_vanilla
 from ..options import RainWorldOptions
 from ..game_data import static_data
-from ..utils import effective_blacklist
 from ..regions.classes import room_to_region
 
 locations = {}
@@ -13,9 +13,9 @@ next_offset = 0
 
 
 class TokenOrPearl(LocationData):
-    def __init__(self, name: str, r: str, offset: int, flag: GameStateFlag | None = None):
+    def __init__(self, name: str, r: str, offset: int, flag: GameStateFlag):
         super().__init__(name, name, r, offset)
-        self.generation_flag = flag or GameStateFlag(0)
+        self.generation_flag = flag
         self.room = r
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
@@ -52,38 +52,24 @@ def token_name(name: str, kind: str, _region: str) -> str:
         return f'Pearl-{name}-{_region}'
 
 
-for region, region_data in static_data["MSC"].items():
-    for room, room_data in region_data.items():
-        if "shinies" in room_data.keys():
-            for shiny_name, shiny_data in room_data["shinies"].items():
-                name = token_name(shiny_name, shiny_data["kind"], region)
-                locations[name] = TokenOrPearl(
-                    name, room, next_offset,
-                    GameStateFlag(
-                        msc=effective_blacklist(
-                            shiny_data.get("filter", None), shiny_data.get("whitelist", None), room_data
-                        )
-                    )
-                )
-                next_offset += 1
+for scuglist, (dlcstate, dlcstate_data) in zip((scugs_vanilla, scugs_all), static_data.items()):
+    for region, region_data in dlcstate_data.items():
+        for room, room_data in region_data.items():
+            if "shinies" in room_data.keys():
+                for shiny_name, shiny_data in room_data["shinies"].items():
+                    name = token_name(shiny_name, shiny_data["kind"], region)
+                    loc = locations.setdefault(name, TokenOrPearl(name, room, next_offset, GameStateFlag(0)))
 
-
-for region, region_data in static_data["Vanilla"].items():
-    for room, room_data in region_data.items():
-        if "shinies" in room_data.keys():
-            for shiny_name, shiny_data in room_data["shinies"].items():
-                name = token_name(shiny_name, shiny_data["kind"], region)
-                if name in locations.keys():
-                    locations[name].generation_flag["Vanilla", shiny_data.get("filter", set()).difference({""})] = False
-                else:
-                    locations[name] = TokenOrPearl(
-                        name, room, next_offset,
-                        GameStateFlag(
-                            vanilla=effective_blacklist(
-                                shiny_data.get("filter", None), shiny_data.get("whitelist", None), room_data
-                            )
-                        )
+                    can_see = (
+                        room_data.get("whitelist", set(scuglist))
+                        .difference(room_data.get("blacklist", set()))
+                        .difference(shiny_data.get("filter", set()))
+                        .difference(room_data.get("alted", set()))
+                        .union(shiny_data.get("whitelist", set()))
+                        .difference({""})
                     )
+                    loc.generation_flag[dlcstate, can_see] = True
+
                     next_offset += 1
 
 
