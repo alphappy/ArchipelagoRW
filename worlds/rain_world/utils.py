@@ -45,7 +45,7 @@ def flounder2(weights: dict[T, float], count: int) -> list[T]:
     return ret[:count]
 
 
-def placed_object_effective_whitelist(room_data: dict, shiny_data: dict, scuglist: set[str]):
+def placed_object_effective_whitelist(room_data: dict, shiny_data: dict, scuglist: set[str]) -> set[str]:
     return (
         room_data.get("whitelist", set(scuglist))
         .difference(room_data.get("blacklist", set()))
@@ -56,7 +56,7 @@ def placed_object_effective_whitelist(room_data: dict, shiny_data: dict, scuglis
     )
 
 
-def creature_den_effective_whitelist(room_data: dict, den_data: set[str], scuglist: set[str]):
+def creature_den_effective_whitelist(room_data: dict, den_data: set[str], scuglist: set[str]) -> set[str]:
     return (
         room_data.get("whitelist", set(scuglist))
         .difference(room_data.get("blacklist", set()))
@@ -64,7 +64,7 @@ def creature_den_effective_whitelist(room_data: dict, den_data: set[str], scugli
     )
 
 
-def room_effective_whitelist(room_data: dict, scuglist: set[str]):
+def room_effective_whitelist(room_data: dict, scuglist: set[str]) -> set[str]:
     return (
         room_data.get("whitelist", set(scuglist))
         .difference(room_data.get("blacklist", set()))
