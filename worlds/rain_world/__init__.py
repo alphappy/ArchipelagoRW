@@ -161,6 +161,7 @@ class RainWorldWorld(World):
             "checks_tokens_pearls",  # ...whether all tokens should be available.
             "which_victory_condition",  # ...which victory condition is a win.
             "which_gate_behavior",  # ...how gates should behave.
+            "difficulty_echo_low_karma",  # ...how low-karma echo appearances should be handled.
         )
         # ...which room to spawn in.  Empty string for default.
         d["starting_room"] = ("" if self.start_is_default

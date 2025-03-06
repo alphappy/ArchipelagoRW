@@ -292,6 +292,27 @@ class DifficultySubmerged(Toggle):
     default = True
 
 
+class DifficultyEchoLowKarma(Choice):
+    """How echo apperances work below 5 max karma.
+    Does not affect the echoes in Subterranean and The Exterior, which can always be visited.
+
+    **Unaltered**: Vanilla behavior.  Artificer needs a karma flower and other slugcats do not.
+
+    **Never**: Echoes cannot appear below 5 karma.
+
+    **With Karma Flower**: Echoes may appear below 5 karma
+    if karma flower reinforcement is active and current karma equals max karma.
+    This is the normal behavior for Artificer.
+
+    **Without Karma Flower**: Echoes may appear if current karma equals max karma."""
+    display_name = "Low-karma echo appearance"
+    option_never = 0
+    option_with_karma_flower = 1
+    option_without_karma_flower = 2
+    option_unaltered = 3
+    default = 3
+
+
 #################################################################
 # FILLER SETTINGS
 class PctTraps(Range):
@@ -601,10 +622,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     difficulty_glow: DifficultyGlow
     difficulty_extreme_threats: DifficultyExtremeThreats
     difficulty_submerged: DifficultySubmerged
+    difficulty_echo_low_karma: DifficultyEchoLowKarma
 
     group_difficulty = [
         ProgressionBalancing, Accessibility, DifficultyMonk, DifficultyHunter, DifficultyOutlaw, DifficultyNomad,
-        DifficultyChieftain, DifficultyGlow, DifficultyExtremeThreats, DifficultySubmerged
+        DifficultyChieftain, DifficultyGlow, DifficultyExtremeThreats, DifficultySubmerged, DifficultyEchoLowKarma,
     ]
 
     #################################################################

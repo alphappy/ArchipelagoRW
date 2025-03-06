@@ -10,8 +10,16 @@ class Echo(PhysicalLocation):
         self.free = free
         
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-        if not self.free and options.starting_scug == "Artificer":
-            self.access_condition = AnyOf(Simple("KarmaFlower"), Simple("Karma", 4))
+        if not self.free:
+            match options.difficulty_echo_low_karma:
+                case "never":
+                    self.access_condition = Simple("Karma", 4)
+                case "with_karma_flower":
+                    self.access_condition = AnyOf(Simple("KarmaFlower"), Simple("Karma", 4))
+                case "unaltered":
+                    if options.starting_scug == "Artificer":
+                        self.access_condition = AnyOf(Simple("KarmaFlower"), Simple("Karma", 4))
+
         return super().make(player, multiworld, options)
 
 
