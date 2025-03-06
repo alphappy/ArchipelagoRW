@@ -137,6 +137,11 @@ class RandomStartingRegion(Choice):
     option_metropolis = 23
     option_looks_to_the_moon = 24
 
+    alias_undergrowth = 3
+    alias_waterfront_facility = 5
+    alias_silent_construct = 6
+    alias_the_rot = 8
+
     default = 0
 
     names = {
