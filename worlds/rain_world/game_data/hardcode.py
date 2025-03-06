@@ -14,3 +14,7 @@ def apply_hardcoded_exceptions(data: dict):
 
     data["MSC"]["GW"]["GW_A14"]["shinies"]["RedLizard"]["filter"].update({"Inv"})
     data["MSC"]["GW"]["GW_A14"]["shinies"]["RedLizard"]["whitelist"].difference_update({"Inv"})
+
+    # These require a jetfish jump or similar (and in the LM version they're entirely behind a wall).
+    del data["MSC"]["LM"]["LM_E02"]["objects"]["Hazer"]
+    del data["MSC"]["SL"]["SL_E02"]["objects"]["Hazer"]
