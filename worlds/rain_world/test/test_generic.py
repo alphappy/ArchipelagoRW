@@ -34,7 +34,8 @@ class TestHunterMSC(RainWorldTestBase):
 
 
 class TestHunterMSCShadedCitadel(RainWorldTestBase):
-    options = {"which_gamestate": "hunter_msc", "random_starting_shelter": "shaded_citadel"}
+    options = {"which_gamestate": "hunter_msc", "random_starting_shelter": "shaded_citadel",
+               "difficulty_echo_low_karma": 1}
 
     def test_karma_flower_absence(self):
         self.assertAccessDependency(["Echo-SH"], [["Karma", "Karma", "Karma", "Karma"]], True)
