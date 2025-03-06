@@ -2,6 +2,7 @@ from .classes import StaticWorldEvent
 from ..conditions import GameStateFlag
 from ..options import RainWorldOptions
 
+from ..conditions.classes import Simple
 from ..game_data.general import scugs_all, scugs_vanilla
 from ..game_data import static_data
 from ..regions.classes import RainWorldRegion, room_to_region
@@ -50,6 +51,6 @@ def generate_events_for_one_gamestate(options: RainWorldOptions,
     ret.append(StaticWorldEvent("Yeek", "Chimney Canopy gimmick", "Chimney Canopy", scugs={"Inv"}))
 
     if options.starting_scug in {"Yellow", "White", "Red", "Gourmand", "Rivulet", "Saint"}:
-        ret.append(StaticWorldEvent("Meet LttM", f'{room} LttM', room_to_region["SL_AI"]))
+        ret.append(StaticWorldEvent("Meet LttM", f'{room} LttM', room_to_region["SL_AI"], Simple("The Mark")))
 
     return ret
