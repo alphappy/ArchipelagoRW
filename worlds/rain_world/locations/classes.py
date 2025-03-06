@@ -41,16 +41,11 @@ class LocationData:
 class PhysicalLocation(LocationData):
     def __init__(self, full_name: str, short_name: str, region: str, offset: int, room: str,
                  access_condition: Condition = ConditionBlank,
-                 generation_condition: Callable[[RainWorldOptions], bool] = lambda _: True):
-        super().__init__(full_name, short_name, region, offset, access_condition, generation_condition)
+                 generation_condition: Callable[[RainWorldOptions], bool] = lambda _: True,
+                 access_condition_generator: Optional[Callable[[RainWorldOptions], Condition]] = None):
+        super().__init__(full_name, short_name, region, offset, access_condition, generation_condition,
+                         access_condition_generator=access_condition_generator)
         self.room = room
-
-
-class Echo(PhysicalLocation):
-    def __init__(self, ghost: str, region: str, offset: int, room: str,
-                 access_condition: Condition = ConditionBlank,
-                 generation_condition: Callable[[RainWorldOptions], bool] = lambda _: True):
-        super().__init__(f"Echo-{ghost}", f"Echo-{ghost}", region, offset, room, access_condition, generation_condition)
 
 
 class Passage(LocationData):

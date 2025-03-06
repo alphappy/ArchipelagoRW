@@ -6,7 +6,7 @@ from ..options import RainWorldOptions
 # Tokens/Pearls        0 -  999
 # Unique            4900 - 4999
 # Passages          5000 - 5046
-# Echoes            5070 - 5079
+# Echoes            5070 - 5080
 # Food Quest        5250 - 5271
 
 
@@ -15,6 +15,6 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
         *tokens_pearls.generate(options),
         *unique.generate(options),
         *passages.generate(options),
-        *echoes.locations,
+        *echoes.generate(options),
         *foodquest.generate(options),
     ]
