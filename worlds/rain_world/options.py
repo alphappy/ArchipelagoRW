@@ -745,7 +745,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             self.wt_karma_flowers, self.wt_vulture_masks, self.wt_joke_rifles,
         ]}
         if not self.msc_enabled:
-            for key in ("LillyPuck", "FireEgg", "GlowWeed", "ElectricSpear", "SingulaityBomb", "JokeRifle"):
+            for key in ("LillyPuck", "FireEgg", "GlowWeed", "ElectricSpear", "SingularityBomb", "JokeRifle"):
                 ret[f"Object-{key}"] = 0
 
         return ret
