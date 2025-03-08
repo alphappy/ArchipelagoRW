@@ -5,7 +5,7 @@ from ..options import RainWorldOptions
 from .classes import ConnectionData, PhysicalRegion
 
 
-def _generate(_: RainWorldOptions) -> list[PhysicalRegion | ConnectionData]:
+def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData]:
     ret = []
     for region, region_data in static_data["MSC"].items():
         rooms = set(region_data.keys())
@@ -80,6 +80,31 @@ def _generate(_: RainWorldOptions) -> list[PhysicalRegion | ConnectionData]:
                                    Simple(["The Glow", "Option-Glow"], 1)),
                     ConnectionData("Pipeyard filtration", "Pipeyard", "Exit dark filtration area"),
                 ]
+
+            case "UW":
+                west_underhang = {"UW_C04", "UW_D05", "UW_A04", "UW_C02", "UW_C02RIV"}
+                east_underhang_and_leg = {
+                    "UW_A05", "UW_C01", "UW_A03", "UW_A10", "UW_J01", "UW_I01", "UW_C08", "GATE_UW_SS", "UW_A11",
+                    "UW_S02", "UW_A06", "UW_E04", "UW_A08", "UW_C03", "UW_D04", "UW_B01", "UW_D03", "UW_E03", "UW_A09",
+                    "UW_S06", "UW_C06", "UW_E02", "UW_A07", "UW_D02", "UW_S05", "GATE_SH_UW"
+                }
+                remainder = rooms.difference(west_underhang).difference(east_underhang_and_leg)
+
+                ret += [
+                    PhysicalRegion("The Exterior", "UW", remainder),
+                    PhysicalRegion("Western Underhang", "UW^", west_underhang),
+                    PhysicalRegion("Eastern Underhang + The Leg", "UW^2", east_underhang_and_leg),
+
+                    # Going into Underhang from the west requires a grapple worm.
+                    # In Vanilla Survivor and Monk worldstates, there isn't one in D06 (but there is in CC).
+                    ConnectionData("The Exterior", "Western Underhang", "UW_D06 to UW_C04", Simple("TubeWorm")),
+                    ConnectionData("Western Underhang", "The Exterior", "UW_C04 to UW_D06"),
+                    ConnectionData("Western Underhang", "Eastern Underhang + The Leg", "UW_C02 to UW_A05"),
+                ]
+
+                # Westward through Underhang is not terribly reasonable for Rivulet.
+                if options.starting_scug != "Rivulet":
+                    ret += [ConnectionData("Eastern Underhang + The Leg", "Western Underhang", "UW_A05 to UW_C02")]
 
             # case "GW":
             #     if "EDGE" in name or name in ("A24", "A25", "S09"):
