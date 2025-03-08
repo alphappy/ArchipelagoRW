@@ -2,9 +2,10 @@ from typing import Callable
 
 from BaseClasses import MultiWorld
 from .classes import LocationData
+from ..conditions import GameStateFlag
+from ..game_data.general import scugs_all, scugs_vanilla
 from ..options import RainWorldOptions
 from ..game_data import static_data
-from ..utils import effective_blacklist
 from ..regions.classes import room_to_region
 
 locations = {}
@@ -12,12 +13,9 @@ next_offset = 0
 
 
 class TokenOrPearl(LocationData):
-    def __init__(self, name: str, r: str, offset: int,
-                 msc_blacklist: list[str] | None = None,
-                 vanilla_blacklist: list[str] | None = None):
+    def __init__(self, name: str, r: str, offset: int, flag: GameStateFlag):
         super().__init__(name, name, r, offset)
-        self.msc_blacklist = msc_blacklist
-        self.vanilla_blacklist = vanilla_blacklist
+        self.generation_flag = flag
         self.room = r
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
@@ -33,10 +31,8 @@ class TokenOrPearl(LocationData):
                 return options.msc_enabled and (
                         (options.starting_scug == "Spear") + options.checks_broadcasts.value >= 2
                 )
-            if options.msc_enabled and self.msc_blacklist is not None:
-                return options.starting_scug not in self.msc_blacklist
-            if not options.msc_enabled and self.vanilla_blacklist is not None:
-                return options.starting_scug not in self.vanilla_blacklist
+            if options.satisfies(self.generation_flag):
+                return True
             return False
         return inner
 
@@ -56,34 +52,24 @@ def token_name(name: str, kind: str, _region: str) -> str:
         return f'Pearl-{name}-{_region}'
 
 
-for region, region_data in static_data["MSC"].items():
-    for room, room_data in region_data.items():
-        if "shinies" in room_data.keys():
-            for shiny_name, shiny_data in room_data["shinies"].items():
-                name = token_name(shiny_name, shiny_data["kind"], region)
-                locations[name] = TokenOrPearl(
-                    name, room, next_offset,
-                    msc_blacklist=effective_blacklist(
-                        shiny_data.get("filter", None), shiny_data.get("whitelist", None), room_data
-                    )
-                )
-                next_offset += 1
+for scuglist, (dlcstate, dlcstate_data) in zip((scugs_vanilla, scugs_all), static_data.items()):
+    for region, region_data in dlcstate_data.items():
+        for room, room_data in region_data.items():
+            if "shinies" in room_data.keys():
+                for shiny_name, shiny_data in room_data["shinies"].items():
+                    name = token_name(shiny_name, shiny_data["kind"], region)
+                    loc = locations.setdefault(name, TokenOrPearl(name, room, next_offset, GameStateFlag(0)))
 
-
-for region, region_data in static_data["Vanilla"].items():
-    for room, room_data in region_data.items():
-        if "shinies" in room_data.keys():
-            for shiny_name, shiny_data in room_data["shinies"].items():
-                name = token_name(shiny_name, shiny_data["kind"], region)
-                if name in locations.keys():
-                    locations[name].vanilla_blacklist = shiny_data.get("filter", set())
-                else:
-                    locations[name] = TokenOrPearl(
-                        name, room, next_offset,
-                        vanilla_blacklist=effective_blacklist(
-                            shiny_data.get("filter", None), shiny_data.get("whitelist", None), room_data
-                        )
+                    can_see = (
+                        room_data.get("whitelist", set(scuglist))
+                        .difference(room_data.get("blacklist", set()))
+                        .difference(shiny_data.get("filter", set()))
+                        .difference(room_data.get("alted", set()))
+                        .union(shiny_data.get("whitelist", set()))
+                        .difference({""})
                     )
+                    loc.generation_flag[dlcstate, can_see] = True
+
                     next_offset += 1
 
 

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from Options import PerGameCommonOptions, Toggle, Range, OptionGroup, Choice, ProgressionBalancing, Accessibility, \
     Visibility, DeathLinkMixin, DeathLink
+from .conditions import GameStateFlag
 
 
 #################################################################
@@ -730,6 +731,8 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             self.wt_redcentipede, self.wt_redlizard, self.wt_spitterspider,
             self.wt_brotherlonglegs, self.wt_daddylonglegs
         ]}
+
+    def satisfies(self, flag: GameStateFlag): return flag[self.dlcstate, self.starting_scug]
 
 
 option_groups = [

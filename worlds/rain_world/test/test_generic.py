@@ -55,6 +55,11 @@ class TestArtificer(RainWorldTestBase):
 class TestRivulet(RainWorldTestBase):
     options = {"which_gamestate": "rivulet"}
 
+    def test_86(self):
+        # https://github.com/alphappy/ArchipelagoRW/issues/86
+        locs = [loc.name for loc in self.multiworld.get_locations(self.player)]
+        self.assertIn("Token-MirosBird-SH", locs)
+
 
 class TestSpear(RainWorldTestBase):
     options = {"which_gamestate": "spearmaster"}
