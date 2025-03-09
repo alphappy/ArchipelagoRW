@@ -120,7 +120,5 @@ def get_starts(options: RainWorldOptions) -> list[str]:
         if code == "SB":
             ret.remove("SB_S02")
             ret.remove("SB_S04")
-        elif code == "VS":
-            ret.remove("VS_S03")
 
     return ret
