@@ -1,66 +1,95 @@
+from BaseClasses import MultiWorld
 from .classes import LocationData
+from ..conditions import GameStateFlag
 from ..conditions.classes import Simple
-from ..game_data.general import (food_quest_items, alt_food_quest_items, food_quest_saint_inedible,
-                                 food_quest_spearmaster_inedible, food_quest_spearmaster_only,
-                                 food_quest_large_creatures, food_quest_expanded_items, extreme_threat_creatures)
+from ..game_data.general import extreme_threat_creatures
 from ..options import RainWorldOptions
 
-locations = {
-    food:
-    LocationData(
-        f"FoodQuest-{food}", f"FoodQuest-{food}", "Food Quest", 5250 + i,
-        Simple(alt_food_quest_items[food], 1) if food in alt_food_quest_items.keys() else Simple(food)
-    ) for i, food in enumerate(food_quest_items + food_quest_expanded_items)
-}
+_offset = 5250
+
+
+class FoodQuestPip(LocationData):
+    def __init__(self, gamestates: int, items: str | list[str]):
+        global _offset
+        self.items = [items] if type(items) == str else items
+        super().__init__(f"FoodQuest-{self.items[0]}", f"FoodQuest-{self.items[0]}", "Food Quest", _offset)
+        _offset += 1
+        self.gamestates = GameStateFlag(gamestates)
+        self.expanded = False
+        self.access_condition = Simple(items, 1)
+
+    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+        if not options.satisfies(self.gamestates):
+            return False
+        if self.items[0] in extreme_threat_creatures and options.difficulty_extreme_threats + (options.starting_scug not in ["Gourmand", "Artificer", "Spear", "Inv"]) < 2:
+            return False
+        if self.expanded and not options.checks_foodquest_expanded:
+            return False
+        return super().make(player, multiworld, options)
+
+
+pips: list[FoodQuestPip] = [
+    FoodQuestPip(0b110_111_111_000, "SlimeMold"),
+    FoodQuestPip(0b110_111_111_000, "DangleFruit"),
+    FoodQuestPip(0b101_111_111_000, "Fly"),
+    FoodQuestPip(0b111_111_111_000, "Mushroom"),
+    FoodQuestPip(0b101_011_100_000, "BlackLizard"),
+    FoodQuestPip(0b110_111_111_000, "WaterNut"),
+    FoodQuestPip(0b100_111_111_000, "JellyFish"),
+    FoodQuestPip(0b101_011_100_000, "JetFish"),
+    # Artificer can eat glow weed, but there are none in that gamestate.
+    FoodQuestPip(0b110_101_111_000, "GlowWeed"),
+    FoodQuestPip(0b101_011_100_000, ["Salamander", "EelLizard"]),
+    FoodQuestPip(0b101_011_100_000, "Snail"),
+    FoodQuestPip(0b101_111_111_000, ["Hazer", "DeadHazer"]),
+    FoodQuestPip(0b101_011_100_000, "EggBug"),
+    FoodQuestPip(0b110_111_111_000, "LillyPuck"),
+    FoodQuestPip(0b101_011_100_000, "YellowLizard"),
+    FoodQuestPip(0b101_011_100_000, "TubeWorm"),
+    FoodQuestPip(0b111_111_111_000, "SSOracleSwarmer"),
+    FoodQuestPip(0b101_111_111_000, "Centiwing"),
+    FoodQuestPip(0b110_111_111_000, "DandelionPeach"),
+    FoodQuestPip(0b101_011_100_000, "CyanLizard"),
+    FoodQuestPip(0b110_111_111_000, "GooieDuck"),
+    FoodQuestPip(0b101_111_111_000, ["RedCentipede", "AquaCenti"]),
+
+    FoodQuestPip(0b111_111_111_000, "SeedCob"),
+    FoodQuestPip(0b101_111_111_000, ["Centipede", "SmallCentipede"]),
+    FoodQuestPip(0b101_111_111_000, ["VultureGrub", "DeadVultureGrub"]),
+    FoodQuestPip(0b101_111_111_000, ["SmallNeedleWorm", "BigNeedleWorm"]),
+    FoodQuestPip(0b101_011_100_000, "GreenLizard"),
+    FoodQuestPip(0b101_011_100_000, "BlueLizard"),
+    FoodQuestPip(0b101_011_100_000, "PinkLizard"),
+    FoodQuestPip(0b101_011_100_000, "WhiteLizard"),
+    FoodQuestPip(0b101_011_100_000, "RedLizard"),
+    FoodQuestPip(0b101_011_100_000, "SpitLizard"),
+    FoodQuestPip(0b100_000_000_000, "ZoopLizard"),
+    FoodQuestPip(0b100_000_000_000, "TrainLizard"),
+    FoodQuestPip(0b101_011_100_000, "BigSpider"),
+    FoodQuestPip(0b101_011_100_000, "SpitterSpider"),
+    FoodQuestPip(0b101_011_100_000, "MotherSpider"),
+    # All vultures are Miros for Sofanthiel.  There are no Miros for Hunter/Gourmand.
+    FoodQuestPip(0b001_011_100_000, "Vulture"),
+    FoodQuestPip(0b001_011_100_000, "KingVulture"),
+    FoodQuestPip(0b101_010_000_000, "MirosVulture"),
+    FoodQuestPip(0b101_011_100_000, "LanternMouse"),
+    FoodQuestPip(0b101_011_100_000, ["CicadaA", "CicadaB"]),
+    FoodQuestPip(0b100_001_000_000, "Yeek"),
+    FoodQuestPip(0b101_011_100_000, "DropBug"),
+    FoodQuestPip(0b101_011_100_000, "MirosBird"),
+    FoodQuestPip(0b101_011_100_000, ["Scavenger", "ScavengerElite"]),
+    FoodQuestPip(0b101_011_100_000, ["DaddyLongLegs", "BrotherLongLegs", "TerrorLongLegs", "HunterDaddy"]),
+    FoodQuestPip(0b001_000_000_000, "PoleMimic"),
+    FoodQuestPip(0b001_000_000_000, "TentaclePlant"),
+    FoodQuestPip(0b001_000_000_000, "BigEel"),
+    FoodQuestPip(0b001_000_000_000, "Inspector"),
+]
+
+for i in range(22, len(pips)):
+    pips[i].expanded = True
 
 
 def generate(options: RainWorldOptions) -> list[LocationData]:
-    if options.checks_foodquest.value == 0 or not options.msc_enabled:
-        return []
-
-    if (options.starting_scug == "Gourmand") + options.checks_foodquest.value > 1:
-        foods = set(food_quest_items)
-        if options.checks_foodquest_expanded:
-            foods.update(food_quest_expanded_items)
-
-        if options.starting_scug != "Spear":
-            foods = foods.difference(food_quest_spearmaster_only)
-        if options.starting_scug in {"White", "Yellow", "Rivulet", "Saint"}:
-            foods = foods.difference(food_quest_large_creatures)
-        if options.starting_scug == "Saint":
-            foods = foods.difference(food_quest_saint_inedible)
-
-        # HARDCODE: MLLs only exist for Rivulet.
-        foods = foods.difference({"TerrorLongLegs"})
-
-        if options.starting_scug == "Spear":
-            foods = foods.difference(food_quest_spearmaster_inedible)
-            # HARDCODE: Spearmaster doesn't find *actual* DLLs in their worldstate.
-            foods = foods.difference({"DaddyLongLegs"})
-
-        # HARDCODE: Hunter doesn't find Miros Vultures in their worldstate.
-        elif options.starting_scug == "Red":
-            foods = foods.difference({"MirosVulture"})
-        # HARDCODE: Gourmand doesn't find Miros Vultures or elite scavs in their worldstate.
-        elif options.starting_scug == "Gourmand":
-            foods = foods.difference({"MirosVulture", "ScavengerElite"})
-        # HARDCODE: Artificer doesn't find Glow Weed in their worldstate.
-        elif options.starting_scug == "Artificer":
-            foods = foods.difference({"GlowWeed"})
-        # HARDCODE: Every vulture in Sofnathiel's worldstate is a Miros, and there are no elite scav dens.
-        elif options.starting_scug == "Inv":
-            foods = foods.difference({"Vulture", "KingVulture", "ScavengerElite"})
-        # HARDCODE: Gourmand and Sofanthiel are the only ones who can both find and eat yeeks.
-        if options.starting_scug not in ("Gourmand", "Inv"):
-            foods = foods.difference({"Yeek"})
-        # HARDCODE: Stawberry and train lizards don't exist in most worldstates.
-        if options.starting_scug != "Inv":
-            foods = foods.difference({"ZoopLizard", "TrainLizard"})
-
-        if options.difficulty_extreme_threats + (options.starting_scug not in
-                                                 ["Gourmand", "Artificer", "Spear", "Inv"]):
-            foods = foods.difference(extreme_threat_creatures)
-
-        return [locations[food] for food in foods]
-
+    if options.msc_enabled and (options.starting_scug == "Gourmand") + options.checks_foodquest.value > 1:
+        return pips
     return []
