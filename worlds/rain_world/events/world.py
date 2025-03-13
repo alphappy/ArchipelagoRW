@@ -47,6 +47,9 @@ def generate_events_for_one_gamestate(options: RainWorldOptions,
         ret.append(StaticWorldEvent("SSOracleSwarmer", f'{room} SSOracleSwarmer',
                                     room_to_region[room]))
 
+    # HARDCODE: Yeeks spawn for Sofanthiel without dens.
+    ret.append(StaticWorldEvent("Yeek", "Chimney Canopy gimmick", "Chimney Canopy", scugs={"Inv"}))
+
     if options.starting_scug in {"Yellow", "White", "Red", "Gourmand", "Rivulet", "Saint"}:
         ret.append(StaticWorldEvent("Meet LttM", f'{room} LttM', room_to_region["SL_AI"], Simple("The Mark")))
 

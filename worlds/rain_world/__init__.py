@@ -157,6 +157,7 @@ class RainWorldWorld(World):
             "passage_progress_without_survivor",  # ...if this setting doesn't match Remix.
             "death_link",  # ...whether to listen for death link notifications.
             "checks_foodquest",  # ...whether the food quest should be available.
+            "checks_foodquest_expanded",  # ... whether the food quest should be expanded.
             "checks_broadcasts",  # ...whether broadcasts should be avilable.
             "checks_tokens_pearls",  # ...whether all tokens should be available.
             "which_victory_condition",  # ...which victory condition is a win.

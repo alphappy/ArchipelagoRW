@@ -141,3 +141,8 @@ food_quest_saint_inedible = {
     "Fly", "BlackLizard", "JellyFish", "JetFish", "Salamander", "Snail", "Hazer", "EggBug", "YellowLizard", "TubeWorm",
     "Centiwing", "CyanLizard", "RedCentipede"
 }
+
+extreme_threat_creatures = {
+    "BrotherLongLegs", "DaddyLongLegs", "TerrorLongLegs", "HunterDaddy", "RedLizard", "RedCentipede",
+    "KingVulture", "MirosVulture", "MirosBird", "AquaCenti"
+}

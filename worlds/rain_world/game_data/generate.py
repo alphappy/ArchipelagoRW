@@ -31,6 +31,7 @@ OBJECT_WHITELIST = [
     "KarmaFlower",  # artificer echo logic
     "SeedCob",  # for The Monk
     "BubbleGrass",  # for waterway traversal
+    "VultureGrub", "DeadVultureGrub",  # expanded food quest
 ]
 SHINY_LIST = ["BlueToken", "GreenToken", "RedToken", "GoldToken", "WhiteToken", "UniqueDataPearl", "DataPearl"]
 

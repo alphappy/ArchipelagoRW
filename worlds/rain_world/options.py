@@ -217,6 +217,15 @@ class ChecksFoodQuest(Choice):
     default = 2
 
 
+class ChecksFoodQuestExpanded(Toggle):
+    """Whether the food quest should be expanded to include most creatures.
+    Specific food quest checks may be disabled by excluding the locations,
+    and some slugcats will not be required to kill and eat extreme threats if that setting is enabled.
+    Requires MSC."""
+    display_name = "Expanded food quest"
+    default = True
+
+
 class ChecksTokensPearls(Toggle):
     """Whether all tokens and pearls should be visible to all slugcats."""
     display_name = "All tokens and pearls"
@@ -648,11 +657,12 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     # CHECK POOL SETTINGS
     checks_broadcasts: ChecksBroadcasts
     checks_foodquest: ChecksFoodQuest
+    checks_foodquest_expanded: ChecksFoodQuestExpanded
     passage_priority: PassagePriority
     checks_tokens_pearls: ChecksTokensPearls
 
     group_checkpool = [
-        ChecksBroadcasts, ChecksFoodQuest, PassagePriority, ChecksTokensPearls
+        ChecksBroadcasts, ChecksFoodQuest, ChecksFoodQuestExpanded, PassagePriority, ChecksTokensPearls
     ]
 
     #################################################################
