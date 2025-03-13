@@ -22,9 +22,11 @@ The `Misc2` pearl in Subterranean, though it appears on the interactive map, is 
 ## Echoes
 Visiting an echo is a check, and the karma cap increases they would normally give are placed in the item pool.
 Whether an echo appears depends on some combination of 
-slugcat, current karma, max karma, whether karma flower reinforcement is active,
+which slugcat is being played, which echo is being met,
+current karma, max karma, whether karma flower reinforcement is active,
 and the `Low-karma echo appearance` player YAML setting:
 
+- The echoes in The Exterior, Subterranean, Metropolis, and Submerged Superstructure (for Saint) always appear.
 - If max karma >= 7:
   - Echoes always appear for Saint.
   - Other slugcats require current karma >= 6.
