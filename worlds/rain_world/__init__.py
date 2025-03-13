@@ -48,6 +48,7 @@ class RainWorldWorld(World):
     starting_room = 'SU_C04'
     start_is_default = True
     start_is_connected = False
+    foodquest_accessibility_flag = 0
 
     def generate_early(self) -> None:
         # This is the earliest that the options are available.  Player YAML failures should be tripped here.
@@ -63,7 +64,11 @@ class RainWorldWorld(World):
 
         # return for each datum is a bool for whether that location was actually generated
         locs = [data.make(self.player, self.multiworld, self.options) for data in locations.generate(self.options)]
-        self.location_count = sum(locs)
+        foodquest_locs = [
+            data.make(self.player, self.multiworld, self.options) for data in locations.generate_foodquest(self.options)
+        ]
+        self.location_count = sum(locs + foodquest_locs)
+        self.foodquest_accessibility_flag = sum(e << i for i, e in enumerate(foodquest_locs))
 
         for data in get_events(self.options, self.multiworld.get_regions(self.player)):
             data.make(self.player, self.multiworld, self.options)
@@ -157,7 +162,6 @@ class RainWorldWorld(World):
             "passage_progress_without_survivor",  # ...if this setting doesn't match Remix.
             "death_link",  # ...whether to listen for death link notifications.
             "checks_foodquest",  # ...whether the food quest should be available.
-            "checks_foodquest_expanded",  # ... whether the food quest should be expanded.
             "checks_broadcasts",  # ...whether broadcasts should be avilable.
             "checks_tokens_pearls",  # ...whether all tokens should be available.
             "which_victory_condition",  # ...which victory condition is a win.
@@ -167,6 +171,9 @@ class RainWorldWorld(World):
         # ...which room to spawn in.  Empty string for default.
         d["starting_room"] = ("" if self.start_is_default
                               else ingame_capitalization.get(self.starting_room, self.starting_room))
+        # ...which food quest checks are accessible.
+        d["checks_foodquest_accessibility"] = (
+            self.foodquest_accessibility_flag if self.options.checks_foodquest_expanded else 0)
         return d
 
     def interpret_slot_data(self, slot_data: dict[str, Any]) -> None:

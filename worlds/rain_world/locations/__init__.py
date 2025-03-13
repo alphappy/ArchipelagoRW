@@ -16,5 +16,8 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
         *unique.generate(options),
         *passages.generate(options),
         *echoes.generate(options),
-        *foodquest.generate(options),
     ]
+
+
+def generate_foodquest(options: RainWorldOptions) -> list[LocationData]:
+    return foodquest.generate(options)
