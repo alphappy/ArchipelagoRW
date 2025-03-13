@@ -21,17 +21,30 @@ The `Misc2` pearl in Subterranean, though it appears on the interactive map, is 
 
 ## Echoes
 Visiting an echo is a check, and the karma cap increases they would normally give are placed in the item pool.
-By default, echo apperance follows the same rules as the unrandomized game:
-- Saint can always see echoes, regardless of current and max karma.
-- For other slugcats:
-  - If max karma is 7 or more, current karma must be at least 6.
-  - If max karma is 5, current karma must be 5.
-  - If max karma is less than 5, current karma must be equal to max karma
-  and karma flower reinforcement must be active.
+Whether an echo appears depends on some combination of 
+slugcat, current karma, max karma, whether karma flower reinforcement is active,
+and the `Low-karma echo appearance` player YAML setting:
 
-Note that current karma is not logically constrained,
-so echo checks are considered accessible as soon as max karma reaches 5
-or, for Artificer, as soon as a karma flower is accessible.
+- If max karma >= 7:
+  - Echoes always appear for Saint.
+  - Other slugcats require current karma >= 6.
+- If max karma = 5:
+  - Echoes always appear for Saint.
+  - Other slugcats require current karma = 5.
+- If max karma < 5:
+  - If `Low-karma echo appearance` is `Never`, echoes do not appear.
+  - If `Low-karma echo appearance` is `With Karma Flower`,
+    echoes appear if current karma = max karma *and* karma reinforcement is active.
+  - If `Low-karma echo appearance` is `Without Karma Flower`,
+    echoes appear if current karma = max karma.
+  - If `Low-karma echo appearance` is `Unaltered` (default):
+    - Echoes always appear for Saint.
+    - Artificer requires current karma = max karma *and* karma reinforcement.
+    - Other slugcats require current karma = max karma.
+
+Note that current karma is not logically constrained.
+This means, for instance, that once max karma >= 5,
+all echoes are considered accessible once they are reachable.
 
 ## Unique checks
 There are several unique checks, mostly associated with the iterators:
