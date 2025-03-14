@@ -1,15 +1,15 @@
 from BaseClasses import MultiWorld
-from .classes import LocationData, PhysicalLocation
+from .classes import LocationData, RoomLocation
 from ..conditions.classes import Simple, AnyOf
 from ..options import RainWorldOptions
 
 
-class Echo(PhysicalLocation):
-    def __init__(self, ghost: str, region: str, offset: int, room: str, free: bool = False):
-        super().__init__(f"Echo-{ghost}", f"Echo-{ghost}", region, offset, room)
+class Echo(RoomLocation):
+    def __init__(self, ghost: str, offset: int, room: str, free: bool = False):
+        super().__init__(f"Echo-{ghost}", [], offset, room)
         self.free = free
         
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+    def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         if not self.free:
             match options.difficulty_echo_low_karma:
                 case "never":
@@ -20,22 +20,22 @@ class Echo(PhysicalLocation):
                     if options.starting_scug == "Artificer":
                         self.access_condition = AnyOf(Simple("KarmaFlower"), Simple("Karma", 4))
 
-        return super().make(player, multiworld, options)
+        return super().pre_generate(player, multiworld, options)
 
 
 # Which echoes are "free" is determined by `GhostWorldPresence.SpawnGhost`.
 locations: dict[str, LocationData] = {
-    "CC": Echo("CC", "Chimney Canopy", 5070, ""),
-    "SH": Echo("SH", "Shaded Citadel", 5071, ""),
-    "LF": Echo("LF", "Farm Arrays", 5072, ""),
-    "UW": Echo("UW", "The Exterior", 5073, "", True),
-    "SI": Echo("SI", "Sky Islands", 5074, ""),
-    "SB": Echo("SB", "Subterranean ravine", 5075, "", True),
-    "LC": Echo("LC", "Metropolis", 5076, "", True),
-    "UG": Echo("UG", "Undergrowth", 5077, ""),
-    "CL": Echo("CL", "Silent Construct", 5078, ""),
-    "SL": Echo("SL", "Shoreline", 5079, ""),
-    "MS": Echo("MS", "Submerged Superstructure", 5080, "", True),
+    "CC": Echo("CC", 5070, "CC_C12"),
+    "SH": Echo("SH", 5071, "SH_A08"),
+    "LF": Echo("LF", 5072, "LF_B01"),
+    "UW": Echo("UW", 5073, "UW_A14", True),
+    "SI": Echo("SI", 5074, "SI_B11"),
+    "SB": Echo("SB", 5075, "SB_A10", True),
+    "LC": Echo("LC", 5076, "LC_HIGHESTPOINT", True),
+    "UG": Echo("UG", 5077, "UG_C02"),
+    "CL": Echo("CL", 5078, "CL_D05"),
+    "SL": Echo("SL", 5079, "SL_WALL06"),
+    "MS": Echo("MS", 5080, "MS_COMMS", True),
 }
 
 

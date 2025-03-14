@@ -1,5 +1,5 @@
 from BaseClasses import MultiWorld
-from .classes import LocationData
+from .classes import LocationData, AbstractLocation
 from ..conditions import GameStateFlag
 from ..conditions.classes import Simple
 from ..game_data.general import extreme_threat_creatures
@@ -8,24 +8,24 @@ from ..options import RainWorldOptions
 _offset = 5250
 
 
-class FoodQuestPip(LocationData):
+class FoodQuestPip(AbstractLocation):
     def __init__(self, gamestates: int, items: str | list[str]):
         global _offset
         self.items = [items] if type(items) == str else items
-        super().__init__(f"FoodQuest-{self.items[0]}", f"FoodQuest-{self.items[0]}", "Food Quest", _offset)
+        super().__init__(f"FoodQuest-{self.items[0]}", [], _offset, "Food Quest")
         _offset += 1
         self.gamestates = GameStateFlag(gamestates)
         self.expanded = False
         self.access_condition = Simple(items, 1)
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+    def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         if not options.satisfies(self.gamestates):
             return False
         if self.items[0] in extreme_threat_creatures and options.difficulty_extreme_threats + (options.starting_scug not in ["Gourmand", "Artificer", "Spear", "Inv"]) < 2:
             return False
         if self.expanded and not options.checks_foodquest_expanded:
             return False
-        return super().make(player, multiworld, options)
+        return super().pre_generate(player, multiworld, options)
 
 
 pips: list[FoodQuestPip] = [
