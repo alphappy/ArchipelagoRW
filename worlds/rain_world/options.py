@@ -233,6 +233,12 @@ class ChecksTokensPearls(Toggle):
     visibility = Visibility.none
 
 
+class ChecksSheltersanity(Toggle):
+    """Whether each shelter is a check."""
+    display_name = "Sheltersanity"
+    default = False
+
+
 #################################################################
 # DIFFICULTY SETTINGS
 class DifficultyHunter(Range):
@@ -660,9 +666,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     checks_foodquest_expanded: ChecksFoodQuestExpanded
     passage_priority: PassagePriority
     checks_tokens_pearls: ChecksTokensPearls
+    checks_sheltersanity: ChecksSheltersanity
 
     group_checkpool = [
-        ChecksBroadcasts, ChecksFoodQuest, ChecksFoodQuestExpanded, PassagePriority, ChecksTokensPearls
+        ChecksBroadcasts, ChecksFoodQuest, ChecksFoodQuestExpanded, PassagePriority, ChecksTokensPearls,
+        ChecksSheltersanity
     ]
 
     #################################################################
