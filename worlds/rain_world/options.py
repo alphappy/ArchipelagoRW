@@ -239,6 +239,15 @@ class ChecksSheltersanity(Toggle):
     default = False
 
 
+class ChecksSubmerged(Choice):
+    """Whether Submerged Superstructure has any checks."""
+    display_name = "Include Submerged"
+    option_all_slugcats = 2
+    option_only_rivulet = 1
+    option_off = 0
+    default = 1
+
+
 #################################################################
 # DIFFICULTY SETTINGS
 class DifficultyHunter(Range):
@@ -667,10 +676,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     passage_priority: PassagePriority
     checks_tokens_pearls: ChecksTokensPearls
     checks_sheltersanity: ChecksSheltersanity
+    checks_submerged: ChecksSubmerged
 
     group_checkpool = [
         ChecksBroadcasts, ChecksFoodQuest, ChecksFoodQuestExpanded, PassagePriority, ChecksTokensPearls,
-        ChecksSheltersanity
+        ChecksSheltersanity, ChecksSubmerged
     ]
 
     #################################################################
@@ -742,6 +752,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     @property
     def starting_scug(self) -> str: return self.which_gamestate.scug_id
+
+    @property
+    def submerged_should_populate(self) -> bool: return self.checks_submerged + (self.starting_scug == "Rivulet") > 1
 
     def get_nontrap_weight_dict(self) -> dict[str, float]:
         ret = {a.item_name: a.value for a in [

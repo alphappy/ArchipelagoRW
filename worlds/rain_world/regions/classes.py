@@ -116,6 +116,8 @@ class PhysicalRegion(RegionData):
             case "UG" | "HR" | "CL":
                 return scug == "Saint"
             case "MS":
+                if not options.submerged_should_populate:
+                    return False
                 # HARDCODE
                 if self.name == "Bitter Aerie":
                     return scug == "Rivulet"
