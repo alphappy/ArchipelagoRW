@@ -3,13 +3,14 @@ __all__ = ["RainWorldWorld", "RainWorldWebWorld"]
 from typing import Mapping, Any
 
 from worlds.AutoWorld import World, WebWorld
-from BaseClasses import Tutorial, LocationProgressType
+from BaseClasses import Tutorial, LocationProgressType, CollectionState
 from .game_data.shelters import get_starts, ingame_capitalization
 from .options import RainWorldOptions
 from .conditions.classes import Simple
 from .game_data.general import region_code_to_name, story_regions
 from .events import get_events
 from .regions.classes import room_to_region
+from .spoiler import get_collection_spheres
 from .utils import normalize, flounder2
 from .items import RainWorldItem, all_items, RainWorldItemData
 from . import regions, locations
@@ -38,7 +39,7 @@ class RainWorldWorld(World):
     game = "Rain World"  # name of the game/world
     options_dataclass = RainWorldOptions  # options the player can set
     options: RainWorldOptions  # typing hints for option results
-    topology_present = True  # show path to required location checks in spoiler
+    topology_present = False  # show path to required location checks in spoiler
     web = RainWorldWebWorld()
 
     item_name_to_id = items.item_name_to_id
@@ -175,6 +176,12 @@ class RainWorldWorld(World):
         d["checks_foodquest_accessibility"] = (
             self.foodquest_accessibility_flag if self.options.checks_foodquest_expanded else 0)
         return d
+
+    def generate_output(self, output_directory: str) -> None:
+        # Remove paths which are trivial routes to abstract regions.
+        print(self.multiworld.spoiler.paths)
+        for loc in [str(loc) for loc in self.multiworld.get_region("Food Quest", self.player).get_locations()]:
+            del self.multiworld.spoiler.paths[loc]
 
     def interpret_slot_data(self, slot_data: dict[str, Any]) -> None:
         """Universal Tracker support - synchronize UT internal multiworld with actual slot data."""
