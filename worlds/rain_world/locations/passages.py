@@ -62,10 +62,7 @@ def generate_cond_hunter(options: RainWorldOptions) -> Condition:
 # MONK
 def generate_cond_monk(options: RainWorldOptions) -> Condition:
     if options.starting_scug == "Spear":
-        return AnyOf(
-            Simple(["Access-SI", "Access-LF"], 1),
-            Simple(["Access-HI", "Access-LM", "Access-SB", "Access-GW"], 2)
-        )
+        return Simple(["Access-SI", "Access-LF"], 1)
     return AnyOf(
         Simple(game_data.general.monk_foods_vanilla, options.difficulty_monk.value),
         AllOf(Simple('MSC'), Simple(game_data.general.monk_foods_msc, options.difficulty_monk.value))
