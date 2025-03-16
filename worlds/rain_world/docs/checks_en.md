@@ -68,38 +68,36 @@ that they would normally give are placed in the item pool.
 The logical requirement for each passage varies.
 There are four passages that may be earned before The Survivor is earned:
 
-| Passage           | Eligibility                                 | Requirements                                                                                 |
-|-------------------|---------------------------------------------|----------------------------------------------------------------------------------------------|
-| The Martyr        | Any; MSC enabled                            | None                                                                                         |
-| The Mother        | Survivor, Hunter, or Gourmand; MSC enabled  | Access to a region which spawns slugpups normally<sup>b</sup>                                |
-| The Pilgrim       | Any; MSC enabled                            | Access to all eligible echoes                                                                |
-| The Survivor      | Any                                         | Max karma at least 5                                                                         |
+| Passage           | Eligibility                                 | Requirements                                    |
+|-------------------|---------------------------------------------|-------------------------------------------------|
+| The Martyr        | Any; MSC enabled                            | None                                            |
+| The Mother        | Survivor, Hunter, or Gourmand; MSC enabled  | Access to HI, DS, GW, SH, CC, SI, LF, SB, or VS |
+| The Pilgrim       | Any; MSC enabled                            | Access to all eligible echoes                   |
+| The Survivor      | Any                                         | Max karma at least 5                            |
 
 There are three passages that may be earned before The Survivor,
 but if and only if the `Passage progress without survivor` setting is enabled:
 
-| Passage           | Eligibility | Requirements                                                                            |
-|-------------------|-------------|-----------------------------------------------------------------------------------------|
-| The Dragon Slayer | Not Saint   | Access to six eligibile lizard types<sup>c</sup>                                        |
-| The Friend        | Any         | Access to one lizard                                                                    |
-| The Wanderer      | Any         | Access to every story region for the given slugcat; each individual pip is also a check |
+| Passage           | Eligibility | Requirements                                                                                                                              |
+|-------------------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| The Dragon Slayer | Not Saint   | - Vanilla: Access to Blue, Pink, Green, Yellow, Black, and White Lizards<br/>- MSC: Red, Cyan, Strawberry, and Caramel Lizards also count |
+| The Friend        | Any         | Access to one lizard                                                                                                                      |
+| The Wanderer      | Any         | Access to every story region for the given slugcat; each individual pip is also a check                                                   |
 
 The remaining seven passages can only be earned after The Survivor has been earned:
 
 | Passage       | Eligibility                                             | Requirements                                                                                                                         |
 |---------------|---------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| The Chieftain | Not Artificer                                           | Access to a Scavenger (or Scavenger Outpost/Toll)<sup>a</sup>                                                                        |
-| The Hunter    | Not Saint                                               | Access to 3<sup>a</sup> types of meat                                                                                                |
-| The Monk      | Any                                                     | Access to 3<sup>a</sup> types of non-meat foods                                                                                      |
-| The Nomad     | Any; MSC enabled                                        | Access to 5<sup>a</sup> different regions                                                                                            |  
-| The Outlaw    | Not Saint                                               | Access to 5<sup>a</sup> eligible creatures                                                                                           |
-| The Saint     | Any                                                     | None                                                                                                                                 |
+| The Chieftain | Not Artificer                                           | Access to a Scavenger (or Scavenger Toll if `The Chieftain requires toll` is set)                                                    |
+| The Hunter    | Not Saint                                               | Access to several types of meat (number depends on `The Hunter difficulty` setting)                                                  |
+| The Monk      | Any                                                     | Access to several types of non-meat foods (number depends on `The Monk difficulty` setting)<sup>a</sup>                              |
+| The Nomad     | Any; MSC enabled                                        | Access to several regions (number depends on `The Nomad difficulty` setting)                                                         |  
+| The Outlaw    | Not Saint                                               | Access to several eligible creatures (number depends on `The Outlaw difficulty` setting)                                             |
+| The Saint     | Any                                                     | None<sup>a</sup>                                                                                                                     |
 | The Scholar   | Not Monk unless MSC is enabled; Not Saint or Sofanthiel | - The Mark of Communication<br/>- Access to three colored pearls<br/>- For Monk, Survivor, and Gourmand: access to Looks to the Moon |
 
-- <sup>a</sup> This is controlled by the player YAML settings.
-- <sup>b</sup> "Normal spawning" of slugpups does not occur in Five Pebbles or Submerged Superstructure.
-- <sup>c</sup> Without MSC, this requires Blue, Pink, Green, Yellow, Black, and White Lizards.
-MSC allows Red, Cyan, Strawberry, and Caramel Lizards to count as well.
+- <sup>a</sup> For Spearmaster, The Monk and The Saint require access to a region with
+at least six popcorn plants (Sky Islands or Farm Arrays). 
 
 ## Food quest
 If MSC is enabled, each item of the food quest is a check when completed.
