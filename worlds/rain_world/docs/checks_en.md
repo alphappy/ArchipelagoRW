@@ -86,18 +86,15 @@ but if and only if the `Passage progress without survivor` setting is enabled:
 
 The remaining seven passages can only be earned after The Survivor has been earned:
 
-| Passage       | Eligibility                                             | Requirements                                                                                                                         |
-|---------------|---------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| The Chieftain | Not Artificer                                           | Access to a Scavenger (or Scavenger Toll if `The Chieftain requires toll` is set)                                                    |
-| The Hunter    | Not Saint                                               | Access to several types of meat (number depends on `The Hunter difficulty` setting)                                                  |
-| The Monk      | Any                                                     | Access to several types of non-meat foods (number depends on `The Monk difficulty` setting)<sup>a</sup>                              |
-| The Nomad     | Any; MSC enabled                                        | Access to several regions (number depends on `The Nomad difficulty` setting)                                                         |  
-| The Outlaw    | Not Saint                                               | Access to several eligible creatures (number depends on `The Outlaw difficulty` setting)                                             |
-| The Saint     | Any                                                     | None<sup>a</sup>                                                                                                                     |
-| The Scholar   | Not Monk unless MSC is enabled; Not Saint or Sofanthiel | - The Mark of Communication<br/>- Access to three colored pearls<br/>- For Monk, Survivor, and Gourmand: access to Looks to the Moon |
-
-- <sup>a</sup> For Spearmaster, The Monk and The Saint require access to a region with
-at least six popcorn plants (Sky Islands or Farm Arrays). 
+| Passage       | Eligibility                                             | Requirements                                                                                                                                                                                |
+|---------------|---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| The Chieftain | Not Artificer                                           | Access to a Scavenger (or Scavenger Toll if `The Chieftain requires toll` is set)                                                                                                           |
+| The Hunter    | Not Saint                                               | Access to several types of meat (number depends on `The Hunter difficulty` setting)                                                                                                         |
+| The Monk      | Any                                                     | - For Hunter, Artificer, and Spearmaster: Access to SI, LF, SS, or DM<br/>- For other slugcats: Access to several types of non-meat foods (number depends on `The Monk difficulty` setting) |
+| The Nomad     | Any; MSC enabled                                        | Access to several regions (number depends on `The Nomad difficulty` setting)                                                                                                                |  
+| The Outlaw    | Not Saint                                               | Access to several eligible creatures (number depends on `The Outlaw difficulty` setting)                                                                                                    |
+| The Saint     | Any                                                     | - For Hunter, Artificer, and Spearmaster: Access to SI, LF, SS, or DM<br/>- For other slugcats: No requirements                                                                             |
+| The Scholar   | Not Monk unless MSC is enabled; Not Saint or Sofanthiel | - The Mark of Communication<br/>- Access to three colored pearls<br/>- For Monk, Survivor, and Gourmand: access to Looks to the Moon                                                        |
 
 ## Food quest
 If MSC is enabled, each item of the food quest is a check when completed.
