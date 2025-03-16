@@ -111,7 +111,7 @@ lizards_any = dragonslayer_msc.union({"Salamander", "EelLizard", "TrainLizard"})
 
 echoes_vanilla = ['CC', 'SI', 'LF', 'SB', 'SH', 'UW']
 
-monk_foods_vanilla = ['DangleFruit', 'BubbleFruit', 'SeedCob', 'SlimeMold']
+monk_foods_vanilla = ['DangleFruit', 'BubbleFruit', 'SeedCob', 'SlimeMold', 'SSOracleSwarmer']
 monk_foods_msc = ['LillyPuck', 'GlowWeed', 'DandelionPeach', 'GooieDuck', 'Seed', 'FireEgg']
 
 slugpup_normal_regions = ['HI', 'DS', 'GW', 'SH', 'CC', 'SI', 'LF', 'SB', 'VS']
