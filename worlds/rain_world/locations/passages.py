@@ -43,7 +43,10 @@ cond_friend = Simple(game_data.general.lizards_any, 1)
 # HUNTER
 def generate_cond_hunter(options: RainWorldOptions) -> Condition:
     return AnyOf(
-        Simple(["Scug-Red", "Scug-Artificer", "Scug-Spear", "Scug-Gourmand", "Scug-Inv"], 1),
+        AllOf(
+            Simple(["Scug-Red", "Scug-Artificer", "Scug-Spear", "Scug-Gourmand", "Scug-Inv"], 1),
+            Simple([f"Access-{region}" for region in set(game_data.general.regions_all).difference({"SS", "MS"})], 1)
+        ),
         AllOf(
             Simple(["Scug-Yellow", "Scug-White", "Scug-Rivulet"], 1),
             Simple(
@@ -58,6 +61,11 @@ def generate_cond_hunter(options: RainWorldOptions) -> Condition:
 #################################################################
 # MONK
 def generate_cond_monk(options: RainWorldOptions) -> Condition:
+    if options.starting_scug == "Spear":
+        return AnyOf(
+            Simple(["Access-SI", "Access-LF"], 1),
+            Simple(["Access-HI", "Access-LM", "Access-SB", "Access-GW"], 2)
+        )
     return AnyOf(
         Simple(game_data.general.monk_foods_vanilla, options.difficulty_monk.value),
         AllOf(Simple('MSC'), Simple(game_data.general.monk_foods_msc, options.difficulty_monk.value))
@@ -72,12 +80,14 @@ cond_mother = AllOf(
     Simple([f"Access-{region}" for region in game_data.general.slugpup_normal_regions], 1)
 )
 
+
 #################################################################
 # NOMAD
-cond_nomad = AllOf(
-    Simple("MSC"),
-    Simple([f"Access-{region}" for region in game_data.general.regions_all], 5)
-)
+def generate_cond_nomad(options: RainWorldOptions) -> Condition:
+    return AllOf(
+        Simple("MSC"),
+        Simple([f"Access-{region}" for region in game_data.general.regions_all], options.difficulty_nomad.value)
+    )
 
 
 #################################################################
@@ -189,9 +199,9 @@ locations: dict[str, LocationData] = {
     "Hunter": Passage("Hunter", "Late Passages", 5041, access_condition_generator=generate_cond_hunter),
     "Monk": Passage("Monk", "Late Passages", 5042, access_condition_generator=generate_cond_monk),
     "Outlaw": Passage("Outlaw", "Late Passages", 5043, access_condition_generator=generate_cond_outlaw),
-    "Saint": Passage("Saint", "Late Passages", 5044),
+    "Saint": Passage("Saint", "Late Passages", 5044, access_condition_generator=generate_cond_monk),
     "Scholar": Passage("Scholar", "Late Passages", 5045, cond_scholar),
-    "Nomad": Passage("Nomad", "Late Passages", 5046, cond_nomad),
+    "Nomad": Passage("Nomad", "Late Passages", 5046, access_condition_generator=generate_cond_nomad),
     **{
         f"Wanderer-{i}": LocationData(
             f"Wanderer-{i}", [], 5049 + i, "PPwS Passages", wanderer_pip_factory(i)
