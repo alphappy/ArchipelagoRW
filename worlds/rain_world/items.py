@@ -4,17 +4,22 @@ from . import constants, game_data
 from .regions.gates import gates
 from .game_data.general import region_code_to_name, alternate_regions
 
+item_client_names: dict[str, str] = {}
+
 
 class RainWorldItem(Item):
     game: str = "Rain World"
 
 
 class RainWorldItemData:
-    def __init__(self, name: str, code: Optional[int], item_type: ItemClassification = ItemClassification.filler):
+    def __init__(self, name: str, client_name: str, code: Optional[int],
+                 item_type: ItemClassification = ItemClassification.filler):
         self.name = name
+        self.client_name = client_name
         self.hints: list[str] = []
         self.code = code
         self.item_type = item_type
+        item_client_names[client_name] = name
 
     def generate_item(self, player: int) -> RainWorldItem:
         return RainWorldItem(self.name, self.item_type, self.code, player)
@@ -22,19 +27,19 @@ class RainWorldItemData:
 
 class GateKeyItemData(RainWorldItemData):
     def __init__(self, names: list[str], code: Optional[int]):
-        super().__init__(names[0], code, ItemClassification.progression)
+        super().__init__(names[0], names[-1], code, ItemClassification.progression)
         self.hints = names[1:]
 
 
 class FillerItemData(RainWorldItemData):
-    def __init__(self, name: str, code: Optional[int], gamestate: Optional[list[str]] = None):
-        super().__init__(name, code, ItemClassification.filler)
+    def __init__(self, name: str, client_name: str, code: Optional[int], gamestate: Optional[list[str]] = None):
+        super().__init__(name, client_name, code, ItemClassification.filler)
         self.gamestate = gamestate or []
 
 
 class TrapItemData(RainWorldItemData):
-    def __init__(self, name: str, code: Optional[int], gamestate: Optional[list[str]] = None):
-        super().__init__(name, code, ItemClassification.trap)
+    def __init__(self, name: str, client_name: str, code: Optional[int], gamestate: Optional[list[str]] = None):
+        super().__init__(name, client_name, code, ItemClassification.trap)
         self.gamestate = gamestate or []
 
 
@@ -43,99 +48,101 @@ offset: int = constants.FIRST_ID
 all_items: Dict[str, RainWorldItemData] = {
     #################################################################
     # PROGRESSION
-    "Karma": RainWorldItemData("Karma", offset, ItemClassification.progression),
-    "The Mark": RainWorldItemData("The Mark", offset + 1, ItemClassification.progression),
-    "Citizen ID Drone": RainWorldItemData("Citizen ID Drone", offset + 2, ItemClassification.progression),
-    "Rarefaction Cell": RainWorldItemData("Rarefaction Cell", offset + 3, ItemClassification.progression),
-    "Spearmaster's Pearl": RainWorldItemData("Spearmaster's Pearl", offset + 4, ItemClassification.progression),
-    "Moon's Final Message": RainWorldItemData("Moon's Final Message", offset + 5, ItemClassification.progression),
-    "Slag Key": RainWorldItemData("Slag Key", offset + 6, ItemClassification.progression),
+    "Karma": RainWorldItemData("Karma", "Karma", offset, ItemClassification.progression),
+    "The Mark": RainWorldItemData("The Mark", "The Mark", offset + 1, ItemClassification.progression),
+    "Citizen ID Drone": RainWorldItemData("Citizen ID Drone", "IdDrone", offset + 2, ItemClassification.progression),
+    "Rarefaction Cell": RainWorldItemData("Rarefaction Cell", "Object-EnergyCell", offset + 3, ItemClassification.progression),
+    "Spearmaster's Pearl": RainWorldItemData("Spearmaster's Pearl", "Pearlobject-Spearlmasterpearl", offset + 4, ItemClassification.progression),
+    "Moon's Final Message": RainWorldItemData("Moon's Final Message", "Rewrite_Spear_Pearl", offset + 5, ItemClassification.progression),
+    "Slag Key": RainWorldItemData("Slag Key", "Object-NSHSwarmer", offset + 6, ItemClassification.progression),
 
     #################################################################
     # PASSAGE TOKENS
     **{
-        f"Passage Token - {p}": RainWorldItemData(f"Passage Token - {p}", offset + 20 + i, ItemClassification.useful)
-        for i, p in enumerate(game_data.general.passage_proper_names.values())
+        f"Passage Token - {pv}": RainWorldItemData(
+            f"Passage Token - {pv}", f"Passage-{pk}", offset + 20 + i, ItemClassification.useful
+        )
+        for i, (pk, pv) in enumerate(game_data.general.passage_proper_names.items())
     },
 
     #################################################################
     # UNIQUE
-    "The Glow": RainWorldItemData("The Glow", offset + 50, ItemClassification.progression),
-    "Longer cycles": RainWorldItemData("Longer cycles", offset + 51, ItemClassification.useful),
+    "The Glow": RainWorldItemData("The Glow", "The Glow", offset + 50, ItemClassification.progression),
+    "Longer cycles": RainWorldItemData("Longer cycles", "Disconnect_FP", offset + 51, ItemClassification.useful),
 
     #################################################################
     # GAMESTATE
-    "MSC": RainWorldItemData("MSC", offset + 100, ItemClassification.progression),
-    "Scug-Yellow": RainWorldItemData("Scug-Yellow", offset + 110, ItemClassification.progression),
-    "Scug-White": RainWorldItemData("Scug-White", offset + 111, ItemClassification.progression),
-    "Scug-Red": RainWorldItemData("Scug-Red", offset + 112, ItemClassification.progression),
-    "Scug-Gourmand": RainWorldItemData("Scug-Gourmand", offset + 113, ItemClassification.progression),
-    "Scug-Artificer": RainWorldItemData("Scug-Artificer", offset + 114, ItemClassification.progression),
-    "Scug-Rivulet": RainWorldItemData("Scug-Rivulet", offset + 115, ItemClassification.progression),
-    "Scug-Spear": RainWorldItemData("Scug-Spear", offset + 116, ItemClassification.progression),
-    "Scug-Saint": RainWorldItemData("Scug-Saint", offset + 117, ItemClassification.progression),
-    "Scug-Inv": RainWorldItemData("Scug-Inv", offset + 118, ItemClassification.progression),
+    "MSC": RainWorldItemData("MSC", "MSC", offset + 100, ItemClassification.progression),
+    "Scug-Yellow": RainWorldItemData("Scug-Yellow", "Scug-Yellow", offset + 110, ItemClassification.progression),
+    "Scug-White": RainWorldItemData("Scug-White", "Scug-White", offset + 111, ItemClassification.progression),
+    "Scug-Red": RainWorldItemData("Scug-Red", "Scug-Red", offset + 112, ItemClassification.progression),
+    "Scug-Gourmand": RainWorldItemData("Scug-Gourmand", "Scug-Gourmand", offset + 113, ItemClassification.progression),
+    "Scug-Artificer": RainWorldItemData("Scug-Artificer", "Scug-Artificer", offset + 114, ItemClassification.progression),
+    "Scug-Rivulet": RainWorldItemData("Scug-Rivulet", "Scug-Rivulet", offset + 115, ItemClassification.progression),
+    "Scug-Spear": RainWorldItemData("Scug-Spear", "Scug-Spear", offset + 116, ItemClassification.progression),
+    "Scug-Saint": RainWorldItemData("Scug-Saint", "Scug-Saint", offset + 117, ItemClassification.progression),
+    "Scug-Inv": RainWorldItemData("Scug-Inv", "Scug-Inv", offset + 118, ItemClassification.progression),
 
     #################################################################
     # OPTIONSTATE
 
-    "Option-Glow": RainWorldItemData("Option-Glow", offset + 170, ItemClassification.progression),
+    "Option-Glow": RainWorldItemData("Option-Glow", "Option-Glow", offset + 170, ItemClassification.progression),
 
     #################################################################
     # FILLER - WEAPONS
-    "Rock": FillerItemData("Rock", 200 + offset),
-    "Spear": FillerItemData("Spear", 201 + offset),
-    "Explosive Spear": FillerItemData("Explosive Spear", 202 + offset),
-    "Electric Spear": FillerItemData("Electric Spear", 203 + offset, ["MSC"]),
-    "Grenade": FillerItemData("Grenade", 204 + offset),
-    "Flashbang": FillerItemData("Flashbang", 205 + offset),
-    "Spore Puff": FillerItemData("Spore Puff", 206 + offset),
-    "Cherrybomb": FillerItemData("Cherrybomb", 207 + offset),
-    "Singularity Bomb": FillerItemData("Singularity Bomb", 208 + offset, ["MSC"]),
-    "Lilypuck": FillerItemData("Lilypuck", 209 + offset, ["MSC"]),
+    "Rock": FillerItemData("Rock", "Object-Rock", 200 + offset),
+    "Spear": FillerItemData("Spear", "Object-Spear", 201 + offset),
+    "Explosive Spear": FillerItemData("Explosive Spear", "Object-ExplosiveSpear", 202 + offset),
+    "Electric Spear": FillerItemData("Electric Spear", "Object-ElectricSpear", 203 + offset, ["MSC"]),
+    "Grenade": FillerItemData("Grenade", "Object-ScavengerBomb", 204 + offset),
+    "Flashbang": FillerItemData("Flashbang", "Object-FlareBomb", 205 + offset),
+    "Spore Puff": FillerItemData("Spore Puff", "Object-PuffBall", 206 + offset),
+    "Cherrybomb": FillerItemData("Cherrybomb", "Object-FirecrackerPlant", 207 + offset),
+    "Singularity Bomb": FillerItemData("Singularity Bomb", "Object-SingularityBomb", 208 + offset, ["MSC"]),
+    "Lilypuck": FillerItemData("Lilypuck", "Object-LillyPuck", 209 + offset, ["MSC"]),
 
     #################################################################
     # FILLER - FOOD
-    "Blue Fruit": FillerItemData("Blue Fruit", 240 + offset),
-    "Bubble Fruit": FillerItemData("Bubble Fruit", 241 + offset),
-    "Eggbug Egg": FillerItemData("Eggbug Egg", 242 + offset),
-    "Jellyfish": FillerItemData("Jellyfish", 243 + offset),
-    "Mushroom": FillerItemData("Mushroom", 244 + offset),
-    "Slime Mold": FillerItemData("Slime Mold", 245 + offset),
-    "Fire Egg": FillerItemData("Fire Egg", 246 + offset, ["MSC"]),
-    "Glow Weed": FillerItemData("Glow Weed", 247 + offset, ["MSC"]),
-    "Seed": FillerItemData("Seed", 248 + offset, ["MSC"]),
-    "Gooieduck": FillerItemData("Gooieduck", 249 + offset, ["MSC"]),
-    "Dandelion Peach": FillerItemData("Dandelion Peach", 250 + offset, ["MSC"]),
+    "Blue Fruit": FillerItemData("Blue Fruit", "Object-DangleFruit", 240 + offset),
+    "Bubble Fruit": FillerItemData("Bubble Fruit", "Object-WaterNut", 241 + offset),
+    "Eggbug Egg": FillerItemData("Eggbug Egg", "Object-EggBugEgg", 242 + offset),
+    "Jellyfish": FillerItemData("Jellyfish", "Object-JellyFish", 243 + offset),
+    "Mushroom": FillerItemData("Mushroom", "Object-Mushroom", 244 + offset),
+    "Slime Mold": FillerItemData("Slime Mold", "Object-SlimeMold", 245 + offset),
+    "Fire Egg": FillerItemData("Fire Egg", "Object-FireEgg", 246 + offset, ["MSC"]),
+    "Glow Weed": FillerItemData("Glow Weed", "Object-GlowWeed", 247 + offset, ["MSC"]),
+    "Seed": FillerItemData("Seed", "Object-Seed", 248 + offset, ["MSC"]),
+    "Gooieduck": FillerItemData("Gooieduck", "Object-GooieDuck", 249 + offset, ["MSC"]),
+    "Dandelion Peach": FillerItemData("Dandelion Peach", "Object-DandelionPeach", 250 + offset, ["MSC"]),
 
     #################################################################
     # FILLER - OTHER
-    "Bubble Weed": FillerItemData("Bubble Weed", 270 + offset),
-    "Batnip": FillerItemData("Batnip", 271 + offset),
-    "Lantern": FillerItemData("Lantern", 272 + offset),
-    "Karma Flower": FillerItemData("Karma Flower", 273 + offset),
-    "Vulture Mask": FillerItemData("Vulture Mask", 274 + offset),
-    "Joke Rifle": FillerItemData("Joke Rifle", 275 + offset, ["MSC"]),
+    "Bubble Weed": FillerItemData("Bubble Weed", "Object-BubbleGrass", 270 + offset),
+    "Batnip": FillerItemData("Batnip", "Object-FlyLure", 271 + offset),
+    "Lantern": FillerItemData("Lantern", "Object-Lantern", 272 + offset),
+    "Karma Flower": FillerItemData("Karma Flower", "Object-KarmaFlower", 273 + offset),
+    "Vulture Mask": FillerItemData("Vulture Mask", "Object-VulutreMask", 274 + offset),
+    "Joke Rifle": FillerItemData("Joke Rifle", "Object-JokeRifle", 275 + offset, ["MSC"]),
 
     #################################################################
     # FILLER - NON-CREATURE TRAPS
-    "Stun trap": TrapItemData("Stun trap", 300 + offset),
-    "Zoomies trap": TrapItemData("Zoomies trap", 301 + offset),
-    "Timer trap": TrapItemData("Timer trap", 302 + offset),
-    "Flood trap": TrapItemData("Flood trap", 303 + offset),
-    "Rain trap": TrapItemData("Rain trap", 304 + offset),
-    "Gravity trap": TrapItemData("Gravity trap", 305 + offset),
-    "Fog trap": TrapItemData("Fog trap", 306 + offset),
-    "Killsquad trap": TrapItemData("Killsquad trap", 307 + offset),
-    "Alarm trap": TrapItemData("Alarm trap", 308 + offset),
+    "Stun trap": TrapItemData("Stun trap", "Trap-Stun", 300 + offset),
+    "Zoomies trap": TrapItemData("Zoomies trap", "Trap-Zoomies", 301 + offset),
+    "Timer trap": TrapItemData("Timer trap", "Trap-Timer", 302 + offset),
+    "Flood trap": TrapItemData("Flood trap", "Trap-Flood", 303 + offset),
+    "Rain trap": TrapItemData("Rain trap", "Trap-Rain", 304 + offset),
+    "Gravity trap": TrapItemData("Gravity trap", "Trap-Gravity", 305 + offset),
+    "Fog trap": TrapItemData("Fog trap", "Trap-Fog", 306 + offset),
+    "Killsquad trap": TrapItemData("Killsquad trap", "Trap-KillSquad", 307 + offset),
+    "Alarm trap": TrapItemData("Alarm trap", "Trap-Alarm", 308 + offset),
 
     #################################################################
     # FILLER - CREATURE TRAPS
-    "Red Lizard trap": TrapItemData("Red Lizard trap", 330 + offset),
-    "Red Centipede trap": TrapItemData("Red Centipede trap", 331 + offset),
-    "Spitter Spider trap": TrapItemData("Spitter Spider trap", 332 + offset),
-    "Brother Long Legs trap": TrapItemData("Brother Long Legs trap", 333 + offset),
-    "Daddy Long Legs trap": TrapItemData("Daddy Long Legs trap", 334 + offset),
+    "Red Lizard trap": TrapItemData("Red Lizard trap", "Trap-RedLizard", 330 + offset),
+    "Red Centipede trap": TrapItemData("Red Centipede trap", "Trap-RedCentipede", 331 + offset),
+    "Spitter Spider trap": TrapItemData("Spitter Spider trap", "Trap-SpitteSpider", 332 + offset),
+    "Brother Long Legs trap": TrapItemData("Brother Long Legs trap", "Trap-BrotherLongLegs", 333 + offset),
+    "Daddy Long Legs trap": TrapItemData("Daddy Long Legs trap", "Trap-DaddylongLegs", 334 + offset),
 }
 
 #################################################################

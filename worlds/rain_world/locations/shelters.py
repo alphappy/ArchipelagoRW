@@ -18,7 +18,7 @@ broken_shelters = {
 
 class Shelter(RoomLocation):
     def __init__(self, room: str, offset: int):
-        super().__init__(f"Shelter - {room}", [], offset, room)
+        super().__init__(f"Shelter - {room}", f"Shelter-{room}", [], offset, room)
         self.gamestates = GameStateFlag(0)
 
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:

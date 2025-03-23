@@ -6,7 +6,7 @@ from ..options import RainWorldOptions
 
 class Echo(RoomLocation):
     def __init__(self, ghost: str, offset: int, room: str, free: bool = False):
-        super().__init__("Echo", [f"Echo-{ghost}"], offset, room)
+        super().__init__("Echo", f"Echo-{ghost}", [], offset, room)
         self.free = free
         
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:

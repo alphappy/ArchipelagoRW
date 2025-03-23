@@ -197,10 +197,10 @@ class RainWorldWorld(World):
                 pprint(self.item_name_groups, f)
             with open(f'{output_directory}/location_hints.txt', 'w') as f:
                 pprint(self.location_name_groups, f)
-        if False:
+        if True:
             import json
-            with open(f'{output_directory}/location_hints.json', 'w') as f:
-                json.dump({k: list(v)[0] for k, v in self.location_name_groups.items() if len(v) == 1}, f)
+            with open(f'{output_directory}/client_map.json', 'w') as f:
+                json.dump({"locations": locations.classes.location_client_map, "items": items.item_client_names}, f)
 
     def interpret_slot_data(self, slot_data: dict[str, Any]) -> None:
         """Universal Tracker support - synchronize UT internal multiworld with actual slot data."""

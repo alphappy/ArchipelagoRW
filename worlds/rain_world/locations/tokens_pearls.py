@@ -20,7 +20,7 @@ name_format = {
 
 class TokenOrPearl(RoomLocation):
     def __init__(self, name: str, kind: str, r: str, offset: int, old_name: str):
-        super().__init__(name_format[kind].format(name), [old_name], offset, r)
+        super().__init__(name_format[kind].format(name), old_name, [], offset, r)
         self.generation_flag = GameStateFlag(0)
         self.room = r
         self.kind = kind

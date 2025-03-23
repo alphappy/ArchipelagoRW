@@ -202,7 +202,7 @@ locations: dict[str, LocationData] = {
     **{
         f"Wanderer-{i}": LocationData(
             f"The Wanderer - {i} pip{'s' if i > 1 else ''}",
-            [f"Wanderer-{i}"], 5049 + i, "PPwS Passages", wanderer_pip_factory(i)
+            f"Wanderer-{i}", [], 5049 + i, "PPwS Passages", wanderer_pip_factory(i)
         ) for i in range(1, 15)
     }
 }

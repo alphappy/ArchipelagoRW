@@ -6,12 +6,12 @@ from ..conditions.classes import Simple, Condition, ConditionBlank
 class RoomLocationSimpleAccess(RoomLocation):
     def __init__(self, description: str, alt_names: list[str] | None, offset: int | None, room: str,
                  access_condition: Condition = ConditionBlank):
-        super().__init__(description, alt_names, offset, room)
+        super().__init__(description, alt_names[0], alt_names[1:], offset, room)
         self.access_condition = access_condition
 
 
 locations = {
-    "Eat_Neuron": AbstractLocation("Eat a Neuron Fly", ["Eat_Neuron"], 4900, "Events", Simple("SSOracleSwarmer")),
+    "Eat_Neuron": AbstractLocation("Eat a Neuron Fly", "Eat_Neuron", [], 4900, "Events", Simple("SSOracleSwarmer")),
     "Gift_Neuron": RoomLocationSimpleAccess(
         "Give a Neuron Fly to Looks to the Moon", ["Gift_Neuron"], 4901, "SL_AI", Simple(["Access-SL", "Access-SS"])),
     "Meet_FP": RoomLocationSimpleAccess("Meet Five Pebbles", ["Meet_FP"], 4902, "SS_AI", Simple("The Mark")),

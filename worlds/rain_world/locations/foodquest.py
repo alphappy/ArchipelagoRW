@@ -15,7 +15,7 @@ class FoodQuestPip(AbstractLocation):
         names = self.names(self.items)
         if proper_name is not None:
             names.insert(0, f"Food Quest - {proper_name}")
-        super().__init__(names[0], names[1:], _offset, "Food Quest")
+        super().__init__(names[0], names[-1], names[1:-1], _offset, "Food Quest")
         _offset += 1
         self.gamestates = GameStateFlag(gamestates)
         self.expanded = False

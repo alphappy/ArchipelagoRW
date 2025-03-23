@@ -10,19 +10,15 @@ from ..game_data.general import region_code_to_name
 
 location_map: dict[str, int] = {}
 location_hints: dict[str, set[str]] = {}
+location_client_map: dict[str, str] = {}
 
 
 class LocationData:
-    def __init__(self, full_name: str, alt_names: list[str] | None, offset: Optional[int], region: str = "Menu",
-                 access_condition: Condition = ConditionBlank):
-        """
-        Represents a location of any type.
-        :param full_name:
-        :param alt_names:
-        :param offset:
-        :param region:
-        """
+    def __init__(self, full_name: str, client_name: str, alt_names: list[str] | None, offset: Optional[int],
+                 region: str = "Menu",access_condition: Condition = ConditionBlank):
+        """Represents a location of any type."""
         self.full_name = full_name
+        self.client_name = client_name
         self.alt_names = alt_names or []
         self.id = None
         self.region = region
@@ -31,8 +27,9 @@ class LocationData:
         if offset is not None:
             self.id = offset + FIRST_ID
             location_map[full_name] = self.id
-            for alt_name in self.alt_names:
+            for alt_name in self.alt_names + [client_name]:
                 location_hints.setdefault(alt_name, set()).update({full_name})
+            location_client_map[client_name] = self.full_name
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         if self.pre_generate(player, multiworld, options):
@@ -51,11 +48,14 @@ class LocationData:
 
 
 class RoomLocation(LocationData):
-    def __init__(self, description: str, alt_names: list[str] | None, offset: Optional[int], room: str):
+    def __init__(self, description: str, client_name: str, alt_names: list[str] | None, offset: Optional[int],
+                 room: str):
         """
         Represents a location that exists in a specific room.
         """
-        super().__init__(f'{region_code_to_name[room.split("_")[0]]} - {description}', alt_names, offset)
+        full_with_code = f'{room.split("_")[0]} - {description}'
+        super().__init__(f'{region_code_to_name[room.split("_")[0]]} - {description}',
+                         client_name, alt_names + [full_with_code], offset)
         self.room = room
 
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
@@ -64,16 +64,16 @@ class RoomLocation(LocationData):
 
 
 class AbstractLocation(LocationData):
-    def __init__(self, name: str, alt_names: list[str], offset: int, region: str,
+    def __init__(self, name: str, client_name: str, alt_names: list[str], offset: int, region: str,
                  access_condition: Condition = ConditionBlank):
-        super().__init__(name, alt_names, offset, region, access_condition)
+        super().__init__(name, client_name, alt_names, offset, region, access_condition)
 
 
 class Passage(AbstractLocation):
     def __init__(self, name: str, region: str, offset: int,
                  access_condition: Condition = ConditionBlank,
                  access_condition_generator:  Optional[Callable[[RainWorldOptions], Condition]] = None):
-        super().__init__(f"Passage - {self.proper_name(name)}", [f"Passage-{name}"], offset, region, access_condition)
+        super().__init__(f"Passage - {self.proper_name(name)}", f"Passage-{name}", [], offset, region, access_condition)
         self.acc_gen = access_condition_generator
 
     @staticmethod
