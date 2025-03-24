@@ -18,3 +18,6 @@ def apply_hardcoded_exceptions(data: dict):
     # These require a jetfish jump or similar (and in the LM version they're entirely behind a wall).
     del data["MSC"]["LM"]["LM_E02"]["objects"]["Hazer"]
     del data["MSC"]["SL"]["SL_E02"]["objects"]["Hazer"]
+
+    # This token is ridiculous to get as Spearmaster.
+    data["MSC"]["LM"]["LM_LEGENTRANCE"]["shinies"]["LM"]["filter"].update({"Spear"})
