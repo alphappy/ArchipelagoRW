@@ -65,9 +65,10 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
 
             case "VS":
                 # Not in logic to go through Sump Tunnel as Artificer.
-                sump = {"VS_B15", "VS_A11", "VS_B14", "VS_A12", "VS_A15", "VS_B18", "VS_D05", "VS_C08", "VS_E01",
-                        "VS_B05", "VS_D02", "VS_S02", "GATE_SL_VS[VS]"}
-                filt = {"VS_C10", "VS_C12", "VS_C11", "VS_E02", "VS_B06", "BS_S03", "VS_H01", "GATE_SB_VS[VS]"}
+                sump = {"VS_A09", "VS_A10", "VS_B13", "VS_S06", "VS_B15", "VS_A11", "VS_B14", "VS_A12", "VS_A15",
+                        "VS_B18", "VS_D05", "VS_C08", "VS_E01", "VS_B05", "VS_D02", "VS_S02", "GATE_SL_VS[VS]"}
+                filt = {"VS_C10", "VS_C12", "VS_C11", "VS_E02", "VS_B06", "BS_S03", "VS_H01", "GATE_SB_VS[VS]",
+                        "VS_S03"}
                 ret += [
                     PhysicalRegion("Pipeyard", "VS", rooms.difference(sump.union(filt))),
                     PhysicalRegion("Sump Tunnel", "VS^", sump),
