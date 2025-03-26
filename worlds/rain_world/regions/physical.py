@@ -41,8 +41,11 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                 ravine = {"SB_A10", "SB_F03", "SB_TOPSIDE", "SB_S09", "GATE_LF_SB[SB]"}
                 filt = {"SB_C05", "SB_C06", "SB_S03", "SB_S04", "SB_D04", "SB_F02", "SB_I01", "SB_E07", "SB_C10",
                         "SB_B04", "SB_S10", "SB_G04", "GATE_SB_VS[SB]", "SB_F01", "SB_J03", "GATE_DS_SB[SB]", "SB_S02"}
+                depths = {"SB_E05", "SB_A14", "SB_D02", "SB_E03", "SB_A07", "SB_A02", "SB_J04", "SB_A08", "SB_B03",
+                          "SB_D05", "SB_A06", "SB_A05", "SB_D03", "SB_D07", "SB_D01", "SB_C08", "SB_E01", "SB_E06",
+                          "SB_C09", "SB_L01"}
                 ret += [
-                    PhysicalRegion("Subterranean", "SB", rooms.difference(ravine.union(filt))),
+                    PhysicalRegion("Subterranean", "SB", rooms.difference(ravine.union(filt).union(depths))),
                     PhysicalRegion("Subterranean ravine", "SB^", ravine),
                     ConnectionData("Subterranean ravine", "Subterranean", "Down the ravine"),
                     ConnectionData("Subterranean", "Subterranean ravine", "Up the ravine",
@@ -52,6 +55,9 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     ConnectionData("Subterranean", "Filtration System", "Enter Filtration System",
                                    Simple(["The Glow", "Option-Glow"], 1)),
                     ConnectionData("Filtration System", "Subterranean", "Exit Filtration System"),
+
+                    PhysicalRegion("Subterranean Depths", "SB^3", depths),
+                    ConnectionData("Filtration System", "Subterranean Depths", "Enter Depths")
                 ]
 
             case "SS":
