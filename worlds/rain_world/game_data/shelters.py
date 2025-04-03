@@ -61,7 +61,7 @@ ingame_capitalization = {
 
 def get_starts(options: RainWorldOptions) -> list[str]:
     code, name = options.random_starting_region.code, options.random_starting_region.name
-    scug, scug_name = options.starting_scug, options.which_gamestate.scug_name
+    scug, scug_name = options.starting_scug, options.which_campaign.scug_name
 
     if code == "!!!":
         if scug == "Spear":

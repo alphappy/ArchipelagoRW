@@ -2,6 +2,7 @@ __all__ = ["RainWorldWorld", "RainWorldWebWorld"]
 
 from typing import Mapping, Any
 
+from Options import OptionError
 from worlds.AutoWorld import World, WebWorld
 from BaseClasses import Tutorial, LocationProgressType
 from .game_data.shelters import get_starts, ingame_capitalization
@@ -56,6 +57,9 @@ class RainWorldWorld(World):
 
     def generate_early(self) -> None:
         # This is the earliest that the options are available.  Player YAML failures should be tripped here.
+
+        if (gamestate_error := self.options.check_gamestate_validity()) is not None:
+            raise OptionError(f"Invalid YAML for {self.player_name}: {gamestate_error}")
 
         #################################################################
         # STARTING REGION
@@ -163,7 +167,10 @@ class RainWorldWorld(World):
     def fill_slot_data(self) -> Mapping[str, Any]:
         d = self.options.as_dict(
             # Plugin needs to know...
-            "which_gamestate",  # ...which slugcat to enforce, and warn if MSC state is wrong.
+            "which_game_version",  # ...which game version should be used.
+            "is_msc_enabled",  # ...whether MSC should be enabled.
+            "is_watcher_enabled",  # ...whether The Watcher should be enabled.
+            "which_campaign",  # ...which campaign should be selected.
             "passage_progress_without_survivor",  # ...if this setting doesn't match Remix.
             "death_link",  # ...whether to listen for death link notifications.
             "checks_foodquest",  # ...whether the food quest should be available.
@@ -174,6 +181,8 @@ class RainWorldWorld(World):
             "which_gate_behavior",  # ...how gates should behave.
             "difficulty_echo_low_karma",  # ...how low-karma echo appearances should be handled.
         )
+        # backwards compatibility
+        d["which_gamestate"] = self.options.which_gamestate_integer
         # ...which room to spawn in.  Empty string for default.
         d["starting_room"] = ("" if self.start_is_default
                               else ingame_capitalization.get(self.starting_room, self.starting_room))

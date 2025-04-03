@@ -2,27 +2,27 @@ from . import RainWorldTestBase
 
 
 class TestMonkVanilla(RainWorldTestBase):
-    options = {"which_gamestate": "monk_vanilla"}
+    options = {"which_campaign": "monk"}
 
 
 class TestSurvivorVanilla(RainWorldTestBase):
-    options = {"which_gamestate": "survivor_vanilla"}
+    options = {"which_campaign": "survivor"}
 
 
 class TestHunterVanilla(RainWorldTestBase):
-    options = {"which_gamestate": "hunter_vanilla"}
+    options = {"which_campaign": "hunter"}
 
 
 class TestMonkMSC(RainWorldTestBase):
-    options = {"which_gamestate": "monk_msc"}
+    options = {"which_campaign": "monk", "is_msc_enabled": True}
 
 
 class TestSurvivorMSC(RainWorldTestBase):
-    options = {"which_gamestate": "survivor_msc"}
+    options = {"which_campaign": "survivor", "is_msc_enabled": True}
 
 
 class TestHunterMSC(RainWorldTestBase):
-    options = {"which_gamestate": "hunter_msc"}
+    options = {"which_campaign": "hunter", "is_msc_enabled": True}
 
     def test_check_generation(self):
         locs = [loc.name for loc in self.multiworld.get_locations(self.player)]
@@ -35,19 +35,19 @@ class TestHunterMSC(RainWorldTestBase):
 
 
 class TestHunterMSCShadedCitadel(RainWorldTestBase):
-    options = {"which_gamestate": "hunter_msc", "random_starting_shelter": "shaded_citadel",
-               "difficulty_echo_low_karma": 1}
+    options = {"which_campaign": "hunter", "random_starting_shelter": "shaded_citadel",
+               "difficulty_echo_low_karma": 1, "is_msc_enabled": True}
 
     def test_karma_flower_absence(self):
         self.assertAccessDependency(["Shaded Citadel - Echo"], [["Karma", "Karma", "Karma", "Karma"]], True)
 
 
 class TestGourmand(RainWorldTestBase):
-    options = {"which_gamestate": "gourmand"}
+    options = {"which_campaign": "gourmand", "is_msc_enabled": True}
 
 
 class TestArtificer(RainWorldTestBase):
-    options = {"which_gamestate": "artificer"}
+    options = {"which_campaign": "artificer", "is_msc_enabled": True}
 
     def test_check_generation(self):
         locs = [loc.name for loc in self.multiworld.get_locations(self.player)]
@@ -55,7 +55,7 @@ class TestArtificer(RainWorldTestBase):
 
 
 class TestRivulet(RainWorldTestBase):
-    options = {"which_gamestate": "rivulet"}
+    options = {"which_campaign": "rivulet", "is_msc_enabled": True}
 
     def test_86(self):
         # https://github.com/alphappy/ArchipelagoRW/issues/86
@@ -64,7 +64,7 @@ class TestRivulet(RainWorldTestBase):
 
 
 class TestSpear(RainWorldTestBase):
-    options = {"which_gamestate": "spearmaster"}
+    options = {"which_campaign": "spearmaster", "is_msc_enabled": True}
 
     def test_check_generation(self):
         locs = [loc.name for loc in self.multiworld.get_locations(self.player)]
@@ -76,32 +76,32 @@ class TestSpear(RainWorldTestBase):
 
 
 class TestSaint(RainWorldTestBase):
-    options = {"which_gamestate": "saint"}
+    options = {"which_campaign": "saint", "is_msc_enabled": True}
 
 
 class TestSofanthiel(RainWorldTestBase):
-    options = {"which_gamestate": "sofanthiel"}
+    options = {"which_campaign": "sofanthiel", "is_msc_enabled": True}
 
 
 class TestMonkMSCAlternate(RainWorldTestBase):
-    options = {"which_gamestate": "monk_msc", "which_victory_condition": "alternate"}
+    options = {"which_campaign": "monk", "which_victory_condition": "alternate", "is_msc_enabled": True}
 
 
 class TestSurvivorMSCAlternate(RainWorldTestBase):
-    options = {"which_gamestate": "survivor_msc", "which_victory_condition": "alternate"}
+    options = {"which_campaign": "survivor", "which_victory_condition": "alternate", "is_msc_enabled": True}
 
 
 class TestGourmandAlternate(RainWorldTestBase):
-    options = {"which_gamestate": "gourmand", "which_victory_condition": "alternate"}
+    options = {"which_campaign": "gourmand", "which_victory_condition": "alternate", "is_msc_enabled": True}
 
 
 class TestArtificerAlternate(RainWorldTestBase):
-    options = {"which_gamestate": "artificer", "which_victory_condition": "alternate"}
+    options = {"which_campaign": "artificer", "which_victory_condition": "alternate", "is_msc_enabled": True}
 
 
 class TestRivuletAlternate(RainWorldTestBase):
-    options = {"which_gamestate": "rivulet", "which_victory_condition": "alternate"}
+    options = {"which_campaign": "rivulet", "which_victory_condition": "alternate", "is_msc_enabled": True}
 
 
 class TestSpearAlternate(RainWorldTestBase):
-    options = {"which_gamestate": "spearmaster", "which_victory_condition": "alternate"}
+    options = {"which_campaign": "spearmaster", "which_victory_condition": "alternate", "is_msc_enabled": True}

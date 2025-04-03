@@ -25,23 +25,54 @@ class PassageProgressWithoutSurvivor(Choice):
     default = 2
 
 
-class WhichGamestate(Choice):
-    """Which campaign and worldstate you will start in.
-    If an MSC state is selected, MSC **must** be enabled in-game."""
-    display_name = "Game state"
-    option_monk_vanilla = 0
-    option_survivor_vanilla = 1
-    option_hunter_vanilla = 2
+class IsMSCEnabled(Toggle):
+    """Whether More Slugcats Expansion (Downpour) is enabled, regardless of which campaign you plan to play."""
+    display_name = "More Slugcats Expansion?"
+    default = 0
 
-    option_monk_msc = 10
-    option_survivor_msc = 11
-    option_hunter_msc = 12
-    option_gourmand = 13
-    option_artificer = 14
-    option_rivulet = 15
-    option_spearmaster = 16
-    option_saint = 17
-    option_sofanthiel = 18
+
+class IsWatcherEnabled(Toggle):
+    """Whether The Watcher is enabled, regardless of which campaign you plan to play."""
+    display_name = "The Watcher?"
+    default = 0
+
+
+class WhichGameVersion(Choice):
+    """Which Rain World version you are using."""
+    display_name = "Game version"
+    option_1_9_15b = 1091503
+    alias_1_9_15_3 = 1091503
+    alias_1_9_15 = 1091503
+    alias_1_9 = 1091503
+    option_1_10_1 = 1100100
+    alias_1_10 = 1100100
+    default = 1100100
+
+    displaying = {
+        1091503: ("v1.9.15b / v1.9.15.3", "1.9.15.3"),
+        1100100: ("v1.10.0 - v1.10.1", "1.10.1"),
+    }
+
+    @property
+    def string(self) -> str: return self.displaying[self.value][1]
+
+    @classmethod
+    def get_option_name(cls, value: int) -> str: return cls.displaying[value][0]
+
+
+class WhichCampaign(Choice):
+    """Which slugcat's campaign you will play."""
+    display_name = "Campaign"
+    option_monk = 0
+    option_survivor = 1
+    option_hunter = 2
+    option_gourmand = 3
+    option_artificer = 4
+    option_rivulet = 5
+    option_spearmaster = 6
+    option_saint = 7
+    option_sofanthiel = 8
+    option_watcher = 9
 
     default = 1
 
@@ -49,22 +80,14 @@ class WhichGamestate(Choice):
         0: ("Yellow", "Monk"),
         1: ("White", "Survivor"),
         2: ("Red", "Hunter"),
-        10: ("Yellow", "Monk"),
-        11: ("White", "Survivor"),
-        12: ("Red", "Hunter"),
-        13: ("Gourmand", "Gourmand"),
-        14: ("Artificer", "Artificer"),
-        15: ("Rivulet", "Rivulet"),
-        16: ("Spear", "Spearmaster"),
-        17: ("Saint", "Saint"),
-        18: ("Inv", "Sofanthiel"),
+        3: ("Gourmand", "Gourmand"),
+        4: ("Artificer", "Artificer"),
+        5: ("Rivulet", "Rivulet"),
+        6: ("Spear", "Spearmaster"),
+        7: ("Saint", "Saint"),
+        8: ("Inv", "Sofanthiel"),
+        9: ("Watcher", "Watcher"),
     }
-
-    @classmethod
-    def get_option_name(cls, value: int) -> str:
-        if value < 19:
-            return f"{cls.ids_names[value][1]}{' (Vanilla)' if value < 10 else (' (MSC)' if value < 13 else '')}"
-        return f"{value}"
 
     @property
     def scug_id(self) -> str:
@@ -73,10 +96,6 @@ class WhichGamestate(Choice):
     @property
     def scug_name(self) -> str:
         return self.__class__.ids_names[self.value][1]
-
-    @property
-    def dlcstate(self) -> str:
-        return "MSC" if self.value > 9 else "Vanilla"
 
 
 class WhichVictoryCondition(Choice):
@@ -641,15 +660,18 @@ class WtTrapAlarm(WtGeneric):
 class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     #################################################################
     # IMPORTANT SETTINGS
+    which_game_version: WhichGameVersion
+    is_msc_enabled: IsMSCEnabled
+    is_watcher_enabled: IsWatcherEnabled
+    which_campaign: WhichCampaign
     passage_progress_without_survivor: PassageProgressWithoutSurvivor
-    which_gamestate: WhichGamestate
     which_victory_condition: WhichVictoryCondition
     which_gate_behavior: WhichGateBehavior
     random_starting_region: RandomStartingRegion
 
     group_important = [
-        PassageProgressWithoutSurvivor, WhichGamestate, WhichVictoryCondition, WhichGateBehavior, DeathLink,
-        RandomStartingRegion
+        WhichGameVersion, IsMSCEnabled, IsWatcherEnabled, WhichCampaign,
+        PassageProgressWithoutSurvivor, WhichVictoryCondition, WhichGateBehavior, DeathLink, RandomStartingRegion
     ]
 
     #################################################################
@@ -756,13 +778,41 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     ]
 
     @property
-    def msc_enabled(self) -> bool: return self.which_gamestate.value > 9
+    def msc_enabled(self) -> bool: return self.is_msc_enabled == 1
 
     @property
-    def dlcstate(self) -> str: return self.which_gamestate.dlcstate
+    def dlcstate(self) -> str:
+        if self.is_msc_enabled:
+            if self.is_watcher_enabled:
+                return "MSC_Watcher"
+            else:
+                return "MSC"
+        elif self.is_watcher_enabled:
+            return "Watcher"
+        else:
+            return "Vanilla"
 
     @property
-    def starting_scug(self) -> str: return self.which_gamestate.scug_id
+    def starting_scug(self) -> str: return self.which_campaign.scug_id
+
+    @property
+    def which_gamestate_integer(self) -> int:
+        return int(self.which_campaign) + (10 if self.is_msc_enabled else 0) + (100 if self.is_watcher_enabled else 0)
+
+    def check_gamestate_validity(self) -> str | None:
+        if self.is_watcher_enabled and self.which_game_version < 1100000:
+            return "The Watcher cannot be enabled with a game version before 1.10.0."
+        if self.is_msc_enabled and self.which_game_version < 1090000:
+            return "More Slugcats Expansion cannot be enabled with a game version before 1.9.0."
+
+        if not self.is_watcher_enabled and self.starting_scug == "Watcher":
+            return "Watcher's campaign cannot be selected without The Watcher enabled."
+        if not self.is_msc_enabled and self.starting_scug in [
+            "Gourmand", "Artificer", "Rivulet", "Spear", "Saint", "Inv"]:
+            return (f"{self.which_campaign.scug_name}'s campaign cannot be selected "
+                    f"without More Slugcats Expansion enabled.")
+
+        return None
 
     @property
     def submerged_should_populate(self) -> bool: return self.checks_submerged + (self.starting_scug == "Rivulet") > 1
