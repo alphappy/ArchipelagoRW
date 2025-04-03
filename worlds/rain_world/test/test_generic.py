@@ -27,6 +27,7 @@ class TestHunterMSC(RainWorldTestBase):
     def test_check_generation(self):
         locs = [loc.name for loc in self.multiworld.get_locations(self.player)]
         self.assertNotIn("Garbage Wastes - Pearl - MS", locs)
+        self.assertNotIn("Garbage Wastes - Arena Token - Scavenger", locs)
         self.assertNotIn("Sky Islands - Broadcast - Chatlog_SI0", locs)
         self.assertNotIn("Sky Islands - Broadcast - Chatlog_SI1", locs)
         self.assertIn("Sky Islands - Arena Token - KingVulture", locs)

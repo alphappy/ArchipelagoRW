@@ -33,6 +33,9 @@ class TokenOrPearl(RoomLocation):
                 return False
         if not options.satisfies(self.generation_flag):
             return False
+        # HARDCODE: This specific token doesn't appear for Hunter - not sure why.
+        if options.starting_scug == "Red" and self.client_name == "Token-Scavenger-GW":
+            return False
         self.region = room_to_region[self.room]
         return super().pre_generate(player, multiworld, options)
 
