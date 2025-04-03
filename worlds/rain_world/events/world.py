@@ -4,7 +4,6 @@ from ..options import RainWorldOptions
 
 from ..conditions.classes import Simple
 from ..game_data.general import scugs_all, scugs_vanilla
-from ..game_data import static_data
 from ..regions.classes import RainWorldRegion, room_to_region
 from ..utils import (placed_object_effective_whitelist as POEW, creature_den_effective_whitelist as CDEW,
                      room_effective_whitelist as REW)
@@ -17,7 +16,7 @@ def generate_events_for_one_gamestate(options: RainWorldOptions,
 
     for region in regions:
         if (rooms := region.rooms) and len(rooms) > 0:
-            if region_data := static_data[options.dlcstate].get(region.code[:2], {}):
+            if region_data := options.data_block.get(region.code[:2], {}):
                 events: dict[str, GameStateFlag] = {}
 
                 for room in rooms:

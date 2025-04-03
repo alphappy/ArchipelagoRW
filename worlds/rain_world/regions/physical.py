@@ -7,7 +7,7 @@ from .classes import ConnectionData, PhysicalRegion
 
 def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData]:
     ret = []
-    for region, region_data in static_data["MSC"].items():
+    for region, region_data in static_data["1.10.1"]["MSC_Watcher"].items():
         rooms = set(region_data.keys())
 
         match region:

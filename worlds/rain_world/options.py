@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from Options import PerGameCommonOptions, Toggle, Range, OptionGroup, Choice, ProgressionBalancing, Accessibility, \
     Visibility, DeathLinkMixin, DeathLink
 from .conditions import GameStateFlag
+from .game_data import static_data
 
 
 #################################################################
@@ -72,7 +73,18 @@ class WhichCampaign(Choice):
     option_spearmaster = 6
     option_saint = 7
     option_sofanthiel = 8
-    option_watcher = 9
+    # option_watcher = 9
+
+    alias_yellow = 0
+    alias_white = 1
+    alias_red = 2
+    alais_gourm = 3
+    alias_arti = 4
+    alias_riv = 5
+    alias_spear = 6
+    alias_sait = 7
+    alias_inv = 8
+    alias_enot = 8
 
     default = 1
 
@@ -813,6 +825,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
                     f"without More Slugcats Expansion enabled.")
 
         return None
+
+    @property
+    def data_block(self) -> dict: return static_data[self.which_game_version.string][self.dlcstate]
 
     @property
     def submerged_should_populate(self) -> bool: return self.checks_submerged + (self.starting_scug == "Rivulet") > 1

@@ -108,7 +108,6 @@ class RainWorldWorld(World):
 
     def create_items(self) -> None:
         added_items = 0
-        dlcstate = "MSC" if self.options.msc_enabled else "Vanilla"
 
         pool = {
             "Karma": 8 + self.options.extra_karma_cap_increases.value,

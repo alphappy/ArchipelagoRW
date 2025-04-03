@@ -31,17 +31,18 @@ def initialize() -> dict[str, Shelter]:
     offset = 5350
     ret: dict[str, Shelter] = {}
 
-    for dlcstate, dlcstate_data in static_data.items():
-        for region, region_data in dlcstate_data.items():
-            for room, room_data in region_data.items():
-                if "SHELTER" in room_data.get("tags", set()):
-                    if (shelter_data := ret.get(room, None)) is None:
-                        shelter_data = Shelter(room, offset)
-                        ret[room] = shelter_data
-                        offset += 1
+    for gameversion, gameversion_data in static_data.items():
+        for dlcstate, dlcstate_data in gameversion_data.items():
+            for region, region_data in dlcstate_data.items():
+                for room, room_data in region_data.items():
+                    if "SHELTER" in room_data.get("tags", set()):
+                        if (shelter_data := ret.get(room, None)) is None:
+                            shelter_data = Shelter(room, offset)
+                            ret[room] = shelter_data
+                            offset += 1
 
-                    whitelist = REW(room_data, scugs_all if dlcstate == "MSC" else scugs_vanilla)
-                    shelter_data.gamestates[dlcstate, whitelist] = True
+                        whitelist = REW(room_data, scugs_all if dlcstate == "MSC" else scugs_vanilla)
+                        shelter_data.gamestates[dlcstate, whitelist] = True
 
     for shelter_name, broken_for in broken_shelters.items():
         ret[shelter_name].gamestates["Vanilla", broken_for.intersection(scugs_vanilla)] = False

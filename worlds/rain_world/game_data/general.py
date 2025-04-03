@@ -31,6 +31,34 @@ region_code_to_name = {
     "MS^": "Bitter Aerie",
     "OE^": "Outer Expanse filtration",
     "LM^": "Eastern Precipice",
+
+    'WARA': 'Shattered Terrace',
+    'WARB': 'Salination',
+    'WARC': 'Fetid Glen',
+    'WARD': 'Cold Storage',
+    'WARE': 'Heat Ducts',
+    'WARF': 'Aether Ridge',
+    'WARG': 'The Surface',
+    'WAUA': 'Ancient Urban',
+    'WBLA': 'Badlands',
+    'WDSR': 'Decaying Tunnels',
+    'WGWR': 'Infested Wastes',
+    'WHIR': 'Corrupted Factories',
+    'WORA': 'Outer Rim',
+    'WPTA': 'Signal Spires',
+    'WRFA': 'Coral Caves',
+    'WRFB': 'Turbulent Pump',
+    'WRRA': 'Rusted Wrecks',
+    'WRSA': 'Daemon',
+    'WSKA': 'Torrential Railways',
+    'WSKB': 'Sunlit Port',
+    'WSKC': 'Stormy Coast',
+    'WSKD': 'Shrouded Coast',
+    'WSSR': 'Unfortunate Evolution',
+    'WSUR': 'Crumbling Fringes',
+    'WTDA': 'Torrid Desert',
+    'WTDB': 'Desolate Tract',
+    'WVWA': 'Verdant Waterways',
 }
 
 regions_all = list(region_code_to_name.keys())
@@ -75,6 +103,8 @@ accessible_gates = {
         "Inv": gates_vanilla.union(gates_msc_red),
     }
 }
+accessible_gates["MSC_Watcher"] = accessible_gates["MSC"]
+accessible_gates["Watcher"] = accessible_gates["Vanilla"]
 
 story_regions_msc = story_regions_vanilla.union({"VS"})
 story_regions_gourmand = story_regions_msc.union({"OE"})

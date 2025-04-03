@@ -18,7 +18,7 @@ class GameStateFlag:
         if type(vanilla) == int:
             self.value = vanilla
         else:
-            self.value = 0 if whitelist else 0b111_111_111_111
+            self.value = 0 if whitelist else 0b11_111111111_111
             if vanilla is not None:
                 self.set_scugs("Vanilla", vanilla, whitelist)
             if msc is not None:
@@ -28,10 +28,18 @@ class GameStateFlag:
         "Vanilla": {s: 1 << i for i, s in enumerate(('Yellow', 'White', 'Red'))},
         "MSC": {s: 1 << (i+3) for i, s in enumerate(
             ('Yellow', 'White', 'Red', 'Gourmand', 'Artificer', 'Rivulet', 'Spear', 'Saint', 'Inv')
-        )}
+        )},
+        "MSC_Watcher": {s: 1 << (i+3) for i, s in enumerate(
+            ('Yellow', 'White', 'Red', 'Gourmand', 'Artificer', 'Rivulet', 'Spear', 'Saint', 'Inv', 'Watcher')
+        )},
+        "Watcher": {'Yellow': 1, 'White': 2, 'Red': 4, 'Watcher': 1 << 13}
     }
 
-    _dlcstate_masks: dict[str, int] = {"Vanilla": 0b111, "MSC": 0b111_111_111_000}
+    _dlcstate_masks: dict[str, int] = {
+        "Vanilla": 0b111,
+        "MSC": 0b01_111_111_111_000,
+        "Watcher": 0b10_000000000_111
+    }
 
     @staticmethod
     def _get_mask(dlcstate: str, scug: str | None = None) -> int:

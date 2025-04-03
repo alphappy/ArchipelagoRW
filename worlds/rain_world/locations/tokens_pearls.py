@@ -65,7 +65,7 @@ def initialize() -> dict[str, TokenOrPearl]:
     offset = 0
     ret = {}
 
-    for scuglist, (dlcstate, dlcstate_data) in zip((scugs_vanilla, scugs_all), static_data.items()):
+    for scuglist, (dlcstate, dlcstate_data) in zip((scugs_vanilla, scugs_all), static_data["1.10.1"].items()):
         for region, region_data in dlcstate_data.items():
             for room, room_data in region_data.items():
                 if "shinies" in room_data.keys():
