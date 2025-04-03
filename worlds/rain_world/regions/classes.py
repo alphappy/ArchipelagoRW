@@ -95,6 +95,9 @@ class PhysicalRegion(RegionData):
             case "SS":
                 return scug not in ("Saint", "Rivulet")
             case "SL":
+                # HARDCODE
+                if self.name == "Shoreline above puppet":
+                    return (scug == "Rivulet" and options.submerged_should_populate) or scug == "Saint"
                 return scug not in ("Artificer", "Spear")
 
         if not options.msc_enabled:

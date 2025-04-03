@@ -33,7 +33,7 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     PhysicalRegion("Submerged Superstructure", "MS", rooms.difference(bitter)),
                     PhysicalRegion("Bitter Aerie", "MS^", bitter),
                     ConnectionData("Submerged Superstructure", "Bitter Aerie", "Rarefaction cell deposit cutscene",
-                                   Simple(["Scug-Rivulet", "Object-EnergyCell"])),
+                                   Simple(["Scug-Rivulet", "Rarefaction Cell"])),
                 ]
 
             case "SB":
@@ -114,17 +114,24 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                 if options.starting_scug != "Rivulet":
                     ret += [ConnectionData("Eastern Underhang + The Leg", "Western Underhang", "UW_A05 to UW_C02")]
 
-            # case "GW":
-            #     if "EDGE" in name or name in ("A24", "A25", "S09"):
-            #         return "Garbage Wastes (upper east)"
-            #     elif name in ("C04", "B08", "S04"):
-            #         return "Garbage Wastes (lower east)"
-            #     return "Garbage Wastes"
-            #
-            # case "SL":
-            #     if name in ("EDGE02", "EDGE01", "BRIDGE01", "BRIDGEEND", "S13"):
-            #         return "Shoreline (broken precipice)"
-            #     return "Shoreline"
+            case "SL":
+                broken_precipice = {"GATE_UW_SL[SL]", "SL_BRIDGEEND", "SL_S13", "SL_EDGE01", "SL_EDGE02", "SL_BRIDGE01"}
+                above_moon = {
+                    "SL_MOONTOP", "SL_ROOF04", "SL_ACCSHAFT", "SL_ROOF03", "GATE_SL_MS[SL]", "SL_TEMPLE", "SL_STOP",
+                    "SL_ROOF01", "SL_WALL06"
+                }
+                remainder = rooms.difference(broken_precipice).difference(above_moon)
+
+                ret += [
+                    PhysicalRegion("Shoreline", "SL", remainder),
+                    PhysicalRegion("Broken Precipice", "SL^", broken_precipice),
+                    PhysicalRegion("Shoreline above puppet", "SL^2", above_moon),
+
+                    ConnectionData("Shoreline above puppet", "Shoreline", "Enter puppet room")
+                ]
+
+                if options.starting_scug == "Saint":
+                    ret += [ConnectionData("Shoreline", "Shoreline above puppet", "Exit top of puppet room")]
 
             case _:
                 ret.append(PhysicalRegion(region_code_to_name[region], region, rooms))

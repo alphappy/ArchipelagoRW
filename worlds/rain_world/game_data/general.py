@@ -57,7 +57,7 @@ gates_vanilla = {
     "SH_SL", "SB_SL", "SH_UW", "CC_UW", "SS_UW", "UW_SS", "SI_CC", "SI_LF", "LF_SB"
 }
 
-gates_msc_red = gates_vanilla.union({"HI_VS", "GW_SH", "DS_CC", "SL_VS", "SL_MS", "MS_SL", "SI_VS", "SB_VS"})
+gates_msc_red = gates_vanilla.union({"HI_VS", "GW_SH", "DS_CC", "SL_VS", "SL_MS", "MS_SL", "SI_VS", "SB_VS", "UW_SL"})
 
 accessible_gates = {
     "Vanilla": {scug: gates_vanilla for scug in ["Yellow", "White", "Red"]},
