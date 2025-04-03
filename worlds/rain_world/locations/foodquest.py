@@ -39,6 +39,9 @@ class FoodQuestPip(AbstractLocation):
             return False
         if self.expanded and not options.checks_foodquest_expanded:
             return False
+        # HARDCODE: Sofanthiel's only glow weed is in MS.  The interactive map is wrong.
+        if options.starting_scug == "Inv" and options.checks_submerged < 2 and self.items[0] == "GlowWeed":
+            return False
         return super().pre_generate(player, multiworld, options)
 
 

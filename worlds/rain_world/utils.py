@@ -46,12 +46,14 @@ def flounder2(weights: dict[T, float], count: int) -> list[T]:
 
 
 def placed_object_effective_whitelist(room_data: dict, shiny_data: dict, scuglist: set[str]) -> set[str]:
+    maybe_whitelist = shiny_data.get("whitelist", set())
+
     return (
         room_data.get("whitelist", set(scuglist))
         .difference(room_data.get("blacklist", set()))
-        .difference(shiny_data.get("filter", set()))
+        .difference(shiny_data.get("filter", scuglist.difference(maybe_whitelist)))
         .difference(room_data.get("alted", set()))
-        .union(shiny_data.get("whitelist", set()))
+        .union(maybe_whitelist)
         .difference({""})
     )
 

@@ -24,11 +24,11 @@ def generate_events_for_one_gamestate(options: RainWorldOptions,
                     if room_data := region_data.get(room, {}):
                         for obj_type, obj_data in room_data.get("objects", {}).items():
                             flag = events.setdefault(obj_type, GameStateFlag(0))
-                            flag[options.dlcstate, POEW(room_data, obj_data, scugs)] = True
+                            flag[options.dlcstate, POEW(room_data, obj_data, set(scugs))] = True
 
                         for crit_type, crit_data in room_data.get("spawners", {}).get("normal", {}).items():
                             flag = events.setdefault(crit_type, GameStateFlag(0))
-                            flag[options.dlcstate, CDEW(room_data, crit_data, scugs)] = True
+                            flag[options.dlcstate, CDEW(room_data, crit_data, set(scugs))] = True
 
                         if room_tags := room_data.get("tags", []):
                             for tagname, eventname in (
@@ -36,7 +36,7 @@ def generate_events_for_one_gamestate(options: RainWorldOptions,
                             ):
                                 if tagname in room_tags:
                                     flag = events.setdefault(eventname, GameStateFlag(0))
-                                    flag[options.dlcstate, REW(room_data, scugs)] = True
+                                    flag[options.dlcstate, REW(room_data, set(scugs))] = True
 
                 for event_type, event_flag in events.items():
                     if options.satisfies(event_flag):
