@@ -809,7 +809,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     @property
     def which_gamestate_integer(self) -> int:
-        return int(self.which_campaign) + (10 if self.is_msc_enabled else 0) + (100 if self.is_watcher_enabled else 0)
+        return int(self.which_campaign) + (10 if self.is_msc_enabled else 0)
 
     def check_gamestate_validity(self) -> str | None:
         if self.is_watcher_enabled and self.which_game_version < 1100000:
