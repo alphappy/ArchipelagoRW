@@ -1,7 +1,8 @@
 # Remix settings for Rain World Randomizer
 
 Rain World Remix must be enabled regardless of your settings.
-If your `Game state` is not a vanilla state, then More Slugcats Expansion must be enabled.
+More Slugcats Expansion (Downpour) and The Watcher must each be enabled
+if the respective player YAML setting is enabled, and must be disabled if not.
 
 The following Remix settings are **recommended**, but not required:
 - Rain World Remix

@@ -35,28 +35,40 @@ You can get a player YAML file by doing one of the following:
   and adjust settings as desired.
   5. Click `Export Options` at the bottom.
 
-## 3. Enable the Randomizer mod
+## 3. Install the Randomizer mod
 
-Install an Archipelago release of the Randomizer mod by doing the following:
-1. Download a release [from GitHub](https://github.com/SaltiestSyrup/RWRandomizer/releases).
-   If you downloaded a specific release of the APWorld,
-   that release page should point to the version(s) of the Randomizer mod that it is designed for.
-2. Unzip it and place the `rwrandomizer` folder in your mods folder
-   (`Rain World\RainWorld_Data\StreamingAssets\mods`).
-3. (Re)start Rain World.
-4. Go to the Remix menu and enable `Check Randomizer` and `Rain World Remix`.
-5. Restart Rain World.
-6. Go to the Remix menu and verify that the mod has loaded correctly
+Install the Randomizer mod by doing one of the following:
+- Download [from the Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3323349183).
+- Download from GitHub.
+  1. Download a release [from GitHub](https://github.com/SaltiestSyrup/RWRandomizer/releases).
+     If you downloaded a specific release of the APWorld,
+     that release page should point to the version(s) of the Randomizer mod that it is designed for.
+  2. Unzip it and place the `rwrandomizer` folder in your mods folder
+     (`Rain World\RainWorld_Data\StreamingAssets\mods`).
+
+## 4. Configure mods and game
+
+Configure Rain World and your mods by doing the following:
+1. Make sure that your version of Rain World matches your player YAML settings.
+   1. You can find the current version you are using on the Options menu in-game,
+      or by opening `Rain World\RainWorld_Data\StreamingAssets\GameVersion.txt`.
+   2. To change game version on Steam:
+      1. Right-click on Rain World in the library and select *Properties...*
+      2. Open the *Betas* tab.
+      3. Select the desired version in the `Beta Participation` dropdown.
+         Select `None` to use the most recent version.
+2. (Re)start Rain World.
+3. Go to the Remix menu and enable the following:
+   1. Rain World Remix
+   2. Check Randomizer
+   3. More Slugcats Expansion, if and only if you enabled it in your player YAML settings
+   4. The Watcher, if and only if you enabled it in your player YAML settings
+4. Restart Rain World.
+5. Go to the Remix menu and verify that the mod has loaded correctly
 by clicking on the `Check Randomizer` to open its Remix interface.
 You should an `Archipelago` tab in this interface.
 
-## 4. Set Remix and mod settings
-
-There are a few mod settings that must be adjusted according to your player YAML file:
-- _Rain World Remix_ must be enabled.
-- If the `Game state` setting is not a `Vanilla` state, then _More Slugcats Expansion_ must be enabled.
-
-For recommended Remix settings, see [the Remix subpage](/tutorial/Rain%20World/remix/en).
+For recommended Rain World Remix settings, see [the Remix subpage](/tutorial/Rain%20World/remix/en).
 
 ## 5. Join an Archipelago room
 
@@ -73,9 +85,11 @@ or if the host address or port number changes.
 
 ## 6. Start the game
 
-Once you are connected to a room, the matching Story campaign may be started.
-A fresh campaign should be used - not necessarily a fresh save file,
-but use alternate save files or backups to avoid deleting other campaign data.
+Once you are connected to a room, the matching Story campaign may be started
+as long as your version and enabled content mods match your player YAML settings.
+A fresh campaign should be used when connecting to a new room.
+It does not necessarily need to be an entirely fresh save file,
+though using a seprate save file (or backup) is encoruaged.
 
 For details on everything that gets randomized,
 see the [game description page](/games/Rain%20World/info/en).

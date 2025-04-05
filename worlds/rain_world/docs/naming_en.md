@@ -72,7 +72,7 @@ Here are some examples of complete check names:
 - `Shaded Citadel - Arena Token - BigSpider`
 - `Subterranean - Level Token - filter`
 - `Garbage Wastes - Safari Token`
-- `Sky Islands - Broadcast - SI_chatlog3`
+- `Sky Islands - Broadcast - Chatlog_SI3`
 - `Waterfront Facility - Pearl - SL_chimney`
 - `The Exterior - Echo`
 - `Undergrowth - Shelter - UG_S03`
