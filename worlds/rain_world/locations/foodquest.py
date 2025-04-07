@@ -35,7 +35,7 @@ class FoodQuestPip(AbstractLocation):
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         if not options.satisfies(self.gamestates):
             return False
-        if self.items[0] in extreme_threat_creatures and options.difficulty_extreme_threats + (options.starting_scug not in ["Gourmand", "Artificer", "Spear", "Inv"]) < 2:
+        if self.items[0] in extreme_threat_creatures and not options.difficulty_extreme_threats:
             return False
         if self.expanded and not options.checks_foodquest_expanded:
             return False

@@ -342,15 +342,12 @@ class DifficultyGlow(Toggle):
     default = True
 
 
-class DifficultyExtremeThreats(Choice):
-    """Whether eliminating an extreme threat could be required.
-    This includes Red Lizards for The Dragon Slayer and Red Centipedes or Aquapedes for the food quest.
-    "Capable slugcats" include Gourmand, Artificer, Spearmaster and Sofanthiel."""
+class DifficultyExtremeThreats(Toggle):
+    """Whether eliminating an extreme threat could be required (such as for a food quest check).
+    This includes Daddy Long Legs (and variants), Red Lizards, King Vultures, Miros Vultures,
+    Miros Birds, Aquapedes, and Red Centipedes."""
     display_name = "Extreme threats"
-    option_all_slugcats = 2
-    option_capable_slugcats = 1
-    option_off = 0
-    default = 1
+    default = 0
 
 
 class DifficultySubmerged(Toggle):
