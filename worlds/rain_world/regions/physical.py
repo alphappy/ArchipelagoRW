@@ -91,9 +91,10 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
             case "UW":
                 west_underhang = {"UW_C04", "UW_D05", "UW_A04", "UW_C02", "UW_C02RIV", "UW_D05RIV", "UW_A04RIV"}
                 east_underhang_and_leg = {
-                    "UW_A05", "UW_C01", "UW_A03", "UW_A10", "UW_J01", "UW_I01", "UW_C08", "GATE_UW_SS", "UW_A11",
-                    "UW_S02", "UW_A06", "UW_E04", "UW_A08", "UW_C03", "UW_D04", "UW_B01", "UW_D03", "UW_E03", "UW_A09",
-                    "UW_S06", "UW_C06", "UW_E02", "UW_A07", "UW_D02", "UW_S05", "GATE_SH_UW"
+                    "UW_A05", "UW_C01", "UW_A03", "UW_A10", "UW_J01", "UW_I01", "UW_C08", "GATE_UW_SS[UW]", "UW_A11",
+                    "UW_S02", "UW_A06", "UW_E04", "UW_A08", "UW_C03", "UW_D04", "UW_B01", "UW_S07", "UW_PREGATE",
+                    "GATE_UW_SL[UW]", "UW_D03", "UW_E03", "UW_A09", "UW_S06", "UW_C06", "UW_E02", "UW_A07", "UW_D02",
+                    "UW_S05", "GATE_SH_UW[UW]",
                     "UW_A05RIV", "UW_C01RIV", "UW_A11RIV", "UW_J02RIV", "UW_A06RIV", "UW_E04RIV"
                 }
                 remainder = rooms.difference(west_underhang).difference(east_underhang_and_leg)
