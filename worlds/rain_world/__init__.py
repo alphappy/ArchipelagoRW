@@ -5,7 +5,7 @@ from typing import Mapping, Any
 from Options import OptionError
 from worlds.AutoWorld import World, WebWorld
 from BaseClasses import Tutorial, LocationProgressType
-from .game_data.shelters import get_starts, ingame_capitalization
+from .game_data.shelters import get_starts, ingame_capitalization, get_default_start
 from .options import RainWorldOptions
 from .conditions.classes import Simple
 from .game_data.general import region_code_to_name, story_regions, passage_proper_names
@@ -99,6 +99,8 @@ class RainWorldWorld(World):
 
     def connect_starting_region(self, room: str):
         if not self.start_is_connected:
+            if room == "":
+                room = get_default_start(self.options.starting_scug)
             start = self.multiworld.get_region(room_to_region[room], self.player)
             self.multiworld.get_region('Menu', self.player).connect(start, "Starting region")
             self.start_is_connected = True

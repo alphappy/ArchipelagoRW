@@ -59,27 +59,31 @@ ingame_capitalization = {
 }
 
 
+def get_default_start(scug: str) -> str:
+    if scug == "Spear":
+        return "GATE_OE_SU[SU]"
+    elif scug == "Gourmand":
+        return "SH_GOR02"
+    elif scug == "Artificer":
+        return "GW_A24"
+    elif scug == "Rivulet":
+        return "DS_RIVSTART"
+    elif scug == "Saint":
+        return "SI_SAINTINTRO"
+    elif scug == "Red":
+        return "LF_E04"
+    elif scug == "Inv":
+        return "SH_E03"
+    else:
+        return "SU_C04"
+
+
 def get_starts(options: RainWorldOptions) -> list[str]:
     code, name = options.random_starting_region.code, options.random_starting_region.name
     scug, scug_name = options.starting_scug, options.which_campaign.scug_name
 
     if code == "!!!":
-        if scug == "Spear":
-            return ["GATE_OE_SU[SU]"]
-        elif scug == "Gourmand":
-            return ["SH_GOR02"]
-        elif scug == "Artificer":
-            return ["GW_A24"]
-        elif scug == "Rivulet":
-            return ["DS_RIVSTART"]
-        elif scug == "Saint":
-            return ["SI_SAINTINTRO"]
-        elif scug == "Red":
-            return ["LF_E04"]
-        elif scug == "Inv":
-            return ["SH_E03"]
-        else:
-            return ["SU_C04"]
+        return [get_default_start(scug)]
 
     code = alternate_regions.get(code, {}).get(scug, code)
 
