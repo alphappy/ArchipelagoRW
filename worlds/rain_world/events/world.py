@@ -12,7 +12,7 @@ from ..utils import (placed_object_effective_whitelist as POEW, creature_den_eff
 def generate_events_for_one_gamestate(options: RainWorldOptions,
                                       regions: list[RainWorldRegion]) -> list[StaticWorldEvent]:
     ret = []
-    scugs = scugs_all if options.dlcstate == "MSC" else scugs_vanilla
+    scugs = scugs_all if options.is_msc_enabled else scugs_vanilla
 
     for region in regions:
         if (rooms := region.rooms) and len(rooms) > 0:

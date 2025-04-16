@@ -79,6 +79,8 @@ story_regions = {
         "Inv": story_regions_vanilla.union({"VS"}),
     }
 }
+story_regions["Watcher"] = story_regions["Vanilla"]
+story_regions["MSC_Watcher"] = story_regions["MSC"]
 
 gates_vanilla = {
     "SU_HI", "SU_DS", "LF_SU", "HI_GW", "HI_CC", "HI_SH", "DS_GW", "GW_SL", "DS_SB",
