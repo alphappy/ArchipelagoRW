@@ -85,7 +85,7 @@ class PhysicalRegion(RegionData):
         match rcode:
             case "SU":
                 # HARDCODE
-                if self.name == "Outskirts filtration":
+                if self.name != "Outskirts":
                     return options.msc_enabled and scug in ("Yellow", "White", "Gourmand")
                 return True
             case "HI" | "GW" | "CC" | "SI" | "LF" | "SB":

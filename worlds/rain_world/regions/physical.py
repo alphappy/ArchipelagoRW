@@ -13,15 +13,32 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
         match region:
             case "SU":
                 # Not in logic (except for Saint) to go backwards through the tutorial/filtration area.
-                filt = {r for r in rooms if "CAVE" in r or "PUMP" in r
-                        or r in ("SU_VR1", "SU_PS1", "SU_C04", "SU_A41", "SU_A42", "SU_A43", "SU_A44", "SU_S05",
-                                 "SU_INTRO01", "SU_X02", "SU_S10", "GATE_OE_SU[SU]")}
+                tutorial = {"SU_C04", "SU_A41", "SU_A42", "SU_A44", "SU_A43"}
+                spearspawn = {"GATE_OE_SU[SU]", "SU_INTRO01"}
+                filt = {r for r in rooms if "CAVE" in r or "PUMP" in r or r in ("SU_VR1", "SU_PS1", "SU_S05", "SU_PMPSTATION01")}
+                remainder = rooms.difference(filt).difference(tutorial).difference(spearspawn)
+
                 ret += [
-                    PhysicalRegion("Outskirts", "SU", rooms.difference(filt)),
+                    PhysicalRegion("Outskirts", "SU", remainder),
                     PhysicalRegion("Outskirts filtration", "SU^", filt),
-                    ConnectionData("Outskirts filtration", "Outskirts", "Exit Survivor tutorial area"),
-                    ConnectionData("Outskirts", "Outskirts filtration", "Return to Survivor tutorial area",
-                                   Simple("Scug-Saint")),
+                    PhysicalRegion("Survivor tutorial area", "SU^2", tutorial),
+                    PhysicalRegion("Spearmaster spawn area", "SU^3", spearspawn),
+
+                    ConnectionData("Survivor tutorial area", "Outskirts", "Eastward from SU_A43 to SU_A22"),
+                    ConnectionData("Outskirts", "Survivor tutorial area", "Westward from SU_A22 to SU_A43", Simple("Scug-Saint")),
+                    ConnectionData("Outskirts filtration", "Survivor tutorial area", "Eastward from SU_CAVE01 to SU_C04"),
+                    ConnectionData("Survivor tutorial area", "Outskirts filtration", "Westward from SU_C04 to SU_CAVE01", Simple("Scug-Saint")),
+                    ConnectionData("Spearmaster spawn area", "Outskirts filtration", "Upward from SU_INTRO01 to SU_PMPSTATION01"),
+                ]
+
+            case "OE":
+                filt = {r for r in rooms if "PUMP" in r or r in ("OE_S03", "GATE_OE_SU[OE]")}
+
+                ret += [
+                    PhysicalRegion("Outer Expanse", "OE", rooms.difference(filt)),
+                    PhysicalRegion("Outer Expanse filtration", "OE^", filt),
+
+                    ConnectionData("Outer Expanse", "Outer Expanse filtration", "Fall from OE_CAVE03 to OE_PUMP01")
                 ]
 
             case "MS":
