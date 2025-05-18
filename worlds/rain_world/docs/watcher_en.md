@@ -51,7 +51,7 @@ See [the naming subpage](/tutorial/Rain%20World/naming/en) for naming of checks 
 | Fixed warp point   | `REGION - Warp Point - ROOM_NAME`                                                                               |
 | Fixed Karma Flower | `REGION - Karma Flower - ROOM_NAME`                                                                             |
 | Throne warp point  | `Outer Rim - Throne Warp - LOC` where `LOC` is either `upper west`, `lower west`, `upper east`, or `lower east` |
-| Spinning Top       | `Spinning Top - NTH encounter` where `NTH` is `first`, `second`, etc.                                           |
+| Spinning Top       | `REGION - Spinning Top`                                                                                         |
 | The Prince         | `Outer Rim - The Prince - NTH encounter` where `NTH` is `first`, `second`, etc.                                 |
 
 ### Fixed warp points
