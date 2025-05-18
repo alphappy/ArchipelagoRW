@@ -10,13 +10,14 @@ INITIAL_OFFSET = 6000
 
 
 class FixedWarpPoint(RoomLocation):
-    def __init__(self, data: PortalData, offset: int):
+    def __init__(self, data: PortalData, offset: int, spinning_top: bool = False):
         room = data.source_room.upper()
-        super().__init__(f"Fixed Warp - {room}", "", [], offset, room)
+        super().__init__(f"{'Spinning Top' if spinning_top else 'Fixed Warp'} - {room}", "", [], offset, room)
 
 
 def initialize() -> list[FixedWarpPoint]:
-    return [FixedWarpPoint(data, INITIAL_OFFSET + i) for i, data in enumerate(portals)]
+    return ([FixedWarpPoint(data, INITIAL_OFFSET + i) for i, data in enumerate(portals)] +
+            [FixedWarpPoint(data, INITIAL_OFFSET + 100 + i, True) for i, data in enumerate(portals) if data.spinning_top])
 
 
 locations = initialize()
