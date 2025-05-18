@@ -27,7 +27,10 @@ locations = {
 
 
 def generate(options: RainWorldOptions) -> list[LocationData]:
-    keys = ["Eat_Neuron"]
+    keys = []
+
+    if options.starting_scug != "Watcher":
+        keys.append("Eat_Neuron")
 
     if options.starting_scug in ["Yellow", "White", "Gourmand"]:
         keys.append("Gift_Neuron")

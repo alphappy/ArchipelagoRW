@@ -43,6 +43,8 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
     match options.starting_scug:
         case "Saint":
             keys = ["CC", "LF", "SI", "SB", "UG", "CL", "SL", "MS"]
+        case "Watcher":
+            return []
         case _:
             # The LC echo does appear for every scug, but the region doesn't populate except for Artificer.
             keys = ["CC", "LF", "SI", "SB", "SH", "UW", "LC"]

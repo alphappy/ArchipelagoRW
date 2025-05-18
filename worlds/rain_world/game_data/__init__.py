@@ -1,10 +1,12 @@
 """
 Static data summarizing the contents of the game world, such as the locations of creature spawns.
 """
+__all__ = ['portals', 'static_data', 'general']
 
 from . import general
 from .data import data as static_data
 from .hardcode import apply_hardcoded_exceptions
+from .watcher import portals
 
 apply_hardcoded_exceptions(static_data)
 

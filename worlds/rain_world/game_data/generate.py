@@ -59,6 +59,8 @@ data = {}
 #               "filter": set of filtered scugs
 #               "whitelist": set of whitelisted scugs
 
+special_data = {}
+
 
 ########################################################################################################################
 scugs_vanilla = {"Yellow", "White", "Red"}
@@ -183,8 +185,8 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
 
     ####################################################################################################################
         # Get the set of all normal settings files to be subtracted from all settings files to get alt settings files.
-        normal_settings_files = set(glob(path.join(ROOT_FP, gameversion, dlcstate, 'world', '??-rooms', '??_*_settings.txt')))
-        all_settings_files = set(glob(path.join(ROOT_FP, gameversion, dlcstate, 'world', '??-rooms', '??_*_settings*')))
+        normal_settings_files = set(glob(path.join(ROOT_FP, gameversion, dlcstate, 'world', '*-rooms', '*_*_settings.txt')))
+        all_settings_files = set(glob(path.join(ROOT_FP, gameversion, dlcstate, 'world', '*-rooms', '*_*_settings*')))
 
         # We need to process the normal settings files first, then update with alt settings files.
         for fp in list(normal_settings_files) + list(all_settings_files - normal_settings_files):
@@ -233,6 +235,26 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                     except KeyError:
                         r_data['objects'][obj['type']] = {"filter": blacklist or set()}
 
+                elif obj['type'] == "WarpPoint":
+                    # oneway, onewayentrance, ripple; see Watcher.WarpPoint.WarpPointData.FromString
+                    flags = sum((custom_data[b] == "true") << i for i, b in enumerate((24, 26, 25)))
+                    sdc(special_data, {"to": custom_data[5], "flags": flags}, "Watcher", "WarpPoints", room)
+
+                elif obj['type'] == "SpinningTopSpot":
+                    sdc(special_data, {
+                        "to": custom_data[4],
+                        "id": int(custom_data[7]) if len(custom_data) > 7 else 0,
+                        "ripple": custom_data[8] == "true" if len(custom_data) > 8 else False,
+                    }, "Watcher", "SpinningTops", room)
+
+                elif obj['type'] == "DynamicWarpTarget":
+                    c = custom_data + [None] * 5
+                    # deadend, badwarp
+                    flags = sum((c[b] == "true") << i for i, b in enumerate((3, 4)))
+                    sdc(special_data, {
+                        "req": float(custom_data[2]), "flags": flags
+                    }, "Watcher", "DynamicWarpTargets", room)
+
     ####################################################################################################################
             if scug is None:
                 # This is normal settings file; just directly update the room data.
@@ -263,6 +285,8 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                 del region_data[key]
 
 ########################################################################################################################
+
+data["SPECIAL"] = special_data
 
 with open("data.py", "w") as f:
     f.write(f'data = {data}\n')

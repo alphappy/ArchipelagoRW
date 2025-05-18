@@ -74,6 +74,8 @@ def get_default_start(scug: str) -> str:
         return "LF_E04"
     elif scug == "Inv":
         return "SH_E03"
+    elif scug == "Watcher":
+        return "WSKB_C17"
     else:
         return "SU_C04"
 
@@ -86,6 +88,11 @@ def get_starts(options: RainWorldOptions) -> list[str]:
         return [get_default_start(scug)]
 
     code = alternate_regions.get(code, {}).get(scug, code)
+
+    if scug == "Watcher":
+        if code != "WSKB":
+            raise ValueError("Watcher must start in Sunlit Port (for now)")
+        return ["WSKB_C17"]  # TODO
 
     if code is None:
         raise ValueError(f"Invalid YAML: {scug_name} cannot start in {name}")

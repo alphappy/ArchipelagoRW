@@ -13,7 +13,7 @@ from .events import get_events
 from .regions.classes import room_to_region
 from .regions.gates import gates
 from .utils import normalize, flounder2
-from .items import RainWorldItem, all_items, RainWorldItemData
+from .items import RainWorldItem, all_items, RainWorldItemData, portal_keys
 from . import regions, locations, options
 from .game_data.general import prioritizable_passages, passages_all, passages_vanilla, accessible_gates
 
@@ -111,23 +111,30 @@ class RainWorldWorld(World):
     def create_items(self) -> None:
         added_items = 0
 
-        pool = {
-            "Karma": 8 + self.options.extra_karma_cap_increases.value,
-            **{gate.names[0]: 1 for gate in (
-                [g for g in gates if g.is_accessible(self.options)]
-                if self.options.which_gate_behavior != "karma_only" else []
-            )},
-            **{f"Passage Token - {passage_proper_names[p]}": 1
-               for p in (passages_all if self.options.msc_enabled else passages_vanilla)},
-            "The Mark": 1,
-            "The Glow": 1,
-            "Slag Key": 1 if self.options.starting_scug == "Red" else 0,
-            "Citizen ID Drone": 1 if self.options.starting_scug == "Artificer" else 0,
-            "Longer cycles": 1 if self.options.starting_scug == "Rivulet" else 0,
-            "Rarefaction Cell": 1 if self.options.starting_scug == "Rivulet" else 0,
-            "Moon's Final Message": 1 if self.options.starting_scug == "Spear" else 0,
-            "Spearmaster's Pearl": 1 if self.options.starting_scug == "Spear" else 0,
-        }
+        if self.options.starting_scug != "Watcher":
+            pool = {
+                "Karma": 8 + self.options.extra_karma_cap_increases.value,
+                **{gate.names[0]: 1 for gate in (
+                    [g for g in gates if g.is_accessible(self.options)]
+                    if self.options.which_gate_behavior != "karma_only" else []
+                )},
+                **{f"Passage Token - {passage_proper_names[p]}": 1
+                   for p in (passages_all if self.options.msc_enabled else passages_vanilla)},
+                "The Mark": 1,
+                "The Glow": 1,
+                "Slag Key": 1 if self.options.starting_scug == "Red" else 0,
+                "Citizen ID Drone": 1 if self.options.starting_scug == "Artificer" else 0,
+                "Longer cycles": 1 if self.options.starting_scug == "Rivulet" else 0,
+                "Rarefaction Cell": 1 if self.options.starting_scug == "Rivulet" else 0,
+                "Moon's Final Message": 1 if self.options.starting_scug == "Spear" else 0,
+                "Spearmaster's Pearl": 1 if self.options.starting_scug == "Spear" else 0,
+            }
+        else:
+            pool = {
+                "Ripple": 12 + self.options.extra_karma_cap_increases.value,
+                **{k: 1 for k in portal_keys.keys()},
+            }
+
         precollect = {
             "MSC": 1 if self.options.msc_enabled else 0,
             f"Scug-{self.options.starting_scug}": 1,

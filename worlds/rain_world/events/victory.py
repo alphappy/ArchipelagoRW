@@ -6,6 +6,9 @@ from ..conditions.classes import Simple
 def generate(options: RainWorldOptions) -> list[EventData]:
     alt = options.which_victory_condition == "alternate"
 
+    if options.starting_scug == "Watcher":
+        return [VictoryEvent("Peace", "Ancient Urban")]
+
     # Saint's victory condition is different regardless of setting.
     if options.starting_scug == "Saint":
         return [VictoryEvent("Ascension", "Rubicon", Simple("Karma", 8))]

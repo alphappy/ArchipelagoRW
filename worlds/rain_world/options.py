@@ -73,7 +73,7 @@ class WhichCampaign(Choice):
     option_spearmaster = 6
     option_saint = 7
     option_sofanthiel = 8
-    # option_watcher = 9
+    option_watcher = 9
 
     alias_yellow = 0
     alias_white = 1
@@ -155,6 +155,26 @@ class WhichGateBehavior(Choice):
 
 
 #################################################################
+# WATCHER SETTINGS
+class RippleWarpBehavior(Choice):
+    """How ripple warps behave.  See the settings documentation for explanation."""
+    display_name = "Ripple warp behavior"
+    option_unaltered = 0
+    option_no_ripple_warps = 1
+    default = 0
+
+
+class DynamicWarpBehavior(Choice):
+    """How dynamic warps behave.  See the settings documentation for explanation."""
+    display_name = "Dynamic warp behavior"
+    option_ignored = 0
+    option_visited = 1
+    option_controlled_pool = 2
+    option_open_world = 3
+    default = 0
+
+
+#################################################################
 # GENERAL SETTINGS
 class RandomStartingRegion(Choice):
     """Where Slugcat will initially spawn.
@@ -178,6 +198,8 @@ class RandomStartingRegion(Choice):
     option_outer_expanse = 22
     option_metropolis = 23
     option_looks_to_the_moon = 24
+
+    option_sunlit_port = 30
 
     alias_undergrowth = 3
     alias_waterfront_facility = 5
@@ -204,6 +226,8 @@ class RandomStartingRegion(Choice):
         22: ("Outer Expanse", "OE"),
         23: ("Metropolis", "LC"),
         24: ("Looks to the Moon", "DM"),
+
+        30: ("Sunlit Port", "WSKB"),
     }
 
     @classmethod

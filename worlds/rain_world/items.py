@@ -3,6 +3,7 @@ from typing import Optional, Dict
 from . import constants, game_data
 from .regions.gates import gates
 from .game_data.general import region_code_to_name, alternate_regions
+from .game_data.watcher import keys as pkeys
 
 item_client_names: dict[str, str] = {}
 
@@ -55,6 +56,7 @@ all_items: Dict[str, RainWorldItemData] = {
     "Spearmaster's Pearl": RainWorldItemData("Spearmaster's Pearl", "Pearlobject-Spearlmasterpearl", offset + 4, ItemClassification.progression),
     "Moon's Final Message": RainWorldItemData("Moon's Final Message", "Rewrite_Spear_Pearl", offset + 5, ItemClassification.progression),
     "Slag Key": RainWorldItemData("Slag Key", "Object-NSHSwarmer", offset + 6, ItemClassification.progression),
+    "Ripple": RainWorldItemData("Ripple", "Ripple", offset + 7, ItemClassification.progression),
 
     #################################################################
     # PASSAGE TOKENS
@@ -82,6 +84,7 @@ all_items: Dict[str, RainWorldItemData] = {
     "Scug-Spear": RainWorldItemData("Scug-Spear", "Scug-Spear", offset + 116, ItemClassification.progression),
     "Scug-Saint": RainWorldItemData("Scug-Saint", "Scug-Saint", offset + 117, ItemClassification.progression),
     "Scug-Inv": RainWorldItemData("Scug-Inv", "Scug-Inv", offset + 118, ItemClassification.progression),
+    "Scug-Watcher": RainWorldItemData("Scug-Watcher", "Scug-Watcher", offset + 119, ItemClassification.progression),
 
     #################################################################
     # OPTIONSTATE
@@ -152,6 +155,17 @@ gate_keys: dict[str, GateKeyItemData] = {
     for i, names in enumerate([g.names for g in gates])
 }
 all_items.update(gate_keys)
+
+#################################################################
+# PORTAL KEYS
+portal_keys: dict[str, RainWorldItemData] = {
+    data.name: RainWorldItemData(
+        data.name, data.name,
+        offset + 600 + i, ItemClassification.progression
+    )
+    for i, data in enumerate(pkeys.values())
+}
+all_items.update(portal_keys)
 
 #################################################################
 item_name_to_id: Dict[str, int] = {k: v.code for k, v in all_items.items()}

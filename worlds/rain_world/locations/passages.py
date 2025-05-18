@@ -159,7 +159,7 @@ def wanderer_regions(scug: str, msc: bool) -> set[str]:
     else:
         return {
             "Gourmand": regions_gourmand, "Artificer": regions_artificer, "Rivulet": regions_rivulet,
-            "Spear": regions_spearmaster, "Saint": regions_saint
+            "Spear": regions_spearmaster, "Saint": regions_saint, "Watcher": set()
         }[scug]
 
 
@@ -211,6 +211,9 @@ locations: dict[str, LocationData] = {
 def generate(options: RainWorldOptions) -> list[LocationData]:
     keys = ["Survivor", "Friend", "Traveller", "Monk", "Saint"]
 
+    if options.starting_scug == "Watcher":
+        return []
+
     if options.starting_scug != "Artificer":
         keys.append("Chieftain")
 
@@ -224,6 +227,7 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
         if options.starting_scug in ["White", "Red", "Gourmand"]:
             keys.append("Mother")
 
-    keys += [f"Wanderer-{i+1}" for i in range(len(wanderer_regions(options.starting_scug, options.msc_enabled)))]
+    if options.starting_scug != "Watcher":
+        keys += [f"Wanderer-{i+1}" for i in range(len(wanderer_regions(options.starting_scug, options.msc_enabled)))]
 
     return [locations[key] for key in keys]

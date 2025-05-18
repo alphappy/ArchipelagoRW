@@ -80,7 +80,12 @@ class PhysicalRegion(RegionData):
         multiworld.regions.append(region)
 
     def _gen(self, options: RainWorldOptions) -> bool:
-        rcode, scug = self.prefix[:2], options.starting_scug
+        rcode, scug = self.prefix.split("^")[0], options.starting_scug
+
+        if scug == "Watcher":
+            if len(rcode) == 4 and rcode[0] == "W":
+                return True
+            return False
 
         match rcode:
             case "SU":

@@ -2,6 +2,9 @@
 
 The meanings and implications of the more nuanced player settings are discussed here.
 
+Settings and details specific to The Watcher are detailed on the
+[the Watcher subpage](/tutorial/Rain%20World/watcher/en).
+
 ### Extra karma cap increases
 How many extra karma cap items are placed into the pool.
 When set to `0`, there are exactly enough karma items to raise max karma to 10,

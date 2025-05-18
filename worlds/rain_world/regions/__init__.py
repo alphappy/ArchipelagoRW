@@ -1,4 +1,4 @@
-from . import physical, classes, abstract, gates
+from . import physical, classes, abstract, gates, portals, warping
 from ..options import RainWorldOptions
 
 
@@ -7,4 +7,6 @@ def generate(options: RainWorldOptions) -> list[classes.RegionData | classes.Con
         *abstract.generate(options),
         *physical.generate(options),
         *gates.generate(options),
+        *portals.generate(options),
+        *warping.generate(options),
     ]

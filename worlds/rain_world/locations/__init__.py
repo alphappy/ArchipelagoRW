@@ -1,4 +1,4 @@
-from . import passages, echoes, foodquest, unique, tokens_pearls, shelters
+from . import passages, echoes, foodquest, unique, tokens_pearls, shelters, portals
 from .classes import LocationData
 from ..options import RainWorldOptions
 
@@ -9,6 +9,7 @@ from ..options import RainWorldOptions
 # Echoes            5070 - 5080
 # Food Quest        5250 -~5301
 # Shelters          5350 -~5550
+# Fixed warps       6000 -~6100
 
 
 def generate(options: RainWorldOptions) -> list[LocationData]:
@@ -18,6 +19,7 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
         *passages.generate(options),
         *echoes.generate(options),
         *shelters.select(options),
+        *portals.select(options),
     ]
 
 
