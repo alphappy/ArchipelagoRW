@@ -164,14 +164,18 @@ class RippleWarpBehavior(Choice):
     default = 0
 
 
-class DynamicWarpBehavior(Choice):
-    """How dynamic warps behave.  See the settings documentation for explanation."""
+class NormalDynamicWarpBehavior(Choice):
+    """How normal dynamic warps behave.  See the settings documentation for explanation."""
     display_name = "Dynamic warp behavior"
     option_ignored = 0
     option_visited = 1
-    option_controlled_pool = 2
+    option_static_pool = 2
     option_open_world = 3
-    default = 0
+    option_unlockable_pool = 4
+    default = 1
+
+    @property
+    def logically_relevant(self) -> bool: return self.value > 1
 
 
 class LogicRottedGeneration(Choice):
@@ -778,8 +782,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     # WATCHER-SPECIFIC SETTINGS
     logic_rotted_generation: LogicRottedGeneration
     logic_ripplespace_min_req: LogicMinRippleTarget
+    normal_dynamic_warp_behavior: NormalDynamicWarpBehavior
 
-    group_watcher = [LogicRottedGeneration, LogicMinRippleTarget]
+    group_watcher = [
+        LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior
+    ]
 
     #################################################################
     # FILLER SETTINGS

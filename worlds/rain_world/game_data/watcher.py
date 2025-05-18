@@ -62,7 +62,12 @@ class PortalKeyData:
         self.source, self.dest, self.spinning_top, self.name = source, dest, spinning_top, name
 
 
-def initialize() -> tuple[list[PortalData], dict[str, PortalKeyData]]:
+class WarpTargetData:
+    def __init__(self, room: str, ripple: float):
+        self.room, self.ripple = room, ripple
+
+
+def initialize() -> tuple[list[PortalData], dict[str, PortalKeyData], list[WarpTargetData]]:
     ret = [
         *[PortalData(k, v, "WarpPoint") for k, v in static_data['SPECIAL']['Watcher']['WarpPoints'].items()],
         *[PortalData(k, v, "SpinningTop") for k, v in static_data['SPECIAL']['Watcher']['SpinningTops'].items()],
@@ -75,7 +80,12 @@ def initialize() -> tuple[list[PortalData], dict[str, PortalKeyData]]:
 
         ret2.setdefault(n, PortalKeyData(s, t, data.spinning_top, data.key_name))
 
-    return ret, ret2
+    ret3 = []
+    for room, warpdata in static_data['SPECIAL']['Watcher']['DynamicWarpTargets'].items():
+        if warpdata['flags'] >> 1 == 0:  # not a bad warp target
+            ret3.append(WarpTargetData(room, warpdata['req']))
+
+    return ret, ret2, ret3
 
 
-portals, keys = initialize()
+portals, keys, targets = initialize()
