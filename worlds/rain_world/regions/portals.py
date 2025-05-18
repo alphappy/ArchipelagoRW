@@ -15,7 +15,9 @@ class PortalConnection(ConnectionData):
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
         self.source, self.dest = room_to_region[self.data.source_room], room_to_region[self.data.target_room]
-        # print(f"Defining connection from {self.source} to {self.dest}")  # DEBUG
+
+        if not options.logic_rotted_generation >= 2 and self.data.source_room[:4] in ["WHIR", "WDSR", "WGWR", "WSUR"]:
+            return
 
         conds = []
         if self.data.should_have_key:

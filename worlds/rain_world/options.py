@@ -174,6 +174,15 @@ class DynamicWarpBehavior(Choice):
     default = 0
 
 
+class LogicRottedGeneration(Choice):
+    """Controls the generation of Crumbling Fringes, Corrupted Factories, Decaying Tunnels, and Infested Wastes."""
+    display_name = "Permarotted accessibility"
+    option_none = 0
+    option_passthrough = 2
+    option_full = 3
+    default = 0
+
+
 #################################################################
 # GENERAL SETTINGS
 class RandomStartingRegion(Choice):
@@ -757,6 +766,12 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     ]
 
     #################################################################
+    # WATCHER-SPECIFIC SETTINGS
+    logic_rotted_generation: LogicRottedGeneration
+
+    group_watcher = [LogicRottedGeneration]
+
+    #################################################################
     # FILLER SETTINGS
     wt_rocks: WtRock
     wt_spears: WtSpear
@@ -892,6 +907,7 @@ option_groups = [
     OptionGroup("Difficulty settings", RainWorldOptions.group_difficulty, True),
     OptionGroup("Check pool settings", RainWorldOptions.group_checkpool, True),
     OptionGroup("Item pool settings", RainWorldOptions.group_itempool, True),
+    OptionGroup("Watcher-specific settings (spoilers)", RainWorldOptions.group_watcher, True),
     OptionGroup("Filler item relative weights", RainWorldOptions.group_filler, True),
     OptionGroup("Trap relative weights", RainWorldOptions.group_traps, True),
 ]

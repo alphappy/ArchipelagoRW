@@ -7,6 +7,10 @@ Any documentation details that are specific to The Watcher are detailed here.
 ## Everything here is preliminary and subject to change!
 
 ## General
+### Terminology
+A few pieces of terminology are used in this documentation for brevity:
+* **BWP region**:  A bad warp pool region - one of Corrupted Factories, Crumbling Fringes, Decaying Tunnels, or Infested Wastes.
+
 ### Start in Watcherspace
 A Watcher world always starts in Watcherspace (that is, not on the Five Pebbles facility grounds).
 Max Ripple starts at 1, as if all three of the first Spinning Tops have already been encountered,
@@ -135,6 +139,20 @@ This has no effect if `which_victory_condition` is `ascension`.
 `spinning_top_keys` controls whether each Spinning Top location requires a key as most warp points do.
 If enabled and the key has not been collected, Spinning Top will not appear and the warp will not be usable.
 If disabled, Spinning Top always appears and the associated warp does not require a key.
+
+### Rotted generation
+`logic_rotted_generation` controls the generation and connectivity of BWP regions.
+It only affects logic and the check pool.
+
+| Value            | BWP regions have checks? | BWP connections might be part of logic? |
+|------------------|--------------------------|-----------------------------------------|
+| `none` (default) | No                       | No                                      |
+| `passthrough`    | No                       | Yes                                     |
+| `full`           | Yes                      | Yes                                     |
+
+If set to `none`, the only way to logically access Outer Rim is through Unfortunate Evolution.
+If set to `passthrough` or `full`, logic may draw the victory path through a BWP region,
+though this requires the Outer Rim to Daemon warp key.
 
 ### Dynamic warp behavior
 There are two settings which affect the behavior of normal dynamic warps (`normal_dynamic_warp_behavior`)

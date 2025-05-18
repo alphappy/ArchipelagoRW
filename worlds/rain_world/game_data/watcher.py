@@ -48,9 +48,11 @@ class PortalData:
     def should_have_key(self) -> bool:
         source_region = self.source_room.upper().split("_")[0]
         target_region = self.target_room.upper().split("_")[0]
-        if any(x == source_region or x == target_region for x in ["WORA", "WAUA", "WSUR", "WHIR", "WGWR", "WDSR"]):
+        if source_region == "WORA":
+            return target_region == "WRSA"
+        elif any(x == source_region or x == target_region for x in ["WORA", "WAUA", "WSUR", "WHIR", "WGWR", "WDSR"]):
             return False
-        if source_region == "WRSA":  # to RSA may have keys, but from RSA may not
+        elif source_region == "WRSA":  # to RSA may have keys, but from RSA may not
             return False
         return True
 
