@@ -2,7 +2,9 @@
 
 Any documentation details that are specific to The Watcher are detailed here.
 
-### This necessarily contains major spoilers!
+## This necessarily contains major spoilers!
+
+## Everything here is preliminary and subject to change!
 
 ## General
 ### Start in Watcherspace
