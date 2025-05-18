@@ -183,6 +183,15 @@ class LogicRottedGeneration(Choice):
     default = 0
 
 
+class LogicMinRippleTarget(Range):
+    """The lowest that your *minimum* Ripple can be before Ripplespace is logically accessible.
+    The default, 5, matches the actual game behavior."""
+    display_name = "Min Ripple target"
+    range_start = 5
+    range_end = 9
+    default = 5
+
+
 #################################################################
 # GENERAL SETTINGS
 class RandomStartingRegion(Choice):
@@ -768,8 +777,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     #################################################################
     # WATCHER-SPECIFIC SETTINGS
     logic_rotted_generation: LogicRottedGeneration
+    logic_ripplespace_min_req: LogicMinRippleTarget
 
-    group_watcher = [LogicRottedGeneration]
+    group_watcher = [LogicRottedGeneration, LogicMinRippleTarget]
 
     #################################################################
     # FILLER SETTINGS

@@ -118,14 +118,15 @@ and spreading sentient rot to all 18 infectable regions (but see `rotted_region_
 With the `alternate` victory condition enabled, meeting Spinning Top in Ancient Urban
 will release all progressive Spinning Top checks immediately.
 
-### Min Ripple target
-`min_ripple_target` controls the number of Ripple items required for ripple warps to be logically accessible.
-The true access requirement for a ripple warp is always having access to ripplespace,
-which just requires 8 Ripple items.
-This is the logical behavior if `min_ripple_target` is set to `5` (its default).
-Setting it to anything higher ensures that more Ripple items are logically required to use a ripple warp,
-reducing difficulty in maintaining the Ripple necessary to enter ripplespace.
-If set to `9`, 12 Ripple items must be in logic so that minimum Ripple may be raised to 9.
+### Ripplesapce minimum Ripple requirement
+`logic_ripplespace_min_req` controls the number of Ripple items required for Ripplespace to be logically accessible.
+The true access requirement for Ripplespace is always having access to Ripplespace,
+which just requires 8 Ripple items (which sets the Ripple range to 5-9).
+This is the logical behavior if `logic_ripplespace_min_req` is set to `5` (its default).
+Setting it to anything higher ensures that more Ripple items are logically required to enter Ripplespace,
+reducing difficulty in maintaining the Ripple necessary to enter Ripplespace.
+If set to `9`, 12 Ripple items must be in logic so that minimum Ripple may be raised to 9
+before entering Ripplespace is required.
 
 This setting may affect logic even if `which_victory_condition` is `alternate`,
 since reaching the Spinning Top in Ancient Urban still releases all other Spinning Top checks.

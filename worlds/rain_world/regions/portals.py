@@ -23,7 +23,7 @@ class PortalConnection(ConnectionData):
         if self.data.should_have_key:
             conds.append(Simple(self.data.key_name))
         if self.data.ripple:
-            conds.append(Simple("Ripple", 8))
+            conds.append(Simple("Ripple", 3 + options.logic_ripplespace_min_req))
         self.condition = AllOf(*conds)
 
         super().make(player, multiworld, options)
