@@ -314,6 +314,12 @@ class ChecksSubmerged(Choice):
     default = 1
 
 
+class ChecksKarmaFlowers(Toggle):
+    """Whether each static karma flower spawn is a check."""
+    display_name = "Karma Flowers"
+    default = False
+
+
 #################################################################
 # DIFFICULTY SETTINGS
 class DifficultyHunter(Range):
@@ -743,10 +749,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     checks_tokens_pearls: ChecksTokensPearls
     checks_sheltersanity: ChecksSheltersanity
     checks_submerged: ChecksSubmerged
+    checks_karma_flowers: ChecksKarmaFlowers
 
     group_checkpool = [
         ChecksBroadcasts, ChecksFoodQuest, ChecksFoodQuestExpanded, PassagePriority, ChecksTokensPearls,
-        ChecksSheltersanity, ChecksSubmerged
+        ChecksSheltersanity, ChecksSubmerged, ChecksKarmaFlowers,
     ]
 
     #################################################################
