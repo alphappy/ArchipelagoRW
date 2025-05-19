@@ -1,34 +1,39 @@
 from random import Random
 
 from BaseClasses import MultiWorld
-from .classes import RainWorldRegion, RegionData, ConnectionData, room_to_region
+from .classes import RegionData, ConnectionData, room_to_region
 from ..options import RainWorldOptions
-from ..conditions.classes import Simple
+from ..conditions.classes import Simple, ConditionBlank
 from ..game_data.watcher import targets, normal_regions
 from ..game_data.general import region_code_to_name
 from ..utils import random_bijective_endofunction
 
 
-class NormalDynamic(ConnectionData):
-    def __init__(self, dest: str, ripple: float):
-        self.ripple = ripple
-        cond = Simple("Ripple", int((ripple - 1) * 2))
-        super().__init__("From any normal region", dest, f"Normal dynamic warp to {dest} ({ripple})", cond)
+class DynamicWarpConnection(ConnectionData):
+    def __init__(self, source: str, dest: str, ripple: float | None, sort: str,
+                 source_room: bool = True, target_room: bool = True):
+        self.ripple, self.source_room, self.target_room = ripple, source_room, target_room
+        cond = Simple("Ripple", int((ripple - 1) * 2)) if ripple is not None else ConditionBlank
+        super().__init__(source, dest, f"{sort} dynamic warp to {dest} ({ripple})", cond)
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
-        self.dest = room_to_region[self.dest]
+        self.source = room_to_region[self.source] if self.source_room else self.source
+        self.dest = room_to_region[self.dest] if self.target_room else self.dest
         super().make(player, multiworld, options)
 
 
-class PredeterminedNormalDynamic(ConnectionData):
+class NormalDynamic(DynamicWarpConnection):
+    def __init__(self, dest: str, ripple: float):
+        super().__init__("From any normal region", dest, ripple, "Normal", False, True)
+
+
+class PredeterminedNormalDynamic(DynamicWarpConnection):
     def __init__(self, source: str, dest: str, ripple: float):
-        cond = Simple("Ripple", int((ripple - 1) * 2))
         self.region_code = source
-        super().__init__(region_code_to_name[source], dest, f"Normal dynamic warp to {dest} ({ripple})", cond)
+        super().__init__(region_code_to_name[source], dest, ripple, "Predetermined normal", False, True)
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
         multiworld.worlds[player].predetermined_warps[self.region_code] = self.dest
-        self.dest = room_to_region[self.dest]
         super().make(player, multiworld, options)
 
 
@@ -46,12 +51,13 @@ def generate(options: RainWorldOptions, rng: Random):
         ConnectionData("From any normal region", "Infested Wastes", "Bad dynamic warp to Infested Wastes"),
     ]
 
+    ####################################################################################################################
     match options.normal_dynamic_warp_behavior:
         case 3:  # open world
             for target in targets:
                 ret.append(NormalDynamic(target.room, target.ripple))
 
-        case 5:  # predetermined
+        case "predetermined":
             for source, target_region in random_bijective_endofunction(normal_regions, rng).items():
                 target = rng.sample([t for t in targets if t.room.startswith(target_region)], 1)[0]
                 ret.append(PredeterminedNormalDynamic(source, target.room, target.ripple))
