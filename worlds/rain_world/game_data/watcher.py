@@ -89,3 +89,8 @@ def initialize() -> tuple[list[PortalData], dict[str, PortalKeyData], list[WarpT
 
 
 portals, keys, targets = initialize()
+
+normal_regions = [
+    'WVWA', 'WRFB', 'WRFA', 'WSKA', 'WPTA', 'WRRA', 'WSKB', 'WARF', 'WTDB',
+    'WARE', 'WTDA', 'WSKC', 'WARD', 'WARB', 'WARC', 'WBLA', 'WARG', 'WSKD',
+]

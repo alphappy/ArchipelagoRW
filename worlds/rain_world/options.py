@@ -172,10 +172,8 @@ class NormalDynamicWarpBehavior(Choice):
     option_static_pool = 2
     option_open_world = 3
     option_unlockable_pool = 4
+    option_predetermined = 5
     default = 1
-
-    @property
-    def logically_relevant(self) -> bool: return self.value > 1
 
 
 class LogicRottedGeneration(Choice):

@@ -54,6 +54,7 @@ class RainWorldWorld(World):
     start_is_default = True
     start_is_connected = False
     foodquest_accessibility_flag = 0
+    predetermined_warps = {}
 
     def generate_early(self) -> None:
         # This is the earliest that the options are available.  Player YAML failures should be tripped here.
@@ -67,7 +68,7 @@ class RainWorldWorld(World):
         self.start_is_default = self.options.random_starting_region == 0
 
     def create_regions(self):
-        for data in regions.generate(self.options):
+        for data in regions.generate(self.options, self.random):
             data.make(self.player, self.multiworld, self.options)
 
         # return for each datum is a bool for whether that location was actually generated
@@ -197,6 +198,10 @@ class RainWorldWorld(World):
         # ...which food quest checks are accessible.
         d["checks_foodquest_accessibility"] = (
             self.foodquest_accessibility_flag if self.options.checks_foodquest_expanded else 0)
+
+        if self.predetermined_warps:
+            d["predetermined_warps"] = self.predetermined_warps
+
         return d
 
     # def generate_output(self, output_directory: str) -> None:

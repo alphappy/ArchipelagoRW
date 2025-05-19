@@ -1,3 +1,4 @@
+from random import Random
 from typing import TypeVar
 
 T = TypeVar("T")
@@ -43,6 +44,19 @@ def flounder2(weights: dict[T, float], count: int) -> list[T]:
 
     # Ensure that the return is exactly of length `count`.
     return ret[:count]
+
+
+def random_bijective_endofunction(population: list[T], rng: Random, no_fixed_points: bool = True) -> dict[T, T]:
+    """Generates a mapping in which every member of `population`
+    appears exactly once as an input and exactly once as an output.
+    If `no_fixed_points`, then members cannot be mapped to themselves."""
+    shuffled = rng.sample(population, len(population))
+    ret = {a: b for a, b in zip(population, shuffled)}
+    if no_fixed_points:
+        for number, fixed_point in enumerate(a for a, b in ret.items() if a == b):
+            swap_key = list(ret.keys())[number]
+            ret[swap_key], ret[fixed_point] = fixed_point, ret[swap_key]
+    return ret
 
 
 def placed_object_effective_whitelist(room_data: dict, shiny_data: dict, scuglist: set[str]) -> set[str]:

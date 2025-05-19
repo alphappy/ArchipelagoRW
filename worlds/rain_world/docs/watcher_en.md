@@ -161,23 +161,23 @@ and of the semipermanent dynamic warps created in The Throne (`throne_dynamic_wa
 Both settings have similar possible values and similar effects.
 Their defaults are `visited` and `predetermined`, respectively.
 
-| Setting           | Valid for   | In-game effect on warps                                                                 | Required to goal? | Notes                                                                                                                                                                                                                           |
-|-------------------|-------------|-----------------------------------------------------------------------------------------|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `ignored`         | Both        | Unaltered.                                                                              | Never             | Logic behaves as if dynamic warping is impossible.  It can easily take the player out of logic.  Invalid if `which_victory_condition` is `alternate`.                                                                           |
-| `visited`         | Both        | Warps can only target already-visited regions.                                          | Never             | Dynamic warps cannot take the player anywhere new and are thus logically irrelevant.                                                                                                                                            |
-| `static_pool`     | Both        | A static pool of possible normal warp targets is decided by the randomizer.             | Possibly          |                                                                                                                                                                                                                                 |
-| `unlockable_pool` | Normal only | Each region requires collecting an item to unlock it as an eligible normal warp target. | Possibly          |                                                                                                                                                                                                                                 |
-| `open_world`      | Normal only | Unaltered.                                                                              | Possibly          | Once dynamic warping is unlocked, every possible target for a normal dynamic warp is in logic once its Ripple requirement is met.  This most closely reflects the actual logic and may require dynamic warps to reach the goal. |
-| `predetermined`   | Throne only | Each warp's target is predetermined by the randomizer.                                  | Possibly          |                                                                                                                                                                                                                                 |
+Some values for the `*_behavior` settings can be further adjusted with the corresponding `*_pool_size` setting.
+The defaults for `normal_dynamic_warp_pool_size` and `throne_dynamic_warp_pool_size` are both 18 (all normal regions).
 
-### Dynamic warp pool size
-`normal_dynamic_warp_pool_size` and `throne_dynamic_warp_pool_size`
-control the number of regions in the pool for normal and throne dynamic warps
-if `static_pool` or `unlockable_pool` is selected for the corresponding `_behavior` setting.
-Pool size does nothing for other behaviors.
+| Setting                       | Effect                                                                                                                                                                                                                                         |
+|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ignored`<sup>o</sup>         | Targetting behavior is unaltered.  Logic assumes dynamic warps are impossible, but this means they can easily take the player out of logic.                                                                                                    |
+| `visited`<sup>o</sup>         | Dynamic warps can only target already-visited regions and are thus logically irrelevant.                                                                                                                                                       |
+| `predetermined`               | For normal warps, each region is tied to a predetermined target in another region.<sup>p</sup>  For Throne warps, each of the four warp rooms is tied to a predetermined target and has no Ripple requirement.                                 |
+| `static_pool`                 | A static pool<sup>p</sup> of possible normal warp targets is decided by the randomizer.  Regions not in this pool can never be the target of a dynamic warp.                                                                                   |
+| `unlockable_pool`<sup>n</sup> | A static pool<sup>p</sup> of possible normal warp targets is decided by the randomizer.  Each region requires collecting an item to unlock it as an eligible warp target.  With none of these items collected, dynamic warps are not possible. |
+| `open_world`<sup>n</sup>      | Unaltered.  Logic assumes all dynamic warps are in logic.  This most closely reflects the actual game logic, but requires dealing with the randomness of targetting and each target's Ripple requirement.                                      |
 
-One of the targets in each pool must be one which has a Ripple requirement of 1,
-regardless of the size of the pool.
+- <sup>n</sup> This value is only valid for `normal_dynamic_warp_behavior`.
+- <sup>o</sup> This value takes dynamic warps out of logic,
+so they will never be required to reach the victory condition.
+- <sup>p</sup> The number of regions in this pool is controlled by
+the corresponding `*_pool_size` setting.
 
 ### Dynamic warp ripple requirement
 `dynamic_warp_ripple_requirement` dictates how the Ripple requirements for dynamic warp targets are handled.
