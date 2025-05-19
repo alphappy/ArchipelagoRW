@@ -166,7 +166,7 @@ class RippleWarpBehavior(Choice):
 
 class NormalDynamicWarpBehavior(Choice):
     """How normal dynamic warps behave.  See the settings documentation for explanation."""
-    display_name = "Dynamic warp behavior"
+    display_name = "Normal dynamic warp behavior"
     option_ignored = 0
     option_visited = 1
     option_static_pool = 2
@@ -174,6 +174,16 @@ class NormalDynamicWarpBehavior(Choice):
     option_unlockable_pool = 4
     option_predetermined = 5
     default = 1
+
+
+class ThroneDynamicWarpBehavior(Choice):
+    """How Throne dynamic warps behave.  See the settings documentation for explanation."""
+    display_name = "Throne dynamic warp behavior"
+    option_ignored = 0
+    option_visited = 1
+    option_static_pool = 2
+    option_predetermined = 5
+    default = 5
 
 
 class LogicRottedGeneration(Choice):
@@ -781,9 +791,10 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     logic_rotted_generation: LogicRottedGeneration
     logic_ripplespace_min_req: LogicMinRippleTarget
     normal_dynamic_warp_behavior: NormalDynamicWarpBehavior
+    throne_dynamic_warp_behavior: ThroneDynamicWarpBehavior
 
     group_watcher = [
-        LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior
+        LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
     ]
 
     #################################################################

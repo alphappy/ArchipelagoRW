@@ -37,6 +37,18 @@ class PredeterminedNormalDynamic(DynamicWarpConnection):
         super().make(player, multiworld, options)
 
 
+class PredeterminedThroneDynamic(DynamicWarpConnection):
+    def __init__(self, dest: str, ripple: float, which: int):
+        super().__init__(self.rooms[which], dest, ripple, f"{self.names[which]} Throne", True, True)
+
+    rooms = [f"WORA_THRONE{a:0>2}" for a in (10, 5, 9, 7)]
+    names = ["Lower east", "Lower west", "Upper east", "Upper west"]
+
+    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
+        multiworld.worlds[player].predetermined_warps[self.source] = self.dest
+        super().make(player, multiworld, options)
+
+
 def generate(options: RainWorldOptions, rng: Random):
     if options.starting_scug != "Watcher":
         return []
@@ -61,6 +73,16 @@ def generate(options: RainWorldOptions, rng: Random):
             for source, target_region in random_bijective_endofunction(normal_regions, rng).items():
                 target = rng.sample([t for t in targets if t.room.startswith(target_region)], 1)[0]
                 ret.append(PredeterminedNormalDynamic(source, target.room, target.ripple))
+
+    ####################################################################################################################
+    match options.throne_dynamic_warp_behavior:
+        case "predetermined":
+            chosen = rng.sample(normal_regions, 4)
+            chosen = [rng.choice([t for t in targets if t.room.startswith(reg)]) for reg in chosen]
+            chosen = sorted([c for c in chosen], key=lambda x: x.ripple)
+
+            for i, target in enumerate(chosen):
+                ret.append(PredeterminedThroneDynamic(target.room, i + 2, i))
 
     return ret
 
