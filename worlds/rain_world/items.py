@@ -3,7 +3,7 @@ from typing import Optional, Dict
 from . import constants, game_data
 from .regions.gates import gates
 from .game_data.general import region_code_to_name, alternate_regions
-from .game_data.watcher import keys as pkeys
+from .game_data.watcher import keys as pkeys, normal_regions
 
 item_client_names: dict[str, str] = {}
 
@@ -166,6 +166,14 @@ portal_keys: dict[str, RainWorldItemData] = {
     for i, data in enumerate(pkeys.values())
 }
 all_items.update(portal_keys)
+
+#################################################################
+# DYNAMIC WARP KEYS
+dynamic_warp_keys: dict[str, RainWorldItemData] = {
+    f"Dynamic: {r}": RainWorldItemData(f"Dynamic: {r}", f"Dynamic: {r}", offset + 700 + i, ItemClassification.progression)
+    for i, r in enumerate(normal_regions)
+}
+all_items.update(dynamic_warp_keys)
 
 #################################################################
 item_name_to_id: Dict[str, int] = {k: v.code for k, v in all_items.items()}

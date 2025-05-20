@@ -13,7 +13,7 @@ from .events import get_events
 from .regions.classes import room_to_region
 from .regions.gates import gates
 from .utils import normalize, flounder2
-from .items import RainWorldItem, all_items, RainWorldItemData, portal_keys
+from .items import RainWorldItem, all_items, RainWorldItemData, portal_keys, dynamic_warp_keys
 from . import regions, locations, options
 from .game_data.general import prioritizable_passages, passages_all, passages_vanilla, accessible_gates
 
@@ -56,6 +56,7 @@ class RainWorldWorld(World):
     foodquest_accessibility_flag = 0
     predetermined_warps = {}
     normal_pool = []
+    unlockable_pool = []
 
     def generate_early(self) -> None:
         # This is the earliest that the options are available.  Player YAML failures should be tripped here.
@@ -135,6 +136,7 @@ class RainWorldWorld(World):
             pool = {
                 "Ripple": 12 + self.options.extra_karma_cap_increases.value,
                 **{k: 1 for k in portal_keys.keys()},
+                **{f"Dynamic: {k}": 1 for k in self.unlockable_pool},
             }
 
         precollect = {
@@ -204,6 +206,8 @@ class RainWorldWorld(World):
             d["predetermined_warps"] = self.predetermined_warps
         if self.normal_pool:
             d["normal_warp_pool"] = self.normal_pool
+        if self.unlockable_pool:
+            d["unlockable_warp_pool"] = self.unlockable_pool
 
         return d
 

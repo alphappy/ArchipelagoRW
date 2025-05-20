@@ -3,7 +3,7 @@ from random import Random
 from BaseClasses import MultiWorld
 from .classes import RegionData, ConnectionData, room_to_region
 from ..options import RainWorldOptions
-from ..conditions.classes import Simple, ConditionBlank
+from ..conditions.classes import Simple, ConditionBlank, AllOf
 from ..game_data.watcher import targets, normal_regions
 from ..game_data.general import region_code_to_name
 from ..utils import random_bijective_endofunction
@@ -58,6 +58,16 @@ class StaticPoolNormalDynamic(DynamicWarpConnection):
         super().make(player, multiworld, options)
 
 
+class UnlockablePoolNormalDynamic(DynamicWarpConnection):
+    def __init__(self, dest: str, ripple: float | None):
+        super().__init__("From any normal region", dest, ripple, "Normal", False, True)
+        self.condition = AllOf(self.condition, Simple(f"Dynamic: {dest[:4]}"))
+
+    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
+        multiworld.worlds[player].unlockable_pool.append(self.dest[:4])
+        super().make(player, multiworld, options)
+
+
 def generate(options: RainWorldOptions, rng: Random):
     if options.starting_scug != "Watcher":
         return []
@@ -94,6 +104,15 @@ def generate(options: RainWorldOptions, rng: Random):
 
             for target in [t for t in targets if any(t.room.startswith(r) for r in pool)]:
                 ret.append(StaticPoolNormalDynamic(target.room, target.ripple))
+
+        case "unlockable_pool":
+            if (size := int(options.dynamic_warp_pool_size)) == 18:
+                pool = normal_regions
+            else:
+                pool = rng.sample(normal_regions, size)
+
+            for target in [t for t in targets if any(t.room.startswith(r) for r in pool)]:
+                ret.append(UnlockablePoolNormalDynamic(target.room, target.ripple))
 
     ####################################################################################################################
     match options.throne_dynamic_warp_behavior:
