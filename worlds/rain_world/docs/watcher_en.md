@@ -15,6 +15,7 @@ A few pieces of terminology are used in this documentation for brevity:
 A Watcher world always starts in Watcherspace (that is, not on the Five Pebbles facility grounds).
 Max Ripple starts at 1, as if all three of the first Spinning Tops have already been encountered,
 which means the ability to camouflage is already unlocked.
+(UNIMPLEMENTED) 
 By default, the starting region is one of the three original starting regions -
 Coral Caves, Sunlit Port, or Torrential Railways -
 but this can be changed by the `random_starting_region` player YAML setting.
@@ -50,13 +51,13 @@ and the creation of Ripple spawn, are still tied to current Ripple.
 Most of Watcher's checks fall into one of a few categories.
 See [the naming subpage](/tutorial/Rain%20World/naming/en) for naming of checks not unique to Watcher.
 
-| Check type         | Naming                                                                                                          |
-|--------------------|-----------------------------------------------------------------------------------------------------------------|
-| Fixed warp point   | `REGION - Warp Point - ROOM_NAME`                                                                               |
-| Fixed Karma Flower | `REGION - Karma Flower - ROOM_NAME`                                                                             |
-| Throne warp point  | `Outer Rim - Throne Warp - LOC` where `LOC` is either `upper west`, `lower west`, `upper east`, or `lower east` |
-| Spinning Top       | `REGION - Spinning Top`                                                                                         |
-| The Prince         | `Outer Rim - The Prince - NTH encounter` where `NTH` is `first`, `second`, etc.                                 |
+| Check type         | Naming                                                                                                                          |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| Fixed warp point   | `REGION - Warp Point - ROOM_NAME`                                                                                               |
+| Fixed Karma Flower | `REGION - Karma Flower - ROOM_NAME`                                                                                             |
+| Throne warp point  | (UNIMPLEMENTED) `Outer Rim - Throne Warp - LOC` where `LOC` is either `upper west`, `lower west`, `upper east`, or `lower east` |
+| Spinning Top       | `REGION - Spinning Top`                                                                                                         |
+| The Prince         | (UNIMPLEMENTED) `Outer Rim - The Prince - NTH encounter` where `NTH` is `first`, `second`, etc.                                 |
 
 ### Fixed warp points
 Visting a warp point, which puts it on the map, is a check.
@@ -69,6 +70,7 @@ If `checks_karma_flowers` is enabled, each fixed Karma Flower spawn is a check.
 The check is earned by grabbing the Karma Flower.
 
 ### Throne warp points
+(UNIMPLEMENTED) 
 Creating a semipermanent warp point in The Throne is a check.
 
 ### Spinning Top
@@ -89,14 +91,15 @@ even if `which_victory_condition` is `ascension`,
 since Spinning Top no longer appears after they ascend.
 
 ### The Prince
+(UNIMPLEMENTED) 
 Each unique encounter with The Prince is a check.
 These checks are awarded upon visiting the top-left-most screen where The Prince is (or will be).
 
 ### Other
-* Watcher can earn some passages.
+* (UNIMPLEMENTED) Watcher can earn some passages.
 Watcher cannot earn The Pilgrim, The Nomad, The Scholar, The Wanderer, or The Mother.
-* If `sheltersanity` is enabled, every shelter is a check when visited.
-* If `checks_food_quest` is enabled, Watcher can earn certain food quest checks.
+* (UNIMPLEMENTED) If `sheltersanity` is enabled, every shelter is a check when visited.
+* (UNIMPLEMENTED) If `checks_food_quest` is enabled, Watcher can earn certain food quest checks.
 
 ## Settings
 
@@ -110,11 +113,13 @@ This in turn requires access to Shattered Terrace (possibly, but not necessarily
 and the ability to shift into ripplespace,
 which in turn requires at least 8 Ripple items (but see `min_ripple_target` below).
 
+(UNIMPLEMENTED) 
 The `alternate` victory condition is the Sentient Rot ending.
 This requires awakening The Prince, which in turn requires at least 5 max Ripple
 and several visits to Outer Rim (`WORA`), creating all four Throne warps in the process,
 and spreading sentient rot to all 18 infectable regions (but see `rotted_region_target` below).
 
+(UNIMPLEMENTED) 
 With the `alternate` victory condition enabled, meeting Spinning Top in Ancient Urban
 will release all progressive Spinning Top checks immediately.
 
@@ -132,11 +137,13 @@ This setting may affect logic even if `which_victory_condition` is `alternate`,
 since reaching the Spinning Top in Ancient Urban still releases all other Spinning Top checks.
 
 ### Rotted region target
+(UNIMPLEMENTED) 
 `rotted_region_target` controls the number of regions that must be rotted to trigger the Sentient Rot ending.
 The default, unaltered behavior is all 18 infectable regions.
 This has no effect if `which_victory_condition` is `ascension`.
 
 ### Spinning Top keys
+(UNIMPLEMENTED) 
 `spinning_top_keys` controls whether each Spinning Top location requires a key as most warp points do.
 If enabled and the key has not been collected, Spinning Top will not appear and the warp will not be usable.
 If disabled, Spinning Top always appears and the associated warp does not require a key.
@@ -179,6 +186,7 @@ so they will never be required to reach the victory condition.
 - <sup>p</sup> The number of regions in this pool is controlled by `dynamic_warp_pool_size`.
 
 ### Dynamic warp ripple requirement
+(UNIMPLEMENTED) 
 `dynamic_warp_ripple_requirement` dictates how the Ripple requirements for dynamic warp targets are handled.
 This only affects normal dynamic warps.
 
