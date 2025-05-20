@@ -10,6 +10,9 @@ Any documentation details that are specific to The Watcher are detailed here.
 ### Terminology
 A few pieces of terminology are used in this documentation for brevity:
 * **BWP region**:  A bad warp pool region - one of Corrupted Factories, Crumbling Fringes, Decaying Tunnels, or Infested Wastes.
+* **Permarotted region**: Any BWP region, plus Unfortunate Evolution and Outer Rim.
+* **Unrottable region**: Any of Shattered Terrace, Ancient Urban, or Daemon.
+* **Normal region**: Any region that isn't permarotted or unrottable.
 
 ### Start in Watcherspace
 A Watcher world always starts in Watcherspace (that is, not on the Five Pebbles facility grounds).
@@ -74,17 +77,10 @@ The check is earned by grabbing the Karma Flower.
 Creating a semipermanent warp point in The Throne is a check.
 
 ### Spinning Top
-Visiting Spinning Top in most regions is a check.
-These are progressive checks, similarly to The Wanderer passage pips;
-that is, Spinning Top checks are not tied to a specific location.
-
-The Spinning Top locations in Shattered Terrace, Ancient Urban,
-and any of the rotted Five Pebbles facility grounds regions
-do not affect Watcher's ripple level and are not checks.
-
+Visiting Spinning Top in a _normal_ region is a check.
 By default, Spinning Top does not appear if the key corresponding to the warp point is not collected
 (but this behavior may be changed with the `spinning_top_keys` player YAML setting).
-In that case, the check cannot be earned.
+In that case, the check cannot be earned without the key.
 
 All Spinning Top checks are immediately released when the `WAUA_BATH` Spinning Top is visited,
 even if `which_victory_condition` is `ascension`,
@@ -105,18 +101,19 @@ Watcher cannot earn The Pilgrim, The Nomad, The Scholar, The Wanderer, or The Mo
 
 ### Karma Flower checks
 `checks_karma_flowers` controls whether fixed Karma Flowers are checks.
+Enabling this is strongly reccomended as otherwise Watcher has relatively few checks.
 
 ### Victory condition
 The `ascension` victory condition is the Toys/Driedel/Spinning Top ending.
 Logically, this just requires access to Ancient Urban.
 This in turn requires access to Shattered Terrace (possibly, but not necessarily, through Daemon)
 and the ability to shift into ripplespace,
-which in turn requires at least 8 Ripple items (but see `min_ripple_target` below).
+which in turn requires at least 8 Ripple items (but see `logic_ripplespace_min_req` below).
 
 (UNIMPLEMENTED) 
 The `alternate` victory condition is the Sentient Rot ending.
 This requires awakening The Prince, which in turn requires at least 5 max Ripple
-and several visits to Outer Rim (`WORA`), creating all four Throne warps in the process,
+and several visits to Outer Rim, creating all four Throne warps in the process,
 and spreading sentient rot to all 18 infectable regions (but see `rotted_region_target` below).
 
 (UNIMPLEMENTED) 

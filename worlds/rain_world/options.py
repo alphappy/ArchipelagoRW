@@ -170,7 +170,6 @@ class NormalDynamicWarpBehavior(Choice):
     option_ignored = 0
     option_visited = 1
     option_static_pool = 2
-    option_open_world = 3
     option_unlockable_pool = 4
     option_predetermined = 5
     default = 1

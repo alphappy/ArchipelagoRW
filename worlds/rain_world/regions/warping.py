@@ -84,10 +84,6 @@ def generate(options: RainWorldOptions, rng: Random):
 
     ####################################################################################################################
     match options.normal_dynamic_warp_behavior:
-        case 3:  # open world
-            for target in targets:
-                ret.append(NormalDynamic(target.room, target.ripple))
-
         case "predetermined":
             for source, target_region in random_bijective_endofunction(normal_regions, rng).items():
                 target = rng.sample([t for t in targets if t.room.startswith(target_region)], 1)[0]
