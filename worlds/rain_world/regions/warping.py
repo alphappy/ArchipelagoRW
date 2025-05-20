@@ -97,7 +97,7 @@ def generate(options: RainWorldOptions, rng: Random):
             if (size := int(options.dynamic_warp_pool_size)) == 18:
                 pool = normal_regions
             else:
-                pool = rng.sample(normal_regions, size - 1)
+                pool = rng.sample(normal_regions, size)
                 # Ensure that at least one of the options has a target with a Ripple requirement of 1.0.
                 if len(set(pool).intersection(ripple_one_targets := ['WRFA', 'WSKB', 'WARF', 'WSKA'])) == 0:
                     pool[0] = rng.choice(ripple_one_targets)
