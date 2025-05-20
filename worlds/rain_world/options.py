@@ -181,7 +181,6 @@ class ThroneDynamicWarpBehavior(Choice):
     display_name = "Throne dynamic warp behavior"
     option_ignored = 0
     option_visited = 1
-    option_static_pool = 2
     option_predetermined = 5
     default = 5
 
