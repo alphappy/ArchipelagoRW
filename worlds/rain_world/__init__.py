@@ -55,6 +55,7 @@ class RainWorldWorld(World):
     start_is_connected = False
     foodquest_accessibility_flag = 0
     predetermined_warps = {}
+    normal_pool = []
 
     def generate_early(self) -> None:
         # This is the earliest that the options are available.  Player YAML failures should be tripped here.
@@ -201,6 +202,8 @@ class RainWorldWorld(World):
 
         if self.predetermined_warps:
             d["predetermined_warps"] = self.predetermined_warps
+        if self.normal_pool:
+            d["normal_warp_pool"] = self.normal_pool
 
         return d
 

@@ -49,6 +49,15 @@ class PredeterminedThroneDynamic(DynamicWarpConnection):
         super().make(player, multiworld, options)
 
 
+class StaticPoolNormalDynamic(DynamicWarpConnection):
+    def __init__(self, dest: str, ripple: float | None):
+        super().__init__("From any normal region", dest, ripple, "Normal", False, True)
+
+    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
+        multiworld.worlds[player].normal_pool.append(self.dest)
+        super().make(player, multiworld, options)
+
+
 def generate(options: RainWorldOptions, rng: Random):
     if options.starting_scug != "Watcher":
         return []
@@ -73,6 +82,18 @@ def generate(options: RainWorldOptions, rng: Random):
             for source, target_region in random_bijective_endofunction(normal_regions, rng).items():
                 target = rng.sample([t for t in targets if t.room.startswith(target_region)], 1)[0]
                 ret.append(PredeterminedNormalDynamic(source, target.room, target.ripple))
+
+        case "static_pool":
+            if (size := int(options.dynamic_warp_pool_size)) == 18:
+                pool = normal_regions
+            else:
+                pool = rng.sample(normal_regions, size - 1)
+                # Ensure that at least one of the options has a target with a Ripple requirement of 1.0.
+                if len(set(pool).intersection(ripple_one_targets := ['WRFA', 'WSKB', 'WARF', 'WSKA'])) == 0:
+                    pool[0] = rng.choice(ripple_one_targets)
+
+            for target in [t for t in targets if any(t.room.startswith(r) for r in pool)]:
+                ret.append(StaticPoolNormalDynamic(target.room, target.ripple))
 
     ####################################################################################################################
     match options.throne_dynamic_warp_behavior:
