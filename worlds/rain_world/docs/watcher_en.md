@@ -110,13 +110,11 @@ This in turn requires access to Shattered Terrace (possibly, but not necessarily
 and the ability to shift into ripplespace,
 which in turn requires at least 8 Ripple items (but see `logic_ripplespace_min_req` below).
 
-(UNIMPLEMENTED) 
 The `alternate` victory condition is the Sentient Rot ending.
-This requires awakening The Prince, which in turn requires at least 5 max Ripple
+This requires awakening The Prince, which in turn requires 8 Ripple items
 and several visits to Outer Rim, creating all four Throne warps in the process,
 and spreading sentient rot to all 18 infectable regions (but see `rotted_region_target` below).
 
-(UNIMPLEMENTED) 
 With the `alternate` victory condition enabled, meeting Spinning Top in Ancient Urban
 will release all progressive Spinning Top checks immediately.
 
@@ -134,7 +132,6 @@ This setting may affect logic even if `which_victory_condition` is `alternate`,
 since reaching the Spinning Top in Ancient Urban still releases all other Spinning Top checks.
 
 ### Rotted region target
-(UNIMPLEMENTED) 
 `rotted_region_target` controls the number of regions that must be rotted to trigger the Sentient Rot ending.
 The default, unaltered behavior is all 18 infectable regions.
 This has no effect if `which_victory_condition` is `ascension`.

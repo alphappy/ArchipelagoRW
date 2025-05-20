@@ -210,6 +210,15 @@ class LogicMinRippleTarget(Range):
     default = 5
 
 
+class RottedRegionTarget(Range):
+    """The number of regions that must be rotted for the Rot ending.
+    The default, 18, matches the unaltered game behavior."""
+    display_name = "Rotted region target"
+    range_start = 2
+    range_end = 18
+    default = 18
+
+
 #################################################################
 # GENERAL SETTINGS
 class RandomStartingRegion(Choice):
@@ -799,10 +808,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     normal_dynamic_warp_behavior: NormalDynamicWarpBehavior
     throne_dynamic_warp_behavior: ThroneDynamicWarpBehavior
     dynamic_warp_pool_size: DynamicWarpPoolSize
+    rotted_region_target: RottedRegionTarget
 
     group_watcher = [
         LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
-        DynamicWarpPoolSize
+        DynamicWarpPoolSize, RottedRegionTarget,
     ]
 
     #################################################################

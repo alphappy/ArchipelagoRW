@@ -192,6 +192,7 @@ class RainWorldWorld(World):
             "which_victory_condition",  # ...which victory condition is a win.
             "which_gate_behavior",  # ...how gates should behave.
             "difficulty_echo_low_karma",  # ...how low-karma echo appearances should be handled.
+            "rotted_region_target",  # ...how many regions must be rotted for Watcher's alt ending.
         )
         # backwards compatibility
         d["which_gamestate"] = self.options.which_gamestate_integer
