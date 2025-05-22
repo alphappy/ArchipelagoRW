@@ -169,9 +169,10 @@ class NormalDynamicWarpBehavior(Choice):
     display_name = "Normal dynamic warp behavior"
     option_ignored = 0
     option_visited = 1
-    option_static_pool = 2
-    option_unlockable_pool = 4
+    option_static_target_pool = 2
+    option_unlockable_target_pool = 4
     option_predetermined = 5
+    option_predetermined_unlockable_source = 6
     default = 1
 
 

@@ -28,12 +28,17 @@ class NormalDynamic(DynamicWarpConnection):
 
 
 class PredeterminedNormalDynamic(DynamicWarpConnection):
-    def __init__(self, source: str, dest: str, ripple: float):
+    def __init__(self, source: str, dest: str, ripple: float, unlockable: bool = False):
         self.region_code = source
+        self.unlockable = unlockable
         super().__init__(region_code_to_name[source], dest, ripple, "Predetermined normal", False, True)
+        if unlockable:
+            self.condition = AllOf(self.condition, Simple(f"Dynamic: {self.region_code}"))
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
         multiworld.worlds[player].predetermined_warps[self.region_code] = self.dest
+        if self.unlockable:
+            multiworld.worlds[player].unlockable_pool.append(self.region_code)
         super().make(player, multiworld, options)
 
 
@@ -89,7 +94,12 @@ def generate(options: RainWorldOptions, rng: Random):
                 target = rng.sample([t for t in targets if t.room.startswith(target_region)], 1)[0]
                 ret.append(PredeterminedNormalDynamic(source, target.room, target.ripple))
 
-        case "static_pool":
+        case "predetermined_unlockable_source":
+            for source, target_region in random_bijective_endofunction(normal_regions, rng).items():
+                target = rng.sample([t for t in targets if t.room.startswith(target_region)], 1)[0]
+                ret.append(PredeterminedNormalDynamic(source, target.room, target.ripple, True))
+
+        case "static_target_pool":
             if (size := int(options.dynamic_warp_pool_size)) == 18:
                 pool = normal_regions
             else:
@@ -101,7 +111,7 @@ def generate(options: RainWorldOptions, rng: Random):
             for target in [t for t in targets if any(t.room.startswith(r) for r in pool)]:
                 ret.append(StaticPoolNormalDynamic(target.room, target.ripple))
 
-        case "unlockable_pool":
+        case "unlockable_target_pool":
             if (size := int(options.dynamic_warp_pool_size)) == 18:
                 pool = normal_regions
             else:
