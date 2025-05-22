@@ -221,10 +221,19 @@ class RottedRegionTarget(Range):
 
 class ChecksSpreadRot(Choice):
     """Whether spreading the Rot to a new region is a check."""
+    display_name = "Rot spread checks"
     option_off = 0
     option_alternate_only = 1
     option_on = 2
     default = 1
+
+
+class SpinningTopKeys(Choice):
+    """Whether Spinning Top warps require keys."""
+    display_name = "Spinning Top keys"
+    option_off = 0
+    option_on = 2
+    default = 2
 
 
 #################################################################
@@ -818,10 +827,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     dynamic_warp_pool_size: DynamicWarpPoolSize
     rotted_region_target: RottedRegionTarget
     checks_spread_rot: ChecksSpreadRot
+    spinning_top_keys: SpinningTopKeys
 
     group_watcher = [
         LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
-        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot
+        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, SpinningTopKeys,
     ]
 
     #################################################################

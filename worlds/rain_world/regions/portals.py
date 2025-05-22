@@ -20,7 +20,7 @@ class PortalConnection(ConnectionData):
             return
 
         conds = []
-        if self.data.should_have_key:
+        if self.data.should_have_key and not (self.data.spinning_top and options.spinning_top_keys):
             conds.append(Simple(self.data.key_name))
         if self.data.ripple:
             conds.append(Simple("Ripple", 3 + options.logic_ripplespace_min_req))

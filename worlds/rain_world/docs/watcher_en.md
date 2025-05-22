@@ -147,7 +147,6 @@ The default, unaltered behavior is all 18 infectable regions.
 This has no effect if `which_victory_condition` is `ascension`.
 
 ### Spinning Top keys
-(UNIMPLEMENTED) 
 `spinning_top_keys` controls whether each Spinning Top location requires a key as most warp points do.
 If enabled and the key has not been collected, Spinning Top will not appear and the warp will not be usable.
 If disabled, Spinning Top always appears and the associated warp does not require a key.
