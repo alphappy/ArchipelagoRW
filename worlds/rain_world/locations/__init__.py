@@ -11,6 +11,8 @@ from ..options import RainWorldOptions
 # Food Quest        5250 -~5301
 # Shelters          5350 -~5550
 # Fixed warps       6000 -~6100
+# Spinning Tops     6100 -~6115
+# Rot spread        6130 - 6147
 
 
 def generate(options: RainWorldOptions) -> list[LocationData]:

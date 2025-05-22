@@ -219,6 +219,14 @@ class RottedRegionTarget(Range):
     default = 18
 
 
+class ChecksSpreadRot(Choice):
+    """Whether spreading the Rot to a new region is a check."""
+    option_off = 0
+    option_alternate_only = 1
+    option_on = 2
+    default = 1
+
+
 #################################################################
 # GENERAL SETTINGS
 class RandomStartingRegion(Choice):
@@ -809,10 +817,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     throne_dynamic_warp_behavior: ThroneDynamicWarpBehavior
     dynamic_warp_pool_size: DynamicWarpPoolSize
     rotted_region_target: RottedRegionTarget
+    checks_spread_rot: ChecksSpreadRot
 
     group_watcher = [
         LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
-        DynamicWarpPoolSize, RottedRegionTarget,
+        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot
     ]
 
     #################################################################
@@ -944,6 +953,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         ]}
 
     def satisfies(self, flag: GameStateFlag): return flag[self.dlcstate, self.starting_scug]
+
+    @property
+    def should_have_rot_spread_checks(self):
+        return (self.starting_scug == "Watcher" and
+                (self.checks_spread_rot + (self.which_victory_condition == "alternate")) > 1)
 
 
 option_groups = [
