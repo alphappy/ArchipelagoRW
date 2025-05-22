@@ -25,15 +25,19 @@ but this can be changed by the `random_starting_region` player YAML setting.
 Any Five Pebbles facility grounds regions are invalid values for this setting.
 
 ## Items
-### Keys
+### Fixed warp keys
 As with karma gates, most warp points have a key which is required to use it.
 There are several exceptions which do not require keys:
 * All dynamic warp points, including the semi-permanent ones created in The Throne.
-* All warps leaving a rotted Five Pebbles facility grounds region.
+* All warps leaving a permarotted region (except Outer Rim to Daemon).
 * The warp from Daemon to Shattered Terrace.
 
-Spinning Top warps also have keys (except for the encounter in the rotted regions).
+Spinning Top warps also have keys (except for the encounter in the BWP regions).
 Spinning Top does not appear if the key is not collected.
+
+### Dynamic warp keys
+For some values of `normal_dynamic_warp_behavior` (see below), dynamic warp keys may be placed in the item pool.
+The keys may make the corresponding region either a valid source or a valid target for a dynamic warp.
 
 ### Ripple
 Twelve progressive Ripple items are placed in the pool rather than being awarded by visiting Spinning Top.
@@ -42,12 +46,12 @@ The first four Ripple items increase the maximum Ripple by one stage;
 after all four are collected, current Ripple may lie between 1 and 5.
 The next four Ripple items increase both the minimum and maximum by one stage;
 after eight total are collected, current Ripple may lie between 5 and 9.
-At this point, it is possible to enter ripplespace.
+At this point, it is possible to enter ripplespace (but see `logic_ripplespace_min_req`).
 The final four Ripple items increase the minimum by one stage,
 after which current Ripple is fixed at 9.
 
 Effects which are tied to current Ripple, such as the behavior of the camouflage ability
-and the creation of Ripple spawn, are still tied to current Ripple.
+and the creation of Ripple spawn, remain tied to current Ripple.
 
 ## Checks
 
@@ -155,15 +159,13 @@ If disabled, Spinning Top always appears and the associated warp does not requir
 `logic_rotted_generation` controls the generation and connectivity of BWP regions.
 It only affects logic and the check pool.
 
-| Value            | BWP regions have checks? | BWP connections might be part of logic? |
-|------------------|--------------------------|-----------------------------------------|
-| `none` (default) | No                       | No                                      |
-| `passthrough`    | No                       | Yes                                     |
-| `full`           | Yes                      | Yes                                     |
+| Value            | BWP regions have checks? | Bad warps could be logically required? |
+|------------------|--------------------------|----------------------------------------|
+| `none` (default) | No                       | No                                     |
+| `passthrough`    | No                       | Yes                                    |
+| `full`           | Yes                      | Yes                                    |
 
 If set to `none`, the only way to logically access Outer Rim is through Unfortunate Evolution.
-If set to `passthrough` or `full`, logic may draw the victory path through a BWP region,
-though this requires the Outer Rim to Daemon warp key.
 
 ### Dynamic warp behavior
 There are two settings which affect the behavior of normal dynamic warps (`normal_dynamic_warp_behavior`)
