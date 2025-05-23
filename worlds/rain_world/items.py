@@ -68,7 +68,7 @@ all_items: Dict[str, RainWorldItemData] = {
     #################################################################
     # UNIQUE
     "The Glow": RainWorldItemData("The Glow", "The Glow", offset + 50, ItemClassification.progression),
-    "Longer cycles": RainWorldItemData("Longer cycles", "Disconnect_FP", offset + 51, ItemClassification.useful),
+    "Longer cycles": RainWorldItemData("Longer cycles", "Disconnect_FP", offset + 51, ItemClassification.progression),
 
     #################################################################
     # GAMESTATE
