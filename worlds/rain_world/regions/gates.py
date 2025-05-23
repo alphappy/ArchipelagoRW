@@ -49,6 +49,12 @@ class GateData:
             if self.name == "GATE_MS_SL" and options.starting_scug == "Rivulet" and options.difficulty_submerged:
                 left_condition = AllOf(left_condition, Simple("Disconnect_FP"))
 
+            # HARDCODE
+            if self.name == "GATE_SB_VS" and options.difficulty_glow:
+                right_condition = AllOf(right_condition, Simple("The Glow"))
+            elif self.name == "GATE_DS_SB" and options.difficulty_glow:
+                left_condition = AllOf(left_condition, Simple("The Glow"))
+
             if left.populate and right.populate:
                 left.connect(
                     right, f"{'west' if self.was_swapped else 'east'} through {self.name}",
