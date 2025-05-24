@@ -211,6 +211,8 @@ class RainWorldWorld(World):
         if self.unlockable_pool:
             d["unlockable_warp_pool"] = self.unlockable_pool
 
+        d["checks_flowersanity"] = self.options.checks_karma_flowers
+
         # temp override
         d["which_campaign"] = self.options.starting_scug
 
