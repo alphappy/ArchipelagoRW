@@ -70,7 +70,7 @@ scugs_msc_watcher = {"Yellow", "White", "Red", "Gourmand", "Artificer", "Rivulet
 
 scugs_by_gameversion = {
     "1.9.15.3": {"Vanilla": scugs_vanilla, "MSC": scugs_msc},
-    "1.10.1": {"Vanilla": scugs_vanilla, "MSC": scugs_msc, "Watcher": scugs_watcher, "MSC_Watcher": scugs_msc_watcher}
+    "1.10.4": {"Vanilla": scugs_vanilla, "MSC": scugs_msc, "Watcher": scugs_watcher, "MSC_Watcher": scugs_msc_watcher}
 }
 
 ########################################################################################################################

@@ -14,7 +14,7 @@ def initialize() -> list[FlowerLocation]:
     ret = []
     offset = INITIAL_OFFSET
 
-    for region, region_data in static_data["1.10.1"]["MSC_Watcher"].items():
+    for region, region_data in static_data["1.10.4"]["MSC_Watcher"].items():
         for room, room_data in region_data.items():
             if "KarmaFlower" in room_data.get("objects", {}).keys():
                 ret.append(FlowerLocation(offset, room))
