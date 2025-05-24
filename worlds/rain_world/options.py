@@ -1,36 +1,93 @@
 from dataclasses import dataclass
 
 from Options import PerGameCommonOptions, Toggle, Range, OptionGroup, Choice, ProgressionBalancing, Accessibility, \
-    Visibility, DeathLinkMixin, DeathLink
+    Visibility, DeathLinkMixin, DeathLink, FreeText
 from .conditions import GameStateFlag
+from .game_data import static_data
 
 
 #################################################################
 # IMPORTANT SETTINGS
-class PassageProgressWithoutSurvivor(Toggle):
-    """Whether The Dragon Slayer, The Friend, and The Wanderer are completable without completing The Survivor.
+class PassageProgressWithoutSurvivor(Choice):
+    """How The Survivor affects earning other passages.
+
+    **Disabled**: Only The Martyr, The Mother, and The Pilgrim can be earned before The Survivor.
+
+    **Enabled**: The Dragon Slayer, The Friend, and The Wanderer can additionally be earned before The Survivor.
+
+    **Bypassed**: Every passage can be earned before The Survivor.
+
     This will override the actual value of the corresponding setting in the Rain World Remix menu."""
     display_name = "Passage progress without Survivor"
-    default = True
+    option_disabled = 0
+    option_enabled = 1
+    option_bypassed = 2
+
+    default = 2
 
 
-class WhichGamestate(Choice):
-    """Which campaign and worldstate you will start in.
-    If an MSC state is selected, MSC **must** be enabled in-game."""
-    display_name = "Game state"
-    option_monk_vanilla = 0
-    option_survivor_vanilla = 1
-    option_hunter_vanilla = 2
+class IsMSCEnabled(Toggle):
+    """Whether More Slugcats Expansion (Downpour) is enabled, regardless of which campaign you plan to play."""
+    display_name = "More Slugcats Expansion?"
+    default = 0
 
-    option_monk_msc = 10
-    option_survivor_msc = 11
-    option_hunter_msc = 12
-    option_gourmand = 13
-    option_artificer = 14
-    option_rivulet = 15
-    option_spearmaster = 16
-    option_saint = 17
-    option_sofanthiel = 18
+
+class IsWatcherEnabled(Toggle):
+    """Whether The Watcher is enabled, regardless of which campaign you plan to play."""
+    display_name = "The Watcher?"
+    default = 0
+
+
+class WhichGameVersion(Choice):
+    """Which Rain World version you are using."""
+    display_name = "Game version"
+    option_1_9_15b = 1091503
+    alias_1_9_15_3 = 1091503
+    alias_1_9_15 = 1091503
+    alias_1_9 = 1091503
+    option_1_10_1 = 1100400
+    alias_1_10 = 1100400
+    alias_1_10_2 = 1100200
+    alias_1_10_3 = 1100300
+    alias_1_10_4 = 1100400
+    default = 1100400
+
+    displaying = {
+        1091503: ("v1.9.15b / v1.9.15.3", "1.9.15.3"),
+        1100400: ("v1.10.0 - v1.10.4", "1.10.4"),
+    }
+
+    @property
+    def string(self) -> str: return self.displaying[self.value][1]
+
+    @classmethod
+    def get_option_name(cls, value: int) -> str: return cls.displaying[value][0]
+
+
+class WhichCampaign(Choice):
+    """Which slugcat's campaign you will play."""
+    display_name = "Campaign"
+    option_monk = 0
+    option_survivor = 1
+    option_hunter = 2
+    option_gourmand = 3
+    option_artificer = 4
+    option_rivulet = 5
+    option_spearmaster = 6
+    option_saint = 7
+    option_sofanthiel = 8
+    # option_watcher = 9
+
+    alias_yellow = 0
+    alias_white = 1
+    alias_red = 2
+    alais_gourm = 3
+    alias_arti = 4
+    alias_riv = 5
+    alias_spear = 6
+    alias_sait = 7
+    alias_inv = 8
+    alias_enot = 8
 
     default = 1
 
@@ -38,22 +95,14 @@ class WhichGamestate(Choice):
         0: ("Yellow", "Monk"),
         1: ("White", "Survivor"),
         2: ("Red", "Hunter"),
-        10: ("Yellow", "Monk"),
-        11: ("White", "Survivor"),
-        12: ("Red", "Hunter"),
-        13: ("Gourmand", "Gourmand"),
-        14: ("Artificer", "Artificer"),
-        15: ("Rivulet", "Rivulet"),
-        16: ("Spear", "Spearmaster"),
-        17: ("Saint", "Saint"),
-        18: ("Inv", "Sofanthiel"),
+        3: ("Gourmand", "Gourmand"),
+        4: ("Artificer", "Artificer"),
+        5: ("Rivulet", "Rivulet"),
+        6: ("Spear", "Spearmaster"),
+        7: ("Saint", "Saint"),
+        8: ("Inv", "Sofanthiel"),
+        9: ("Watcher", "Watcher"),
     }
-
-    @classmethod
-    def get_option_name(cls, value: int) -> str:
-        if value < 19:
-            return f"{cls.ids_names[value][1]}{' (Vanilla)' if value < 10 else (' (MSC)' if value < 13 else '')}"
-        return f"{value}"
 
     @property
     def scug_id(self) -> str:
@@ -62,10 +111,6 @@ class WhichGamestate(Choice):
     @property
     def scug_name(self) -> str:
         return self.__class__.ids_names[self.value][1]
-
-    @property
-    def dlcstate(self) -> str:
-        return "MSC" if self.value > 9 else "Vanilla"
 
 
 class WhichVictoryCondition(Choice):
@@ -113,6 +158,102 @@ class WhichGateBehavior(Choice):
 
 
 #################################################################
+# WATCHER SETTINGS
+class RippleWarpBehavior(Choice):
+    """How ripple warps behave.  See the settings documentation for explanation."""
+    display_name = "Ripple warp behavior"
+    option_unaltered = 0
+    option_no_ripple_warps = 1
+    default = 0
+    visibility = Visibility.none
+
+
+class NormalDynamicWarpBehavior(Choice):
+    """How normal dynamic warps behave.  See the Watcher documentation for explanation."""
+    display_name = "Normal dynamic warp behavior"
+    option_ignored = 0
+    option_visited = 1
+    option_static_target_pool = 2
+    option_unlockable_target_pool = 4
+    option_predetermined = 5
+    option_predetermined_unlockable_source = 6
+    default = 1
+    visibility = Visibility.none
+
+
+class ThroneDynamicWarpBehavior(Choice):
+    """How Throne dynamic warps behave.  See the Watcher documentation for explanation."""
+    display_name = "Throne dynamic warp behavior"
+    option_ignored = 0
+    option_visited = 1
+    option_predetermined = 5
+    default = 5
+    visibility = Visibility.none
+
+
+class DynamicWarpPoolSize(Range):
+    """Number of regions in the dynamic warp pool.  See the Watcher documentation for explanation."""
+    display_name = "Normal pool size"
+    range_start = 1
+    range_end = 18
+    default = 18
+    visibility = Visibility.none
+
+
+class LogicRottedGeneration(Choice):
+    """Controls the generation of Crumbling Fringes, Corrupted Factories, Decaying Tunnels, and Infested Wastes."""
+    display_name = "Permarotted accessibility"
+    option_none = 0
+    option_passthrough = 2
+    option_full = 3
+    default = 0
+    visibility = Visibility.none
+
+
+class LogicMinRippleTarget(Range):
+    """The lowest that your *minimum* Ripple can be before Ripplespace is logically accessible.
+    The default, 5, matches the actual game behavior."""
+    display_name = "Min Ripple target"
+    range_start = 5
+    range_end = 9
+    default = 5
+    visibility = Visibility.none
+
+
+class RottedRegionTarget(Range):
+    """The number of regions that must be rotted for the Rot ending.
+    The default, 18, matches the unaltered game behavior."""
+    display_name = "Rotted region target"
+    range_start = 2
+    range_end = 18
+    default = 18
+    visibility = Visibility.none
+
+
+class ChecksSpreadRot(Choice):
+    """Whether spreading the Rot to a new region is a check."""
+    display_name = "Rot spread checks"
+    option_off = 0
+    option_alternate_only = 1
+    option_on = 2
+    default = 1
+    visibility = Visibility.none
+
+
+class SpinningTopKeys(Choice):
+    """Whether Spinning Top warps require keys."""
+    display_name = "Spinning Top keys"
+    option_off = 0
+    option_on = 2
+    default = 2
+    visibility = Visibility.none
+
+
+class SoPeeping(FreeText):
+    visibility = Visibility.none
+
+
+#################################################################
 # GENERAL SETTINGS
 class RandomStartingRegion(Choice):
     """Where Slugcat will initially spawn.
@@ -137,6 +278,13 @@ class RandomStartingRegion(Choice):
     option_metropolis = 23
     option_looks_to_the_moon = 24
 
+    # option_sunlit_port = 30
+
+    alias_undergrowth = 3
+    alias_waterfront_facility = 5
+    alias_silent_construct = 6
+    alias_the_rot = 8
+
     default = 0
 
     names = {
@@ -157,6 +305,8 @@ class RandomStartingRegion(Choice):
         22: ("Outer Expanse", "OE"),
         23: ("Metropolis", "LC"),
         24: ("Looks to the Moon", "DM"),
+
+        30: ("Sunlit Port", "WSKB"),
     }
 
     @classmethod
@@ -212,6 +362,15 @@ class ChecksFoodQuest(Choice):
     default = 2
 
 
+class ChecksFoodQuestExpanded(Toggle):
+    """Whether the food quest should be expanded to include most creatures.
+    Specific food quest checks may be disabled by excluding the locations,
+    and some slugcats will not be required to kill and eat extreme threats if that setting is enabled.
+    Requires MSC."""
+    display_name = "Expanded food quest"
+    default = True
+
+
 class ChecksTokensPearls(Toggle):
     """Whether all tokens and pearls should be visible to all slugcats."""
     display_name = "All tokens and pearls"
@@ -222,6 +381,27 @@ class ChecksTokensPearls(Toggle):
 class ChecksDevTokens(Toggle):
     """Whether dev commentary tokens should be checks.  Requires MSC."""
     display_name = "Dev tokens"
+    default = False
+
+
+class ChecksSheltersanity(Toggle):
+    """Whether each shelter is a check."""
+    display_name = "Sheltersanity"
+    default = False
+
+
+class ChecksSubmerged(Choice):
+    """Whether Submerged Superstructure has any checks."""
+    display_name = "Include Submerged"
+    option_all_slugcats = 2
+    option_only_rivulet = 1
+    option_off = 0
+    default = 1
+
+
+class ChecksKarmaFlowers(Toggle):
+    """Whether each static karma flower spawn is a check."""
+    display_name = "Karma Flowers"
     default = False
 
 
@@ -277,15 +457,12 @@ class DifficultyGlow(Toggle):
     default = True
 
 
-class DifficultyExtremeThreats(Choice):
-    """Whether eliminating an extreme threat could be required.
-    This includes Red Lizards for The Dragon Slayer and Red Centipedes or Aquapedes for the food quest.
-    "Capable slugcats" include Gourmand, Artificer, Spearmaster and Sofanthiel."""
+class DifficultyExtremeThreats(Toggle):
+    """Whether eliminating an extreme threat could be required (such as for a food quest check).
+    This includes Daddy Long Legs (and variants), Red Lizards, King Vultures, Miros Vultures,
+    Miros Birds, Aquapedes, and Red Centipedes."""
     display_name = "Extreme threats"
-    option_all_slugcats = 2
-    option_capable_slugcats = 1
-    option_off = 0
-    default = 1
+    default = 0
 
 
 class DifficultySubmerged(Toggle):
@@ -296,6 +473,27 @@ class DifficultySubmerged(Toggle):
     This setting only impacts Rivulet."""
     display_name = "Late Submerged"
     default = True
+
+
+class DifficultyEchoLowKarma(Choice):
+    """How echo apperances work below 5 max karma.
+    Does not affect the echoes in Subterranean and The Exterior, which can always be visited.
+
+    **Unaltered**: Vanilla behavior.  Artificer needs a karma flower and other slugcats do not.
+
+    **Never**: Echoes cannot appear below 5 karma.
+
+    **With Karma Flower**: Echoes may appear below 5 karma
+    if karma flower reinforcement is active and current karma equals max karma.
+    This is the normal behavior for Artificer.
+
+    **Without Karma Flower**: Echoes may appear if current karma equals max karma."""
+    display_name = "Low-karma echo appearance"
+    option_never = 0
+    option_with_karma_flower = 1
+    option_without_karma_flower = 2
+    option_unaltered = 3
+    default = 3
 
 
 #################################################################
@@ -326,154 +524,154 @@ class WtGeneric(Range):
 class WtRock(WtGeneric):
     """The relative weight of rocks in the non-trap filler item pool."""
     display_name = "Rock"
-    item_name = "Object-Rock"
+    item_name = "Rock"
     default = 100
 
 
 class WtSpear(WtGeneric):
     """The relative weight of spears in the non-trap filler item pool."""
     display_name = "Spear"
-    item_name = "Object-Spear"
+    item_name = "Spear"
     default = 40
 
 
 class WtExplosiveSpear(WtGeneric):
     """The relative weight of explosive spears in the non-trap filler item pool."""
-    display_name = "ExplosiveSpear"
-    item_name = "Object-ExplosiveSpear"
+    display_name = "Explosive Spear"
+    item_name = "Explosive Spear"
     default = 10
 
 
 class WtGrenade(WtGeneric):
     """The relative weight of grenades in the non-trap filler item pool."""
     display_name = "Grenade"
-    item_name = "Object-ScavengerBomb"
+    item_name = "Grenade"
     default = 10
 
 
 class WtFlashbang(WtGeneric):
     """The relative weight of flashbangs in the non-trap filler item pool."""
     display_name = "Flashbang"
-    item_name = "Object-FlareBomb"
+    item_name = "Flashbang"
     default = 20
 
 
 class WtSporePuff(WtGeneric):
     """The relative weight of spore puffs in the non-trap filler item pool."""
-    display_name = "Spore puff"
-    item_name = "Object-PuffBall"
+    display_name = "Spore Puff"
+    item_name = "Spore Puff"
     default = 20
 
 
 class WtCherrybomb(WtGeneric):
     """The relative weight of cherrybombs in the non-trap filler item pool."""
     display_name = "Cherrybomb"
-    item_name = "Object-FirecrackerPlant"
+    item_name = "Cherrybomb"
     default = 30
 
 
 class WtLillyPuck(WtGeneric):
     """The relative weight of lilypucks in the non-trap filler item pool."""
     display_name = "Lilypuck (MSC)"
-    item_name = "Object-LillyPuck"
+    item_name = "Lilypuck"
     default = 20
 
 
 class WtFruit(WtGeneric):
     """The relative weight of blue fruit in the non-trap filler item pool."""
-    display_name = "Blue fruit"
-    item_name = "Object-DangleFruit"
+    display_name = "Blue Fruit"
+    item_name = "Blue Fruit"
     default = 60
 
 
 class WtBubbleFruit(WtGeneric):
     """The relative weight of bubble fruit in the non-trap filler item pool."""
-    display_name = "Bubble fruit"
-    item_name = "Object-WaterNut"
+    display_name = "Bubble Fruit"
+    item_name = "Bubble Fruit"
     default = 40
 
 
 class WtEggbugEgg(WtGeneric):
     """The relative weight of eggbug eggs in the non-trap filler item pool."""
-    display_name = "Eggbug egg"
-    item_name = "Object-EggBugEgg"
+    display_name = "Eggbug Egg"
+    item_name = "Eggbug Egg"
     default = 30
 
 
 class WtJellyfish(WtGeneric):
     """The relative weight of jellyfish in the non-trap filler item pool."""
     display_name = "Jellyfish"
-    item_name = "Object-JellyFish"
+    item_name = "Jellyfish"
     default = 15
 
 
 class WtMushroom(WtGeneric):
     """The relative weight of mushrooms in the non-trap filler item pool."""
     display_name = "Mushroom"
-    item_name = "Object-Mushroom"
+    item_name = "Mushroom"
     default = 15
 
 
 class WtSlimeMold(WtGeneric):
     """The relative weight of slime mold in the non-trap filler item pool."""
-    display_name = "Slime mold"
-    item_name = "Object-SlimeMold"
+    display_name = "Slime Mold"
+    item_name = "Slime Mold"
     default = 35
 
 
 class WtFireEgg(WtGeneric):
     """The relative weight of firebug eggs in the non-trap filler item pool."""
     display_name = "Firebug egg (MSC)"
-    item_name = "Object-FireEgg"
+    item_name = "Fire Egg"
     default = 5
 
 
 class WtGlowWeed(WtGeneric):
     """The relative weight of glow weed in the non-trap filler item pool."""
-    display_name = "Glow weed (MSC)"
-    item_name = "Object-GlowWeed"
+    display_name = "Glow Weed (MSC)"
+    item_name = "Glow Weed"
     default = 15
 
 
 class WtElectricSpear(WtGeneric):
     """The relative weight of electric spears in the non-trap filler item pool."""
-    display_name = "Electric spear (MSC)"
-    item_name = "Object-ElectricSpear"
+    display_name = "Electric Spear (MSC)"
+    item_name = "Electric Spear"
     default = 3
 
 
 class WtSingularityBomb(WtGeneric):
     """The relative weight of singularity bombs in the non-trap filler item pool."""
     display_name = "Singularity Bomb (MSC)"
-    item_name = "Object-SingularityBomb"
+    item_name = "Singularity Bomb"
     default = 1
 
 
 class WtLantern(WtGeneric):
     """The relative weight of lanterns in the non-trap filler item pool."""
     display_name = "Lantern"
-    item_name = "Object-Lantern"
+    item_name = "Lantern"
     default = 15
 
 
 class WtKarmaFlower(WtGeneric):
     """The relative weight of karma flowers in the non-trap filler item pool."""
-    display_name = "Karma flower"
-    item_name = "Object-KarmaFlower"
+    display_name = "Karma Flower"
+    item_name = "Karma Flower"
     default = 5
 
 
 class WtVultureMask(WtGeneric):
     """The relative weight of vulture masks in the non-trap filler item pool."""
-    display_name = "Vulture mask"
-    item_name = "Object-VultureMask"
+    display_name = "Vulture Mask"
+    item_name = "Vulture Mask"
     default = 9
 
 
 class WtJokeRifle(WtGeneric):
     """The relative weight of joke rifles in the non-trap filler item pool."""
-    display_name = "Joke rifle (MSC)"
-    item_name = "Object-JokeRifle"
+    display_name = "Joke Rifle (MSC)"
+    item_name = "Joke Rifle"
     default = 1
 
 
@@ -481,104 +679,104 @@ class WtJokeRifle(WtGeneric):
 # TRAP SETTINGS
 class WtTrapStun(WtGeneric):
     """The relative weight of stun traps in the trap filler item pool."""
-    display_name = "Stun"
-    item_name = "Trap-Stun"
+    display_name = "Stun trap"
+    item_name = "Stun trap"
     default = 100
 
 
 class WtTrapZoomies(WtGeneric):
     """The relative weight of zoomies traps in the trap filler item pool."""
-    display_name = "Zoomies"
-    item_name = "Trap-Zoomies"
+    display_name = "Zoomies trap"
+    item_name = "Zoomies trap"
     default = 70
 
 
 class WtTrapTimer(WtGeneric):
     """The relative weight of timer traps in the trap filler item pool."""
-    display_name = "Timer"
-    item_name = "Trap-Timer"
+    display_name = "Timer trap"
+    item_name = "Timer trap"
     default = 100
 
 
 class WtTrapRedLizard(WtGeneric):
     """The relative weight of red lizard traps in the trap filler item pool."""
-    display_name = "RedLizard"
-    item_name = "Trap-RedLizard"
+    display_name = "Red Lizard trap"
+    item_name = "Red Lizard trap"
     default = 40
 
 
 class WtTrapRedCentipede(WtGeneric):
     """The relative weight of red centipede traps in the trap filler item pool."""
-    display_name = "RedCentipede"
-    item_name = "Trap-RedCentipede"
+    display_name = "Red Centipede trap"
+    item_name = "Red Centipede trap"
     default = 25
 
 
 class WtTrapSpitterSpider(WtGeneric):
     """The relative weight of spitter spider traps in the trap filler item pool."""
-    display_name = "RedCentipede"
-    item_name = "Trap-RedCentipede"
+    display_name = "Red Centipede trap"
+    item_name = "Red Centipede trap"
     default = 30
 
 
 class WtTrapBrotherLongLegs(WtGeneric):
     """The relative weight of brother long legs traps in the trap filler item pool."""
-    display_name = "BrotherLongLegs"
-    item_name = "Trap-BrotherLongLegs"
+    display_name = "Brother Long Legs trap"
+    item_name = "Brother Long Legs trap"
     default = 15
 
 
 class WtTrapDaddyLongLegs(WtGeneric):
     """The relative weight of daddy long legs traps in the trap filler item pool."""
-    display_name = "DaddyLongLegs"
-    item_name = "Trap-DaddyLongLegs"
+    display_name = "Daddy Long Legs trap"
+    item_name = "Daddy Long Legs trap"
     default = 5
 
 
 class WtTrapFlood(WtGeneric):
     """The relative weight of flood traps in the trap filler item pool."""
-    display_name = "Flood"
-    item_name = "Trap-Flood"
+    display_name = "Flood trap"
+    item_name = "Flood trap"
     default = 0
     visibility = Visibility.none
 
 
 class WtTrapRain(WtGeneric):
     """The relative weight of rain traps in the trap filler item pool."""
-    display_name = "Rain"
-    item_name = "Trap-Rain"
+    display_name = "Rain trap"
+    item_name = "Rain trap"
     default = 0
     visibility = Visibility.none
 
 
 class WtTrapGravity(WtGeneric):
     """The relative *weight* of gravity traps in the trap filler item pool."""
-    display_name = "Gravity"
-    item_name = "Trap-Gravity"
+    display_name = "Gravity trap"
+    item_name = "Gravity trap"
     default = 0
     visibility = Visibility.none
 
 
 class WtTrapFog(WtGeneric):
     """The relative weight of fog traps in the trap filler item pool."""
-    display_name = "Fog"
-    item_name = "Trap-Fog"
+    display_name = "Fog trap"
+    item_name = "Fog trap"
     default = 0
     visibility = Visibility.none
 
 
 class WtTrapKillSquad(WtGeneric):
     """The relative weight of kill squad traps in the trap filler item pool."""
-    display_name = "KillSquad"
-    item_name = "Trap-KillSquad"
+    display_name = "Killsquad trap"
+    item_name = "Killsquad trap"
     default = 0
     visibility = Visibility.none
 
 
 class WtTrapAlarm(WtGeneric):
     """The relative weight of alarm traps in the trap filler item pool."""
-    display_name = "Alarm"
-    item_name = "Trap-Alarm"
+    display_name = "Alarm trap"
+    item_name = "Alarm trap"
     default = 15
 
 
@@ -586,15 +784,18 @@ class WtTrapAlarm(WtGeneric):
 class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     #################################################################
     # IMPORTANT SETTINGS
+    which_game_version: WhichGameVersion
+    is_msc_enabled: IsMSCEnabled
+    is_watcher_enabled: IsWatcherEnabled
+    which_campaign: WhichCampaign
     passage_progress_without_survivor: PassageProgressWithoutSurvivor
-    which_gamestate: WhichGamestate
     which_victory_condition: WhichVictoryCondition
     which_gate_behavior: WhichGateBehavior
     random_starting_region: RandomStartingRegion
 
     group_important = [
-        PassageProgressWithoutSurvivor, WhichGamestate, WhichVictoryCondition, WhichGateBehavior, DeathLink,
-        RandomStartingRegion
+        WhichGameVersion, IsMSCEnabled, IsWatcherEnabled, WhichCampaign,
+        PassageProgressWithoutSurvivor, WhichVictoryCondition, WhichGateBehavior, DeathLink, RandomStartingRegion
     ]
 
     #################################################################
@@ -607,10 +808,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     difficulty_glow: DifficultyGlow
     difficulty_extreme_threats: DifficultyExtremeThreats
     difficulty_submerged: DifficultySubmerged
+    difficulty_echo_low_karma: DifficultyEchoLowKarma
 
     group_difficulty = [
         ProgressionBalancing, Accessibility, DifficultyMonk, DifficultyHunter, DifficultyOutlaw, DifficultyNomad,
-        DifficultyChieftain, DifficultyGlow, DifficultyExtremeThreats, DifficultySubmerged
+        DifficultyChieftain, DifficultyGlow, DifficultyExtremeThreats, DifficultySubmerged, DifficultyEchoLowKarma,
     ]
 
     #################################################################
@@ -627,12 +829,34 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     # CHECK POOL SETTINGS
     checks_broadcasts: ChecksBroadcasts
     checks_foodquest: ChecksFoodQuest
+    checks_foodquest_expanded: ChecksFoodQuestExpanded
     passage_priority: PassagePriority
     checks_tokens_pearls: ChecksTokensPearls
+    checks_sheltersanity: ChecksSheltersanity
+    checks_submerged: ChecksSubmerged
+    checks_karma_flowers: ChecksKarmaFlowers
     checks_devtokens: ChecksDevTokens
 
     group_checkpool = [
-        ChecksBroadcasts, ChecksFoodQuest, PassagePriority, ChecksTokensPearls, ChecksDevTokens
+        ChecksBroadcasts, ChecksFoodQuest, ChecksFoodQuestExpanded, PassagePriority, ChecksTokensPearls,
+        ChecksDevTokens, ChecksSheltersanity, ChecksSubmerged, ChecksKarmaFlowers,
+    ]
+
+    #################################################################
+    # WATCHER-SPECIFIC SETTINGS
+    logic_rotted_generation: LogicRottedGeneration
+    logic_ripplespace_min_req: LogicMinRippleTarget
+    normal_dynamic_warp_behavior: NormalDynamicWarpBehavior
+    throne_dynamic_warp_behavior: ThroneDynamicWarpBehavior
+    dynamic_warp_pool_size: DynamicWarpPoolSize
+    rotted_region_target: RottedRegionTarget
+    checks_spread_rot: ChecksSpreadRot
+    spinning_top_keys: SpinningTopKeys
+    so_peeping: SoPeeping
+
+    group_watcher = [
+        LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
+        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, SpinningTopKeys,
     ]
 
     #################################################################
@@ -697,13 +921,47 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     ]
 
     @property
-    def msc_enabled(self) -> bool: return self.which_gamestate.value > 9
+    def msc_enabled(self) -> bool: return self.is_msc_enabled == 1
 
     @property
-    def dlcstate(self) -> str: return self.which_gamestate.dlcstate
+    def dlcstate(self) -> str:
+        if self.is_msc_enabled:
+            if self.is_watcher_enabled:
+                return "MSC_Watcher"
+            else:
+                return "MSC"
+        elif self.is_watcher_enabled:
+            return "Watcher"
+        else:
+            return "Vanilla"
 
     @property
-    def starting_scug(self) -> str: return self.which_gamestate.scug_id
+    def starting_scug(self) -> str: return "Watcher" if self.so_peeping == "OAOAOA!" else self.which_campaign.scug_id
+
+    @property
+    def which_gamestate_integer(self) -> int:
+        return int(self.which_campaign) + (10 if self.is_msc_enabled else 0)
+
+    def check_gamestate_validity(self) -> str | None:
+        if self.is_watcher_enabled and self.which_game_version < 1100000:
+            return "The Watcher cannot be enabled with a game version before 1.10.0."
+        if self.is_msc_enabled and self.which_game_version < 1090000:
+            return "More Slugcats Expansion cannot be enabled with a game version before 1.9.0."
+
+        if not self.is_watcher_enabled and self.starting_scug == "Watcher":
+            return "Watcher's campaign cannot be selected without The Watcher enabled."
+        if not self.is_msc_enabled and self.starting_scug in [
+            "Gourmand", "Artificer", "Rivulet", "Spear", "Saint", "Inv"]:
+            return (f"{self.which_campaign.scug_name}'s campaign cannot be selected "
+                    f"without More Slugcats Expansion enabled.")
+
+        return None
+
+    @property
+    def data_block(self) -> dict: return static_data[self.which_game_version.string][self.dlcstate]
+
+    @property
+    def submerged_should_populate(self) -> bool: return self.checks_submerged + (self.starting_scug == "Rivulet") > 1
 
     def get_nontrap_weight_dict(self) -> dict[str, float]:
         ret = {a.item_name: a.value for a in [
@@ -715,8 +973,8 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             self.wt_karma_flowers, self.wt_vulture_masks, self.wt_joke_rifles,
         ]}
         if not self.msc_enabled:
-            for key in ("LillyPuck", "FireEgg", "GlowWeed", "ElectricSpear", "SingulaityBomb", "JokeRifle"):
-                ret[f"Object-{key}"] = 0
+            for key in ("Lilypuck", "Fire Egg", "Glow Weed", "Electric Spear", "Singularity Bomb", "Joke Rifle"):
+                ret[f"{key}"] = 0
 
         return ret
 
@@ -731,12 +989,18 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     def satisfies(self, flag: GameStateFlag): return flag[self.dlcstate, self.starting_scug]
 
+    @property
+    def should_have_rot_spread_checks(self):
+        return (self.starting_scug == "Watcher" and
+                (self.checks_spread_rot + (self.which_victory_condition == "alternate")) > 1)
+
 
 option_groups = [
     OptionGroup("Important", RainWorldOptions.group_important),
     OptionGroup("Difficulty settings", RainWorldOptions.group_difficulty, True),
     OptionGroup("Check pool settings", RainWorldOptions.group_checkpool, True),
     OptionGroup("Item pool settings", RainWorldOptions.group_itempool, True),
+    # OptionGroup("Watcher-specific settings (spoilers)", RainWorldOptions.group_watcher, True),
     OptionGroup("Filler item relative weights", RainWorldOptions.group_filler, True),
     OptionGroup("Trap relative weights", RainWorldOptions.group_traps, True),
 ]

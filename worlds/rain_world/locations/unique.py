@@ -1,25 +1,36 @@
-from .classes import LocationData
+from .classes import LocationData, AbstractLocation, RoomLocation
 from ..options import RainWorldOptions
-from ..conditions.classes import Simple, ConditionBlank
+from ..conditions.classes import Simple, Condition, ConditionBlank
+
+
+class RoomLocationSimpleAccess(RoomLocation):
+    def __init__(self, description: str, alt_names: list[str] | None, offset: int | None, room: str,
+                 access_condition: Condition = ConditionBlank):
+        super().__init__(description, alt_names[0], alt_names[1:], offset, room)
+        self.access_condition = access_condition
+
 
 locations = {
-    "Eat_Neuron": LocationData("Eat_Neuron", "Eat_Neuron", "Events", 4900, Simple("SSOracleSwarmer")),
-    "Gift_Neuron": LocationData("Gift_Neuron", "Gift_Neuron", "Events", 4901, Simple(["Access-SL", "Access-SS"])),
-    "Meet_FP": LocationData(
-        "Meet_FP", "Meet_FP", "Five Pebbles above puppet", 4902,
-        access_condition_generator=lambda opt: ConditionBlank if opt.starting_scug == "Inv" else Simple("The Mark")
-    ),
-    "Meet_LttM": LocationData("Meet_LttM", "Meet_LttM", "Shoreline", 4903, Simple("The Mark")),
-    "Meet_LttM_Spear": LocationData("Meet_LttM_Spear", "Meet_LttM_Spear", "Looks to the Moon", 4904),
-    "Kill_FP": LocationData("Kill_FP", "Kill_FP", "The Rot", 4905),
-    "Save_LttM": LocationData("Save_LttM", "Save_LttM", "Shoreline", 4906, Simple("Object-NSHSwarmer")),
-    "Ascend_FP": LocationData("Ascend_FP", "Ascend_FP", "Silent Construct", 4907, Simple("Karma", 8)),
-    "Ascend_LttM": LocationData("Ascend_LttM", "Ascend_LttM", "Shoreline", 4908, Simple("Karma", 8)),
+    "Eat_Neuron": AbstractLocation("Eat a Neuron Fly", "Eat_Neuron", [], 4900, "Events", Simple("SSOracleSwarmer")),
+    "Gift_Neuron": RoomLocationSimpleAccess(
+        "Give a Neuron Fly to Looks to the Moon", ["Gift_Neuron"], 4901, "SL_AI", Simple(["Access-SL", "Access-SS"])),
+    "Meet_FP": RoomLocationSimpleAccess("Meet Five Pebbles", ["Meet_FP"], 4902, "SS_AI", Simple("The Mark")),
+    "Meet_LttM": RoomLocationSimpleAccess("Meet Looks to the Moon", ["Meet_LttM"], 4903, "SL_AI", Simple("The Mark")),
+    "Meet_LttM_Spear": RoomLocationSimpleAccess("Meet Looks to the Moon", ["Meet_LttM_Spear"], 4904, "DM_AI"),
+    "Kill_FP": RoomLocationSimpleAccess("Remove Rarefaction Cell", ["Kill_FP"], 4905, "RM_CORE"),
+    "Save_LttM": RoomLocationSimpleAccess(
+        "Revive Looks to the Moon", ["Save_LttM"], 4906, "SL_AI", Simple("Slag Key")),
+    "Ascend_FP": RoomLocationSimpleAccess("Ascend Five Pebbles", ["Ascend_FP"], 4907, "CL_AI", Simple("Karma", 8)),
+    "Ascend_LttM": RoomLocationSimpleAccess(
+        "Ascend Looks to the Moon", ["Ascend_LttM"], 4908, "SL_AI", Simple("Karma", 8)),
 }
 
 
 def generate(options: RainWorldOptions) -> list[LocationData]:
-    keys = ["Eat_Neuron"]
+    keys = []
+
+    if options.starting_scug != "Watcher":
+        keys.append("Eat_Neuron")
 
     if options.starting_scug in ["Yellow", "White", "Gourmand"]:
         keys.append("Gift_Neuron")

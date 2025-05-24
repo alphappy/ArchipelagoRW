@@ -43,7 +43,10 @@ cond_friend = Simple(game_data.general.lizards_any, 1)
 # HUNTER
 def generate_cond_hunter(options: RainWorldOptions) -> Condition:
     return AnyOf(
-        Simple(["Scug-Red", "Scug-Artificer", "Scug-Spear", "Scug-Gourmand", "Scug-Inv"], 1),
+        AllOf(
+            Simple(["Scug-Red", "Scug-Artificer", "Scug-Spear", "Scug-Gourmand", "Scug-Inv"], 1),
+            Simple([f"Access-{region}" for region in set(game_data.general.regions_all).difference({"SS", "MS"})], 1)
+        ),
         AllOf(
             Simple(["Scug-Yellow", "Scug-White", "Scug-Rivulet"], 1),
             Simple(
@@ -58,6 +61,8 @@ def generate_cond_hunter(options: RainWorldOptions) -> Condition:
 #################################################################
 # MONK
 def generate_cond_monk(options: RainWorldOptions) -> Condition:
+    if options.starting_scug in ["Spear", "Artificer", "Red"]:
+        return Simple(["Access-SI", "Access-LF", "Access-SS", "Access-DM"], 1)
     return AnyOf(
         Simple(game_data.general.monk_foods_vanilla, options.difficulty_monk.value),
         AllOf(Simple('MSC'), Simple(game_data.general.monk_foods_msc, options.difficulty_monk.value))
@@ -72,12 +77,14 @@ cond_mother = AllOf(
     Simple([f"Access-{region}" for region in game_data.general.slugpup_normal_regions], 1)
 )
 
+
 #################################################################
 # NOMAD
-cond_nomad = AllOf(
-    Simple("MSC"),
-    Simple([f"Access-{region}" for region in game_data.general.regions_all], 5)
-)
+def generate_cond_nomad(options: RainWorldOptions) -> Condition:
+    return AllOf(
+        Simple("MSC"),
+        Simple([f"Access-{region}" for region in game_data.general.regions_all], options.difficulty_nomad.value)
+    )
 
 
 #################################################################
@@ -92,16 +99,16 @@ def generate_cond_outlaw(options: RainWorldOptions) -> Condition:
 
 #################################################################
 # PILGRIM
-cond_pilgrim = AllOf(
-    Simple("MSC"),
-    Simple([f"Echo-{e}" for e in ('CC', 'SI', 'LF', 'SB')], locations=True),
-    AnyOf(Simple("Scug-Saint"), Simple(["Echo-SH", "Echo-UW"], locations=True)),
-    AnyOf(
-        Simple([f"Scug-{scug}" for scug in set(game_data.general.scugs_all) - {"Artificer", "Saint"}], 1),
-        AllOf(Simple("Scug-Artificer"), Simple("Echo-LC", locations=True)),
-        AllOf(Simple("Scug-Saint"), Simple(["Echo-UG", "Echo-SL", "Echo-CL"], locations=True)),
-    )
-)
+def generate_cond_pilgrim(options: RainWorldOptions) -> Condition:
+    if options.starting_scug == "Saint":
+        echoes = ["CC", "SI", "LF", "SB", "UG", "SL", "CL"]
+    elif options.starting_scug == "Artificer":
+        echoes = ["CC", "SI", "LF", "SB", "UW", "SH", "LC"]
+    else:
+        echoes = ["CC", "SI", "LF", "SB", "UW", "SH"]
+
+    return Simple([f"{game_data.general.region_code_to_name[e]} - Echo" for e in echoes], locations=True)
+
 
 #################################################################
 # SCHOLAR
@@ -111,9 +118,8 @@ cond_scholar = AnyOf(
         Simple(["Scug-White", "Scug-Gourmand"], 1),
         Simple(["Access-SL", "The Mark"])
     ),
-    Simple(["Scug-Red", "Scug-Rivulet"], 1),
     AllOf(
-        Simple(["Scug-Artificer", "Scug-Spear"], 1),
+        Simple(["Scug-Artificer", "Scug-Spear", "Scug-Red", "Scug-Rivulet"], 1),
         Simple("The Mark")
     ),
 )
@@ -152,7 +158,7 @@ def wanderer_regions(scug: str, msc: bool) -> set[str]:
     else:
         return {
             "Gourmand": regions_gourmand, "Artificer": regions_artificer, "Rivulet": regions_rivulet,
-            "Spear": regions_spearmaster, "Saint": regions_saint
+            "Spear": regions_spearmaster, "Saint": regions_saint, "Watcher": set()
         }[scug]
 
 
@@ -177,7 +183,7 @@ def wanderer_pip_factory(count: int) -> Condition:
 locations: dict[str, LocationData] = {
     "Martyr": Passage("Martyr", "Early Passages", 5000),
     "Mother": Passage("Mother", "Early Passages", 5001, cond_mother),
-    "Pilgrim": Passage("Pilgrim", "Early Passages", 5002, cond_pilgrim),
+    "Pilgrim": Passage("Pilgrim", "Early Passages", 5002, access_condition_generator=generate_cond_pilgrim),
     "Survivor": Passage("Survivor", "Early Passages", 5003, Simple("Karma", 4)),
 
     "DragonSlayer": Passage("DragonSlayer", "PPwS Passages", 5020,
@@ -189,12 +195,13 @@ locations: dict[str, LocationData] = {
     "Hunter": Passage("Hunter", "Late Passages", 5041, access_condition_generator=generate_cond_hunter),
     "Monk": Passage("Monk", "Late Passages", 5042, access_condition_generator=generate_cond_monk),
     "Outlaw": Passage("Outlaw", "Late Passages", 5043, access_condition_generator=generate_cond_outlaw),
-    "Saint": Passage("Saint", "Late Passages", 5044),
+    "Saint": Passage("Saint", "Late Passages", 5044, access_condition_generator=generate_cond_monk),
     "Scholar": Passage("Scholar", "Late Passages", 5045, cond_scholar),
-    "Nomad": Passage("Nomad", "Late Passages", 5046, cond_nomad),
+    "Nomad": Passage("Nomad", "Late Passages", 5046, access_condition_generator=generate_cond_nomad),
     **{
         f"Wanderer-{i}": LocationData(
-            f"Wanderer-{i}", f"Wanderer-{i}", "PPwS Passages", 5049 + i, wanderer_pip_factory(i)
+            f"The Wanderer - {i} pip{'s' if i > 1 else ''}",
+            f"Wanderer-{i}", [], 5049 + i, "PPwS Passages", wanderer_pip_factory(i)
         ) for i in range(1, 15)
     }
 }
@@ -202,6 +209,9 @@ locations: dict[str, LocationData] = {
 
 def generate(options: RainWorldOptions) -> list[LocationData]:
     keys = ["Survivor", "Friend", "Traveller", "Monk", "Saint"]
+
+    if options.starting_scug == "Watcher":
+        return []
 
     if options.starting_scug != "Artificer":
         keys.append("Chieftain")
@@ -216,6 +226,7 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
         if options.starting_scug in ["White", "Red", "Gourmand"]:
             keys.append("Mother")
 
-    keys += [f"Wanderer-{i+1}" for i in range(len(wanderer_regions(options.starting_scug, options.msc_enabled)))]
+    if options.starting_scug != "Watcher":
+        keys += [f"Wanderer-{i+1}" for i in range(len(wanderer_regions(options.starting_scug, options.msc_enabled)))]
 
     return [locations[key] for key in keys]

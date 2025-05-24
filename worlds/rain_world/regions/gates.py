@@ -2,7 +2,7 @@ from BaseClasses import MultiWorld
 from .classes import room_to_region
 from ..options import RainWorldOptions
 from ..conditions.classes import Condition, ConditionBlank, Simple, AllOf, AnyOf
-from ..game_data.general import scugs_all, accessible_gates
+from ..game_data.general import scugs_all, accessible_gates, region_code_to_name, direct_alternate_regions
 
 
 class GateData:
@@ -31,14 +31,14 @@ class GateData:
                     left_cost = Simple("Karma", self.left - (1 if self.left < 6 else 2))
                     right_cost = Simple("Karma", self.right - (1 if self.right < 6 else 2))
                 case "key_only":
-                    left_cost = Simple(self.name)
-                    right_cost = Simple(self.name)
+                    left_cost = Simple(self.item_name)
+                    right_cost = Simple(self.item_name)
                 case "key_and_karma":
-                    left_cost = AllOf(Simple(self.name), Simple("Karma", self.left - (1 if self.left < 6 else 2)))
-                    right_cost = AllOf(Simple(self.name), Simple("Karma", self.right - (1 if self.right < 6 else 2)))
+                    left_cost = AllOf(Simple(self.item_name), Simple("Karma", self.left - (1 if self.left < 6 else 2)))
+                    right_cost = AllOf(Simple(self.item_name), Simple("Karma", self.right - (1 if self.right < 6 else 2)))
                 case "key_or_karma":
-                    left_cost = AnyOf(Simple(self.name), Simple("Karma", self.left - (1 if self.left < 6 else 2)))
-                    right_cost = AnyOf(Simple(self.name), Simple("Karma", self.right - (1 if self.right < 6 else 2)))
+                    left_cost = AnyOf(Simple(self.item_name), Simple("Karma", self.left - (1 if self.left < 6 else 2)))
+                    right_cost = AnyOf(Simple(self.item_name), Simple("Karma", self.right - (1 if self.right < 6 else 2)))
                 case _:
                     raise ValueError(f"invalid setting: {options.which_gate_behavior=}")
 
@@ -49,6 +49,12 @@ class GateData:
             if self.name == "GATE_MS_SL" and options.starting_scug == "Rivulet" and options.difficulty_submerged:
                 left_condition = AllOf(left_condition, Simple("Disconnect_FP"))
 
+            # HARDCODE
+            if self.name == "GATE_SB_VS" and options.difficulty_glow:
+                right_condition = AllOf(right_condition, Simple("The Glow"))
+            elif self.name == "GATE_DS_SB" and options.difficulty_glow:
+                left_condition = AllOf(left_condition, Simple("The Glow"))
+
             if left.populate and right.populate:
                 left.connect(
                     right, f"{'west' if self.was_swapped else 'east'} through {self.name}",
@@ -58,6 +64,36 @@ class GateData:
                     left, f"{'east' if self.was_swapped else 'west'} through {self.name}",
                     rule=right_condition.check(player)
                 )
+
+    @property
+    def item_name(self) -> str:
+        return self.names[0]
+
+    @property
+    def names(self) -> list[str]:
+        _, left_code, right_code = self.name.split("_")
+        left_name, right_name = region_code_to_name[left_code], region_code_to_name[right_code]
+
+        if self.name == "GATE_SS_UW": right_name = "The Wall"
+        if self.name == "GATE_UW_SS": left_name = "Underhang"
+        if self.name == "GATE_SL_MS": right_name = "Bitter Aerie"
+        if self.name == "GATE_SL_DM": left_name = "The Precipice"
+        if self.name == "GATE_DM_SL": left_name, right_name = "The Struts", "Waterfront Facility"
+
+        ret = [f'Gate: {left_name} to {right_name}', f'Gate: {right_name} to {left_name}']
+
+        for alt in direct_alternate_regions.get(left_code, []):
+            left_alt = region_code_to_name[alt]
+            ret += [f'Gate: {left_alt} to {right_name}', f'Gate: {right_name} to {left_alt}']
+
+        for alt in direct_alternate_regions.get(right_code, []):
+            right_alt = region_code_to_name[alt]
+            ret += [f'Gate: {left_name} to {right_alt}', f'Gate: {right_alt} to {left_name}']
+
+        return ret + [self.name]
+
+    def is_accessible(self, options: RainWorldOptions):
+        return self.name[5:] in accessible_gates[options.dlcstate][options.starting_scug]
 
     def effective_names(self, options: RainWorldOptions) -> dict[str, set[str]]:
         ret = {self.name: set(scugs_all)}
@@ -111,7 +147,7 @@ gates = [
     GateData("GATE_SL_MS", 999, 5),
     GateData("GATE_MS_SL", 1, 5, True),
     GateData("GATE_SB_OE", 1, 5, True, left_extra=Simple(["Scug-White", "Scug-Yellow", "Scug-Gourmand"], 1)),
-    GateData("GATE_UW_LC", -1, 5, left_extra=Simple(["The Mark", "IdDrone", "Scug-Artificer"])),
+    GateData("GATE_UW_LC", -1, 5, left_extra=Simple(["The Mark", "Citizen ID Drone", "Scug-Artificer"])),
     GateData("GATE_OE_SU", 1, 5),
     GateData("GATE_SL_DM", 5, 1),
     GateData("GATE_UW_SL", 1, 1),

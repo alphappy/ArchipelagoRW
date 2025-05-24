@@ -8,8 +8,11 @@ by navigating directly to the `.md` files in this folder.
 - [Checks](checks_en.md)
 - [Compatibility](compatibility_en.md)
 - [Items](items_en.md)
+- [Naming](naming_en.md)
+- [Remix](remix_en.md)
 - [Settings](settings_en.md)
 - [Tracking](tracking_en.md)
+- [Watcher](watcher_en.md) (spoilers!)
 
 Note that the links on _this_ page only work if accessed directly (such as through GitHub),
-and the links on the _target_ pages only work if you use them through the WebHost.
+and the links on the linked pages only work if you use them through the WebHost.

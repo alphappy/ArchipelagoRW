@@ -1,10 +1,25 @@
 from .classes import EventData, VictoryEvent
 from .. import RainWorldOptions
-from ..conditions.classes import Simple
+from ..conditions.classes import Simple, AllOf
+from ..game_data.watcher import normal_regions
 
 
 def generate(options: RainWorldOptions) -> list[EventData]:
     alt = options.which_victory_condition == "alternate"
+
+    if options.starting_scug == "Watcher":
+        if alt:
+            cond = AllOf(
+                Simple("Ripple", 8),
+                # For now, I'm just assuming that if you can access a region, you can rot it.
+                # I can't think of any circumstance where this isn't the case,
+                # even considering all the different dynamic warp options,
+                # but I'm leaving this note here as a thing to investigate later just in case.
+                Simple([f"Access-{r}" for r in normal_regions], options.rotted_region_target.value)
+            )
+            return [VictoryEvent("Purpose", "Outer Rim", cond)]
+        else:
+            return [VictoryEvent("Peace", "Ancient Urban")]
 
     # Saint's victory condition is different regardless of setting.
     if options.starting_scug == "Saint":
@@ -12,7 +27,7 @@ def generate(options: RainWorldOptions) -> list[EventData]:
 
     # Hunter and Sofanthiel have no alterante, and no alternate exists without MSC.
     if not alt or not options.msc_enabled or options.starting_scug in ["Red", "Inv"]:
-        return [VictoryEvent("Ascension", "Subterranean", Simple("Karma", 8))]
+        return [VictoryEvent("Ascension", "Subterranean Depths", Simple("Karma", 8))]
 
     if options.starting_scug in ["Yellow", "White"]:
         return [VictoryEvent("Journey's End", "Outer Expanse")]
@@ -20,7 +35,7 @@ def generate(options: RainWorldOptions) -> list[EventData]:
     if options.starting_scug == "Rivulet":
         return [
             EventData("Install rarefaction cell", "Submerged Superstucture Heart", "Submerged Superstructure",
-                      condition=Simple("Object-EnergyCell")),
+                      condition=Simple("Rarefaction Cell")),
             VictoryEvent("Old Friend", "Shoreline", Simple("Install rarefaction cell"))
         ]
 
@@ -36,7 +51,7 @@ def generate(options: RainWorldOptions) -> list[EventData]:
         ret += [
             EventData("MeetLttM", "MeetLttM", "Looks to the Moon"),
             VictoryEvent("Messenger", "Sky Islands", Simple(
-                ["The Mark", "MeetFP", "MeetLttM", "Rewrite_Spear_Pearl", "PearlObject-Spearmasterpearl"]
+                ["The Mark", "MeetFP", "MeetLttM", "Moon's Final Message", "Spearmaster's Pearl"]
             ))
         ]
 

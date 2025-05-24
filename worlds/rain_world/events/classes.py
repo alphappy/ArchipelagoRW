@@ -20,6 +20,7 @@ class EventData:
         if region.populate:
             item = Item(self.item_name, self.classification, None, player)
             location = Location(player, self.location_item, None, region)
+            location.show_in_spoiler = False
             region.locations.append(location)
             location.place_locked_item(item)
             if self.condition is not None:

@@ -80,12 +80,19 @@ class PhysicalRegion(RegionData):
         multiworld.regions.append(region)
 
     def _gen(self, options: RainWorldOptions) -> bool:
-        rcode, scug = self.prefix[:2], options.starting_scug
+        rcode, scug = self.prefix.split("^")[0], options.starting_scug
+
+        if scug == "Watcher":
+            if len(rcode) == 4 and rcode[0] == "W":
+                if not options.logic_rotted_generation % 2 == 0 and rcode in ["WSUR", "WHIR", "WDSR", "WGWR"]:
+                    return False
+                return True
+            return False
 
         match rcode:
             case "SU":
                 # HARDCODE
-                if self.name == "Outskirts filtration":
+                if self.name != "Outskirts":
                     return options.msc_enabled and scug in ("Yellow", "White", "Gourmand")
                 return True
             case "HI" | "GW" | "CC" | "SI" | "LF" | "SB":
@@ -95,6 +102,9 @@ class PhysicalRegion(RegionData):
             case "SS":
                 return scug not in ("Saint", "Rivulet")
             case "SL":
+                # HARDCODE
+                if self.name == "Shoreline above puppet":
+                    return (scug == "Rivulet" and options.submerged_should_populate) or scug == "Saint"
                 return scug not in ("Artificer", "Spear")
 
         if not options.msc_enabled:
@@ -116,6 +126,8 @@ class PhysicalRegion(RegionData):
             case "UG" | "HR" | "CL":
                 return scug == "Saint"
             case "MS":
+                if not options.submerged_should_populate:
+                    return False
                 # HARDCODE
                 if self.name == "Bitter Aerie":
                     return scug == "Rivulet"

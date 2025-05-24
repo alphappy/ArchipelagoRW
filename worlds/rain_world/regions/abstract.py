@@ -20,8 +20,10 @@ def generate(options: RainWorldOptions):
         ConnectionData("Menu", "Food Quest", "Food Quest"),
     ]
 
-    if options.passage_progress_without_survivor:
-        ret.append(ConnectionData("Menu", "PPwS Passages", "Bypass Survivor requirement"))
+    if options.passage_progress_without_survivor in ("enabled", "bypassed"):
+        ret.append(ConnectionData("Menu", "PPwS Passages", "Passage progress without Survivor"))
+    if options.passage_progress_without_survivor == "bypassed":
+        ret.append(ConnectionData("Menu", "Late Passages", "Bypass Survivor requirement"))
 
     return ret
 
