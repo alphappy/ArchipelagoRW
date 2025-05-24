@@ -37,7 +37,6 @@ class PortalData:
                 raise Exception("There's a portal that doesn't make sense: "
                                 f"{self.source_room}->{self.target_room} "
                                 f"({self.ripple} {self.oneway} {self.spinning_top})")
-            print(f"NULL target changed: {self.source_room} to {self.target_room}")
 
     @property
     def key_name(self):

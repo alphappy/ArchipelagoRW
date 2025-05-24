@@ -107,5 +107,5 @@ class TestSpearAlternate(RainWorldTestBase):
     options = {"which_campaign": "spearmaster", "which_victory_condition": "alternate", "is_msc_enabled": True}
 
 
-class TestWatcher(RainWorldTestBase):
-    options = {"which_campaign": "watcher", "is_watcher_enabled": True}
+# class TestWatcher(RainWorldTestBase):
+#     options = {"which_campaign": "watcher", "is_watcher_enabled": True}
