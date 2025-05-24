@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from Options import PerGameCommonOptions, Toggle, Range, OptionGroup, Choice, ProgressionBalancing, Accessibility, \
-    Visibility, DeathLinkMixin, DeathLink
+    Visibility, DeathLinkMixin, DeathLink, FreeText
 from .conditions import GameStateFlag
 from .game_data import static_data
 
@@ -73,7 +73,7 @@ class WhichCampaign(Choice):
     option_spearmaster = 6
     option_saint = 7
     option_sofanthiel = 8
-    option_watcher = 9
+    # option_watcher = 9
 
     alias_yellow = 0
     alias_white = 1
@@ -162,6 +162,7 @@ class RippleWarpBehavior(Choice):
     option_unaltered = 0
     option_no_ripple_warps = 1
     default = 0
+    visibility = Visibility.none
 
 
 class NormalDynamicWarpBehavior(Choice):
@@ -174,6 +175,7 @@ class NormalDynamicWarpBehavior(Choice):
     option_predetermined = 5
     option_predetermined_unlockable_source = 6
     default = 1
+    visibility = Visibility.none
 
 
 class ThroneDynamicWarpBehavior(Choice):
@@ -183,6 +185,7 @@ class ThroneDynamicWarpBehavior(Choice):
     option_visited = 1
     option_predetermined = 5
     default = 5
+    visibility = Visibility.none
 
 
 class DynamicWarpPoolSize(Range):
@@ -191,6 +194,7 @@ class DynamicWarpPoolSize(Range):
     range_start = 1
     range_end = 18
     default = 18
+    visibility = Visibility.none
 
 
 class LogicRottedGeneration(Choice):
@@ -200,6 +204,7 @@ class LogicRottedGeneration(Choice):
     option_passthrough = 2
     option_full = 3
     default = 0
+    visibility = Visibility.none
 
 
 class LogicMinRippleTarget(Range):
@@ -209,6 +214,7 @@ class LogicMinRippleTarget(Range):
     range_start = 5
     range_end = 9
     default = 5
+    visibility = Visibility.none
 
 
 class RottedRegionTarget(Range):
@@ -218,6 +224,7 @@ class RottedRegionTarget(Range):
     range_start = 2
     range_end = 18
     default = 18
+    visibility = Visibility.none
 
 
 class ChecksSpreadRot(Choice):
@@ -227,6 +234,7 @@ class ChecksSpreadRot(Choice):
     option_alternate_only = 1
     option_on = 2
     default = 1
+    visibility = Visibility.none
 
 
 class SpinningTopKeys(Choice):
@@ -235,6 +243,11 @@ class SpinningTopKeys(Choice):
     option_off = 0
     option_on = 2
     default = 2
+    visibility = Visibility.none
+
+
+class SoPeeping(FreeText):
+    visibility = Visibility.none
 
 
 #################################################################
@@ -262,7 +275,7 @@ class RandomStartingRegion(Choice):
     option_metropolis = 23
     option_looks_to_the_moon = 24
 
-    option_sunlit_port = 30
+    # option_sunlit_port = 30
 
     alias_undergrowth = 3
     alias_waterfront_facility = 5
@@ -829,6 +842,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     rotted_region_target: RottedRegionTarget
     checks_spread_rot: ChecksSpreadRot
     spinning_top_keys: SpinningTopKeys
+    so_peeping: SoPeeping
 
     group_watcher = [
         LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
@@ -912,7 +926,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             return "Vanilla"
 
     @property
-    def starting_scug(self) -> str: return self.which_campaign.scug_id
+    def starting_scug(self) -> str: return "Watcher" if self.so_peeping == "OAOAOA!" else self.which_campaign.scug_id
 
     @property
     def which_gamestate_integer(self) -> int:
@@ -976,7 +990,7 @@ option_groups = [
     OptionGroup("Difficulty settings", RainWorldOptions.group_difficulty, True),
     OptionGroup("Check pool settings", RainWorldOptions.group_checkpool, True),
     OptionGroup("Item pool settings", RainWorldOptions.group_itempool, True),
-    OptionGroup("Watcher-specific settings (spoilers)", RainWorldOptions.group_watcher, True),
+    # OptionGroup("Watcher-specific settings (spoilers)", RainWorldOptions.group_watcher, True),
     OptionGroup("Filler item relative weights", RainWorldOptions.group_filler, True),
     OptionGroup("Trap relative weights", RainWorldOptions.group_traps, True),
 ]

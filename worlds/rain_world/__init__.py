@@ -211,6 +211,9 @@ class RainWorldWorld(World):
         if self.unlockable_pool:
             d["unlockable_warp_pool"] = self.unlockable_pool
 
+        # temp override
+        d["which_campaign"] = self.options.starting_scug
+
         return d
 
     # def generate_output(self, output_directory: str) -> None:
