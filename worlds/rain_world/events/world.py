@@ -35,7 +35,9 @@ def generate_events_for_one_gamestate(options: RainWorldOptions,
                             ):
                                 if tagname in room_tags:
                                     flag = events.setdefault(eventname, GameStateFlag(0))
-                                    flag[options.dlcstate, REW(room_data, set(scugs))] = True
+                                    whitelist = REW(room_data, set(scugs))
+                                    whitelist = whitelist.difference(room_data.get("broken", set()))
+                                    flag[options.dlcstate, whitelist] = True
 
                 for event_type, event_flag in events.items():
                     if options.satisfies(event_flag):
