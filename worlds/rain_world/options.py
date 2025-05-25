@@ -942,7 +942,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def which_gamestate_integer(self) -> int:
         return int(self.which_campaign) + (10 if self.is_msc_enabled else 0)
 
-    def check_gamestate_validity(self) -> str | None:
+    def general_validity_check(self) -> str | None:
         if self.is_watcher_enabled and self.which_game_version < 1100000:
             return "The Watcher cannot be enabled with a game version before 1.10.0."
         if self.is_msc_enabled and self.which_game_version < 1090000:
@@ -954,6 +954,13 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             "Gourmand", "Artificer", "Rivulet", "Spear", "Saint", "Inv"]:
             return (f"{self.which_campaign.scug_name}'s campaign cannot be selected "
                     f"without More Slugcats Expansion enabled.")
+
+        if sum(self.get_nontrap_weight_dict().values()) == 0:
+            return ("At least one non-trap filler weight must be nonzero."
+                    "To disable non-trap filler, set `pct_traps` to 100.")
+        if sum(self.get_trap_weight_dict().values()) == 0:
+            return ("At least one trap filler weight must be nonzero."
+                    "To disable traps, set `pct_traps` to 0.")
 
         return None
 

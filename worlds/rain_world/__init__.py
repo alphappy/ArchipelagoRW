@@ -61,7 +61,7 @@ class RainWorldWorld(World):
     def generate_early(self) -> None:
         # This is the earliest that the options are available.  Player YAML failures should be tripped here.
 
-        if (gamestate_error := self.options.check_gamestate_validity()) is not None:
+        if (gamestate_error := self.options.general_validity_check()) is not None:
             raise OptionError(f"Invalid YAML for {self.player_name}: {gamestate_error}")
 
         #################################################################
