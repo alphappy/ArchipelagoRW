@@ -142,7 +142,6 @@ class RainWorldWorld(World):
         precollect = {
             "MSC": 1 if self.options.msc_enabled else 0,
             f"Scug-{self.options.starting_scug}": 1,
-            "Option-Glow": 0 if self.options.difficulty_glow else 1,
         }
 
         for name, count in pool.items():

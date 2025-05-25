@@ -6,14 +6,11 @@ from ..game_data.general import scugs_all, accessible_gates, region_code_to_name
 
 
 class GateData:
-    def __init__(self, name: str, left: int, right: int, was_swapped: bool = False,
-                 left_extra: Condition = ConditionBlank, right_extra: Condition = ConditionBlank):
+    def __init__(self, name: str, left: int, right: int, was_swapped: bool = False):
         self.name = name
         self.left = left
         self.right = right
         self.was_swapped = was_swapped
-        self.left_extra = left_extra
-        self.right_extra = right_extra
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
         dlcstate = "MSC" if options.msc_enabled else "Vanilla"
@@ -42,18 +39,9 @@ class GateData:
                 case _:
                     raise ValueError(f"invalid setting: {options.which_gate_behavior=}")
 
-            left_condition = AllOf(self.left_extra, Simple([f"Scug-{s}" for s in scugs], 1), left_cost)
-            right_condition = AllOf(self.right_extra, Simple([f"Scug-{s}" for s in scugs], 1), right_cost)
-
-            # HARDCODE
-            if self.name == "GATE_MS_SL" and options.starting_scug == "Rivulet" and options.difficulty_submerged:
-                left_condition = AllOf(left_condition, Simple("Disconnect_FP"))
-
-            # HARDCODE
-            if self.name == "GATE_SB_VS" and options.difficulty_glow:
-                right_condition = AllOf(right_condition, Simple("The Glow"))
-            elif self.name == "GATE_DS_SB" and options.difficulty_glow:
-                left_condition = AllOf(left_condition, Simple("The Glow"))
+            _l, _r = self.additional_conditions(options)
+            left_condition = AllOf(_l, Simple([f"Scug-{s}" for s in scugs], 1), left_cost)
+            right_condition = AllOf(_r, Simple([f"Scug-{s}" for s in scugs], 1), right_cost)
 
             if left.populate and right.populate:
                 left.connect(
@@ -95,6 +83,31 @@ class GateData:
     def is_accessible(self, options: RainWorldOptions):
         return self.name[5:] in accessible_gates[options.dlcstate][options.starting_scug]
 
+    def additional_conditions(self, options: RainWorldOptions) -> tuple[Condition, Condition]:
+        left, right, gg = [], [], self.name[5:]
+
+        if options.difficulty_glow:
+            if gg in ("HI_SH", "GW_SH", "DS_SB"):
+                left.append("The Glow")
+            elif gg in ("SH_UW", "SH_SL", "SB_VS"):
+                right.append("The Glow")
+
+        if gg == "SB_OE":
+            if not options.msc_enabled or options.starting_scug not in ("White", "Yellow", "Gourmand"):
+                left = ["Impossible"]
+            if options.starting_scug == "Gourmand":
+                left.append("The Mark")
+
+        if gg == "UW_LC":
+            if not (options.msc_enabled and options.starting_scug == "Artificer"):
+                left = ["Impossible"]
+            left += ["The Mark", "Citizen ID Drone"]
+
+        if gg == "MS_SL" and options.starting_scug == "Rivulet" and options.difficulty_submerged:
+            left.append("Disconnect_FP")
+
+        return Simple(left), Simple(right)
+
     def effective_names(self, options: RainWorldOptions) -> dict[str, set[str]]:
         ret = {self.name: set(scugs_all)}
 
@@ -135,23 +148,23 @@ gates = [
     GateData("GATE_GW_SL", 3, 2),
     GateData("GATE_HI_CC", 3, 3, True),
     GateData("GATE_HI_GW", 2, 2),
-    GateData("GATE_HI_SH", 5, 1, left_extra=Simple(["The Glow", "Option-Glow"], 1)),
+    GateData("GATE_HI_SH", 5, 1),
     GateData("GATE_LF_SB", 4, 5, True),
     GateData("GATE_SB_SL", 2, 5),
-    GateData("GATE_SH_UW", 1, 1, right_extra=Simple(["The Glow", "Option-Glow"], 1)),
-    GateData("GATE_SH_SL", 3, 2, right_extra=Simple(["The Glow", "Option-Glow"], 1)),
+    GateData("GATE_SH_UW", 1, 1),
+    GateData("GATE_SH_SL", 3, 2),
     GateData("GATE_SI_CC", 3, 2),
     GateData("GATE_SI_LF", 3, 3),
     GateData("GATE_SS_UW", 1, 1),
     GateData("GATE_UW_SS", 5, 1),
     GateData("GATE_SL_MS", 999, 5),
     GateData("GATE_MS_SL", 1, 5, True),
-    GateData("GATE_SB_OE", 1, 5, True, left_extra=Simple(["Scug-White", "Scug-Yellow", "Scug-Gourmand"], 1)),
-    GateData("GATE_UW_LC", -1, 5, left_extra=Simple(["The Mark", "Citizen ID Drone", "Scug-Artificer"])),
+    GateData("GATE_SB_OE", 1, 5, True),
+    GateData("GATE_UW_LC", -1, 5),
     GateData("GATE_OE_SU", 1, 5),
     GateData("GATE_SL_DM", 5, 1),
     GateData("GATE_UW_SL", 1, 1),
-    GateData("GATE_GW_SH", 4, 2, left_extra=Simple(["The Glow", "Option-Glow"], 1)),
+    GateData("GATE_GW_SH", 4, 2),
     GateData("GATE_DS_CC", 5, 3),
     GateData("GATE_SL_CL", 5, 1),
     GateData("GATE_HI_VS", 4, 2),

@@ -1,6 +1,6 @@
 from ..game_data.general import region_code_to_name, scugs_all
 from ..game_data import static_data
-from ..conditions.classes import Simple, AllOf
+from ..conditions.classes import Simple, AllOf, ConditionBlank
 from ..options import RainWorldOptions
 from .classes import ConnectionData, PhysicalRegion
 
@@ -70,7 +70,7 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
 
                     PhysicalRegion("Filtration System", "SB^2", filt),
                     ConnectionData("Subterranean", "Filtration System", "Enter Filtration System",
-                                   Simple(["The Glow", "Option-Glow"], 1)),
+                                   Simple("The Glow") if options.difficulty_glow else ConditionBlank),
                     ConnectionData("Filtration System", "Subterranean", "Exit Filtration System"),
 
                     PhysicalRegion("Subterranean Depths", "SB^3", depths),
@@ -101,7 +101,7 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                                    Simple(list(set(scugs_all).difference({"Artificer"})), 1)),
                     PhysicalRegion("Pipeyard filtration", "VS^2", filt),
                     ConnectionData("Pipeyard", "Pipeyard filtration", "Enter dark filtration area",
-                                   Simple(["The Glow", "Option-Glow"], 1)),
+                                   Simple("The Glow") if options.difficulty_glow else ConditionBlank),
                     ConnectionData("Pipeyard filtration", "Pipeyard", "Exit dark filtration area"),
                 ]
 

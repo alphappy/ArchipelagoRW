@@ -94,11 +94,6 @@ all_items: Dict[str, RainWorldItemData] = {
     "Scug-Watcher": RainWorldItemData("Scug-Watcher", "Scug-Watcher", offset + 119, ItemClassification.progression),
 
     #################################################################
-    # OPTIONSTATE
-
-    "Option-Glow": RainWorldItemData("Option-Glow", "Option-Glow", offset + 170, ItemClassification.progression),
-
-    #################################################################
     # FILLER - WEAPONS
     "Rock": FillerItemData("Rock", "Object-Rock", 200 + offset),
     "Spear": FillerItemData("Spear", "Object-Spear", 201 + offset),
