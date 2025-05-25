@@ -59,6 +59,30 @@ def random_bijective_endofunction(population: list[T], rng: Random, no_fixed_poi
     return ret
 
 
+def necklace_derangement(pop: list[T], rng: Random) -> dict[T, T]:
+    """Generates a derangement of `pop`."""
+    # Generate a random partition of `len(pop)` with no numbers smaller than 3.  These are the necklace lengths.
+    sizes = []
+    remaining = len(pop)
+    while remaining > 2:
+        sizes.append(val := (3 if remaining == 3 else rng.randrange(3, remaining)))
+        remaining -= val
+    # If anything < 3 is left over, slap it onto a random necklace.
+    sizes[rng.randrange(len(sizes))] += remaining
+
+    # Shuffle the list.
+    shuffled = rng.sample(pop, len(pop))
+    targets = []
+    cursor = 0
+    # For each picked necklace size `n`...
+    for size in sizes:
+        # Take the next `n` targets up for consideration and shift them up one, wrapping the first one around.
+        targets += shuffled[cursor + 1:cursor + size] + [shuffled[cursor]]
+        cursor += size
+
+    return dict(zip(pop, shuffled))
+
+
 def placed_object_effective_whitelist(room_data: dict, shiny_data: dict, scuglist: set[str]) -> set[str]:
     maybe_whitelist = shiny_data.get("whitelist", set())
 

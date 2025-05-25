@@ -6,7 +6,7 @@ from ..options import RainWorldOptions
 from ..conditions.classes import Simple, ConditionBlank, AllOf
 from ..game_data.watcher import targets, normal_regions
 from ..game_data.general import region_code_to_name
-from ..utils import random_bijective_endofunction
+from ..utils import necklace_derangement
 
 
 class DynamicWarpConnection(ConnectionData):
@@ -90,12 +90,12 @@ def generate(options: RainWorldOptions, rng: Random):
     ####################################################################################################################
     match options.normal_dynamic_warp_behavior:
         case "predetermined":
-            for source, target_region in random_bijective_endofunction(normal_regions, rng).items():
+            for source, target_region in necklace_derangement(normal_regions, rng).items():
                 target = rng.sample([t for t in targets if t.room.startswith(target_region)], 1)[0]
                 ret.append(PredeterminedNormalDynamic(source, target.room, target.ripple))
 
         case "predetermined_unlockable_source":
-            for source, target_region in random_bijective_endofunction(normal_regions, rng).items():
+            for source, target_region in necklace_derangement(normal_regions, rng).items():
                 target = rng.sample([t for t in targets if t.room.startswith(target_region)], 1)[0]
                 ret.append(PredeterminedNormalDynamic(source, target.room, target.ripple, True))
 
