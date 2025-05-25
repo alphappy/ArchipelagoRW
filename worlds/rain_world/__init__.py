@@ -189,6 +189,7 @@ class RainWorldWorld(World):
             "checks_broadcasts",  # ...whether broadcasts should be avilable.
             "checks_tokens_pearls",  # ...whether all tokens should be available.
             "checks_sheltersanity",  # ...whether sheltersanity is enabled.
+            "checks_devtokens",  # ...whether devtokens should be checks.
             "which_victory_condition",  # ...which victory condition is a win.
             "which_gate_behavior",  # ...how gates should behave.
             "difficulty_echo_low_karma",  # ...how low-karma echo appearances should be handled.

@@ -13,7 +13,7 @@ name_format = {
     "GoldToken": "Level Token - {0}",
     "RedToken": "Safari Token",
     "WhiteToken": "Broadcast - {0}",
-    "DevToken": "Dev Token - {0}",
+    "DevToken": "Dev Token - {1}",
     "UniqueDataPearl": "Pearl - {0}",
     "DataPearl": "Pearl - {0}",
 }
@@ -21,13 +21,13 @@ name_format = {
 
 class TokenOrPearl(RoomLocation):
     def __init__(self, name: str, kind: str, r: str, offset: int, old_name: str):
-        super().__init__(name_format[kind].format(name), old_name, [], offset, r)
+        super().__init__(name_format[kind].format(name, r), old_name, [], offset, r)
         self.generation_flag = GameStateFlag(0)
         self.room = r
         self.kind = kind
 
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-        if self.kind == "DevToken":
+        if self.kind == "DevToken" and not options.checks_devtokens:
             return False
         if self.kind == "WhiteToken":
             if not (options.msc_enabled and (options.starting_scug == "Spear") + options.checks_broadcasts.value >= 2):
