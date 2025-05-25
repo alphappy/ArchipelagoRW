@@ -218,10 +218,15 @@ class RainWorldWorld(World):
 
         return d
 
-    # def generate_output(self, output_directory: str) -> None:
-    #     import json
-    #     with open(f'{output_directory}/client_map.json', 'w') as f:
-    #         json.dump({"locations": locations.classes.location_client_map, "items": items.item_client_names}, f)
+    def generate_output(self, output_directory: str) -> None:
+        if self.options.debug_output:
+            import json
+            with open(f'{output_directory}/client_map.json', 'w') as f:
+                json.dump({"locations": locations.classes.location_client_map, "items": items.item_client_names}, f)
+            with open(f'{output_directory}/player_{self.player}_debug.json', 'w') as f:
+                json.dump(fp=f, obj={
+                    "slot_data": self.fill_slot_data()
+                })
 
     def interpret_slot_data(self, slot_data: dict[str, Any]) -> None:
         """Universal Tracker support - synchronize UT internal multiworld with actual slot data."""

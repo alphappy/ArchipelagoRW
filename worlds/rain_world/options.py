@@ -157,6 +157,11 @@ class WhichGateBehavior(Choice):
     default = 0
 
 
+class DebugOutput(Toggle):
+    default = False
+    visibility = Visibility.none
+
+
 #################################################################
 # WATCHER SETTINGS
 class RippleWarpBehavior(Choice):
@@ -792,6 +797,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     which_victory_condition: WhichVictoryCondition
     which_gate_behavior: WhichGateBehavior
     random_starting_region: RandomStartingRegion
+    debug_output: DebugOutput
 
     group_important = [
         WhichGameVersion, IsMSCEnabled, IsWatcherEnabled, WhichCampaign,
