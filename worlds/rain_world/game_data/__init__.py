@@ -11,12 +11,13 @@ from .watcher import portals
 apply_hardcoded_exceptions(static_data)
 
 # (root)
-#   game version ("1.9.15.3" | "1.10.1")
+#   game version ("1.9.15.3" | "1.10.4")
 #     dlcstate ("Vanilla" | "MSC")
 #       region code
 #         room name
 #           "whitelist": set of whitelisted scugs
 #           "blacklist": set of blacklisted scugs
+#           "broken"?: set of scugs for which this shelter is broken
 #           "alted": set of scugs with alternate settings files
 #           "tags": set of room tags
 #           "spawners"

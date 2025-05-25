@@ -79,11 +79,13 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
     gameversion_data = data.setdefault(gameversion, {})
     for dlcstate, all_scugs in dlcstate_and_scugs.items():
         gameversion_data[dlcstate] = {}
+        print(f"Version: {gameversion}")
 
         # Loop over every world file.
         for fp in glob(path.join(ROOT_FP, gameversion, dlcstate, 'world', '*', 'world_*.txt')):
             region = path.basename(fp).split("_")[1].split(".")[0].upper()
             region_data = gameversion_data[dlcstate].setdefault(region, {})
+            print(f"  World file: {region}")
 
             with open(fp) as f:
                 # The world files are broken up into distinct blocks with clear entry and exit.
@@ -183,6 +185,19 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                                     if crit.type != "NONE":
                                         dentype = "precycle" if "PreCycle" in crit.attributes else "normal"
                                         sdc(region_data, set(spawner.scugs), room.upper(), "spawners", dentype, crit.type)
+
+    ####################################################################################################################
+        # Loop over every world properties file.
+        print(f"World properties files")
+        for fp in glob(path.join(ROOT_FP, gameversion, dlcstate, 'world', '*', 'properties.txt')):
+            region = path.basename(path.dirname(fp)).upper()
+            region_data = gameversion_data[dlcstate].setdefault(region, {})
+
+            with open(fp) as f:
+                for line in f:
+                    if line.startswith("Broken Shelters:"):
+                        scug, shelter = [e.strip() for e in line[16:].split(":")]
+                        region_data[shelter.upper()].setdefault("broken", set()).add(scug)
 
     ####################################################################################################################
         # Get the set of all normal settings files to be subtracted from all settings files to get alt settings files.
@@ -289,6 +304,7 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
 
 data["SPECIAL"] = special_data
 
+print("Writing")
 with open("data.py", "w") as f:
     f.write(f'data = {data}\n')
 
