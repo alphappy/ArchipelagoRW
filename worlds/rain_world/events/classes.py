@@ -3,6 +3,7 @@ from worlds.generic.Rules import add_rule
 from ..options import RainWorldOptions
 from ..game_data.general import scugs_all
 from ..conditions.classes import Condition, ConditionBlank
+from ..regions.classes import room_to_region, RainWorldRegion
 
 
 class EventData:
@@ -58,3 +59,18 @@ class StaticWorldEvent:
             region.locations.append(location)
             location.place_locked_item(item)
             add_rule(location, self.condition.check(player))
+
+
+class StaticWorldEventDetached:
+    def __init__(self, name: str, rooms: list[str]):
+        self.name, self.rooms = name, rooms
+
+    def make(self, player: int, multiworld: MultiWorld, _: RainWorldOptions):
+        regions = {multiworld.get_region(name, player) for name in {room_to_region[room] for room in self.rooms}}
+        if regions := {r for r in regions if r.populate}:
+            multiworld.regions.append(event_region := RainWorldRegion(self.name, player, multiworld, True))
+            event_region.locations.append(location := Location(player, self.name, None, event_region))
+            location.place_locked_item(Item(self.name, ItemClassification.progression, None, player))
+            location.show_in_spoiler = False
+            for region in regions:
+                region.connect(event_region, f"{self.name} in {region.name}")

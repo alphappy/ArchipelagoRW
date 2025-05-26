@@ -9,6 +9,11 @@ def apply_hardcoded_exceptions(data: dict):
                         if objtype == "KarmaFlower":
                             obj_data.setdefault("filter", {"Red"}).update({"Red"})
 
+                # `room_to_region` needs all the `OFFSCREEN`s to be different
+                if offscreen_data := region_data.get("OFFSCREEN", {}):
+                    region_data[f"{region}_OFFSCREEN"] = offscreen_data
+                    del region_data["OFFSCREEN"]
+
             if "MSC" in dlcstate:
                 # This token is not reasonably accessible for Artificer or at all for Sofanthiel.
                 dlcstate_data["GW"]["GW_C09"]["shinies"]["BrotherLongLegs"]["filter"].update({"Artificer", "Inv"})
