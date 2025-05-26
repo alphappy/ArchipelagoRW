@@ -36,18 +36,15 @@ def generate_events_for_one_gamestate(options: RainWorldOptions, regions: list[R
                                     if options.starting_scug in whitelist:
                                         detached.setdefault(eventname, []).append(room)
 
+    # HARDCODE
+    detached.setdefault("SSOracleSwarmer", []).extend(["SS_E07", "SL_AI", "RM_AI", "DM_AI", "LC_LAB01"])
+    if options.starting_scug == "Inv":
+        detached.setdefault("Yeek", ["GATE_HI_CC[CC]", "GATE_SI_CC[CC]", "GATE_CC_UW[CC]"])
+
     for event_type, event_rooms in detached.items():
         ret.append(StaticWorldEventDetached(event_type, event_rooms))
 
-    # HARDCODE
-    for room in ("SS_E07", "SL_AI", "RM_AI", "DM_AI", "LC_LAB01"):
-        ret.append(StaticWorldEvent("SSOracleSwarmer", f'{room} SSOracleSwarmer',
-                                    room_to_region[room]))
-
-    # HARDCODE: Yeeks spawn for Sofanthiel without dens.
-    ret.append(StaticWorldEvent("Yeek", "Chimney Canopy gimmick", "Chimney Canopy", scugs={"Inv"}))
-
     if options.starting_scug in {"Yellow", "White", "Red", "Gourmand", "Rivulet", "Saint"}:
-        ret.append(StaticWorldEvent("Meet LttM", f'{room} LttM', room_to_region["SL_AI"], Simple("The Mark")))
+        ret.append(StaticWorldEvent("Meet LttM", f'Meet LttM', room_to_region["SL_AI"], Simple("The Mark")))
 
     return ret
