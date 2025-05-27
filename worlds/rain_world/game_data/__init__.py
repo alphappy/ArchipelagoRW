@@ -14,23 +14,23 @@ apply_hardcoded_exceptions(static_data)
 
 # (root)
 #   game version ("1.9.15.3" | "1.10.4")
-#     dlcstate ("Vanilla" | "MSC")
-#       region code
-#         room name
-#           "whitelist": set of whitelisted scugs
-#           "blacklist": set of blacklisted scugs
-#           "broken"?: set of scugs for which this shelter is broken
-#           "alted": set of scugs with alternate settings files
+#     dlcstate ("Vanilla" | "MSC" | "Watcher" | "MSC_Watcher")
+#       region code, all caps
+#         room name, all caps, including region code
+#           "whitelist": ScugFlag for `EXCLUSIVEROOM`
+#           "blacklist": ScugFlag for `HIDEROOM`
+#           "broken"?: ScugFlag for broken shelters
+#           "alted": ScugFlag for alternate room settings files
 #           "tags": set of room tags
 #           "spawners"
 #             den type ("normal" | "precycle" | "lineage_start" | "lineage_mid" | "lineage_end")
-#               creature type: set of whitelisted scugs
+#               creature type: ScugFlag of scugs that see this creature and den type
 #           "shinies"
 #             shiny name
-#               "filter": set of filtered scugs
-#               "whitelist": set of whitelisted scugs
+#               "filter": ScugFlag of filtered scugs
+#               "whitelist": ScugFlag of whitelisted scugs
 #               "kind": token/pearl type
 #           "objects"
 #             object type
-#               "filter": set of filtered scugs
-#               "whitelist": set of whitelisted scugs
+#               "filter": ScugFlag of filtered scugs
+#               "whitelist": ScugFlag of whitelisted scugs
