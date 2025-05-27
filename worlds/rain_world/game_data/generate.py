@@ -2,8 +2,9 @@ import re
 from os import path
 from glob import glob
 
+from bitflag import ScugFlag
 from generate_classes import Spawner
-from generate_methods import parse_placed_objects, splitstrip, setdefaultchain as sdc
+from generate_methods import parse_placed_objects, splitstrip, setdefaultchain as sdc, recursive_flag_reduction
 
 ########################################################################################################################
 # Before the generator may run, a directory must be created to house each dlcstate's files.
@@ -82,10 +83,10 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
         print(f"Version: {gameversion}")
 
         # Loop over every world file.
+        print(f"  World files...")
         for fp in glob(path.join(ROOT_FP, gameversion, dlcstate, 'world', '*', 'world_*.txt')):
             region = path.basename(fp).split("_")[1].split(".")[0].upper()
             region_data = gameversion_data[dlcstate].setdefault(region, {})
-            print(f"  World file: {region}")
 
             with open(fp) as f:
                 # The world files are broken up into distinct blocks with clear entry and exit.
@@ -119,10 +120,14 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                         # room names can't differ by capitalization alone anyway.
                         match parts:
                             case [scugname, "EXCLUSIVEROOM", roomname]:
-                                sdc(region_data, {scugname}, roomname.upper(), "whitelist")
+                                scugname = scugname.split("}")[-1]
+                                if scugname != "Slugpup":
+                                    region_data.setdefault(roomname.upper(), {}).setdefault("whitelist", ScugFlag())[scugname] = True
 
                             case [scugname, "HIDEROOM", roomname]:
-                                sdc(region_data, {scugname}, roomname.upper(), "blacklist")
+                                scugname = scugname.split("}")[-1]
+                                if scugname != "Slugpup":
+                                    region_data.setdefault(roomname.upper(), {}).setdefault("blacklist", ScugFlag())[scugname] = True
 
                             # A conditional room connection looks like `Artificer : GATE_HI_GW : GW_B01 : GW_B01_PAST`.
                             # We don't need these for the static data right now.
@@ -170,7 +175,8 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                             for i, crit in enumerate(spawner.crits):
                                 if crit.type != "NONE":
                                     dentype = "lineage_start" if i == 0 else ("lineage_end" if i == len(spawner.crits) - 1 else "lineage_mid")
-                                    sdc(region_data, set(spawner.scugs), room.upper(), "spawners", dentype, crit.type)
+                                    region_data.setdefault(room.upper(), {}).setdefault("spawners", {}).setdefault(
+                                        dentype, {}).setdefault(crit.type, ScugFlag())[tuple(spawner.scugs)] = True
 
                         # A normal den declaration looks like:
                         # GW_C02 : 2-CicadaB-2, 3-CicadaB, 5-Scavenger-{PreCycle,Seed:2837}, 5-TentaclePlant-{PreCycle}
@@ -184,11 +190,12 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                                 for crit in spawner.crits:
                                     if crit.type != "NONE":
                                         dentype = "precycle" if "PreCycle" in crit.attributes else "normal"
-                                        sdc(region_data, set(spawner.scugs), room.upper(), "spawners", dentype, crit.type)
+                                        region_data.setdefault(room.upper(), {}).setdefault("spawners", {}).setdefault(
+                                            dentype, {}).setdefault(crit.type, ScugFlag())[tuple(spawner.scugs)] = True
 
     ####################################################################################################################
         # Loop over every world properties file.
-        print(f"World properties files")
+        print(f"  World properties files...")
         for fp in glob(path.join(ROOT_FP, gameversion, dlcstate, 'world', '*', 'properties.txt')):
             region = path.basename(path.dirname(fp)).upper()
             region_data = gameversion_data[dlcstate].setdefault(region, {})
@@ -197,15 +204,21 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                 for line in f:
                     if line.startswith("Broken Shelters:"):
                         scug, shelter = [e.strip() for e in line[16:].split(":")]
-                        region_data[shelter.upper()].setdefault("broken", set()).add(scug)
+                        region_data[shelter.upper()].setdefault("broken", ScugFlag())[scug] = True
 
     ####################################################################################################################
         # Get the set of all normal settings files to be subtracted from all settings files to get alt settings files.
         normal_settings_files = set(glob(path.join(ROOT_FP, gameversion, dlcstate, 'world', '*-rooms', '*_*_settings.txt')))
         all_settings_files = set(glob(path.join(ROOT_FP, gameversion, dlcstate, 'world', '*-rooms', '*_*_settings*')))
+        settings_file_count = len(all_settings_files)
+        settings_file_i = 0
 
         # We need to process the normal settings files first, then update with alt settings files.
         for fp in list(normal_settings_files) + list(all_settings_files - normal_settings_files):
+            if settings_file_i % 100 == 0:
+                print(f"  Room settings {settings_file_i / settings_file_count:.0%}...")
+            settings_file_i += 1
+
             if match := re_rsf.match(path.basename(fp)):
                 room, region, scug = match.groups()
                 # We force the room to be uppercase as in previous sections.
@@ -227,29 +240,28 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
 
             for obj in room_objects:
                 custom_data = obj["data"]
-                blacklist: set = obj["filtered"]
+                blacklist: set = obj["filtered"] or set()
 
                 if obj['type'] in SHINY_LIST:
                     # For shinies, we need the name.
                     name = custom_data[4 if "Pearl" in obj['type'] else 5]
                     # Tokens have their own blacklist in custom data, though it's not always used.
                     if "Token" in obj['type']:
-                        blacklist = set(custom_data[6].split("|")).union(blacklist or set())
+                        blacklist = set(custom_data[6].split("|")).union(blacklist).difference({""})
                     # Pearls with `Misc` in the name or a blank name should be ignored.
                     elif "Misc" in name or name.strip() == "":
                         continue
 
-                    r_data["shinies"][name] = {"filter": blacklist, "kind": obj["type"]}
+                    r_data["shinies"][name] = {"filter": ScugFlag(blacklist), "kind": obj["type"]}
 
                 elif obj['type'] in OBJECT_WHITELIST:
                     try:
                         # If this object already has an entry in the temp data,
                         # then there's another placed object of the same kind.
                         # Add in the new blacklist (which is an intersection).
-                        s = r_data['objects'][obj['type']]['filter']
-                        r_data['objects'][obj['type']]['filter'] = s.intersection(blacklist or set())
+                        r_data['objects'][obj['type']]['filter'].intersect(blacklist)
                     except KeyError:
-                        r_data['objects'][obj['type']] = {"filter": blacklist or set()}
+                        r_data['objects'][obj['type']] = {"filter": ScugFlag(blacklist)}
 
                 elif obj['type'] == "WarpPoint":
                     # oneway, onewayentrance, ripple; see Watcher.WarpPoint.WarpPointData.FromString
@@ -277,20 +289,21 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                 room_data.update(r_data)
             else:
                 # This is an alt settings file.  First, add this scug to the list of alted scugs.
-                sdc(room_data, {scug}, "alted")
+                room_data.setdefault("alted", ScugFlag()).add(scug)
 
                 for shiny_name, shiny_data in r_data['shinies'].items():
                     # On the rare off-chance that an alt settings file blacklist the scug in question.
                     if scug not in shiny_data["filter"]:
                         # Update the room data - importantly updating the whitelist
-                        sdc(room_data, shiny_data["kind"], "shinies", shiny_name, "kind")
-                        sdc(room_data, {scug}, "shinies", shiny_name, "whitelist")
+                        room_data.setdefault("shinies", {}).setdefault(shiny_name, {})["kind"] = shiny_data["kind"]
+                        room_data.setdefault("shinies", {}).setdefault(shiny_name, {}).setdefault("whitelist", ScugFlag()).add(scug)
 
                 for object_name, object_data in r_data['objects'].items():
                     if scug not in object_data["filter"]:
-                        sdc(room_data, {scug}, "objects", object_name, "whitelist")
+                        room_data.setdefault("objects", {}).setdefault(object_name, {}).setdefault("whitelist", ScugFlag()).add(scug)
 
     ####################################################################################################################
+        print("  Post-processing...")
         # Append region code to gate names (there are at least two version of every gate room).
         # Yes, they're stored under different region dicts, but this simplifies the AP connection logic.
         for region, region_data in gameversion_data[dlcstate].items():
@@ -301,11 +314,14 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                 del region_data[key]
 
 ########################################################################################################################
+recursive_flag_reduction(data)
+
+########################################################################################################################
 
 data["SPECIAL"] = special_data
 
-print("Writing")
+print("Writing to file...")
 with open("data.py", "w") as f:
     f.write(f'data = {data}\n')
 
-print('script ending normally')
+print('Script ending normally')

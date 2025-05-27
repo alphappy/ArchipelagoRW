@@ -5,9 +5,11 @@ __all__ = ['portals', 'static_data', 'general']
 
 from . import general
 from .data import data as static_data
+from .generate_methods_post import recursive_flag_expansion
 from .hardcode import apply_hardcoded_exceptions
 from .watcher import portals
 
+recursive_flag_expansion(static_data)
 apply_hardcoded_exceptions(static_data)
 
 # (root)

@@ -1,5 +1,7 @@
 import re
 
+from bitflag import ScugFlag
+
 re_3 = re.compile(r'\b(\w+)><([\d.]+)><([\d.]+)><([^,]*)')
 
 
@@ -64,3 +66,11 @@ def setdefaultchain(root: dict, value, *keys):
 def splitstrip(text: str, *args) -> list[str]:
     """Split a string, then strip() each element of the array."""
     return [i.strip() for i in text.split(*args)]
+
+
+def recursive_flag_reduction(d: dict):
+    for k, v in d.items():
+        if type(v) == ScugFlag:
+            d[k] = v.value
+        elif type(v) == dict:
+            recursive_flag_reduction(v)
