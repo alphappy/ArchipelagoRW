@@ -195,6 +195,10 @@ class RainWorldWorld(World):
             "difficulty_echo_low_karma",  # ...how low-karma echo appearances should be handled.
             "rotted_region_target",  # ...how many regions must be rotted for Watcher's alt ending.
             "spinning_top_keys",  # ...whether Spinning Top should appear without a key.
+
+            # External tracker needs to know...
+            "difficulty_glow", "difficulty_monk", "difficulty_hunter", "difficulty_outlaw", "difficulty_chieftain",
+            "difficulty_nomad", "checks_submerged",
         )
         # backwards compatibility
         d["which_gamestate"] = self.options.which_gamestate_integer
