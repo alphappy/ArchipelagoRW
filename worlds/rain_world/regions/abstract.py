@@ -15,7 +15,8 @@ def generate(options: RainWorldOptions):
 
         ConnectionData("Menu", "Events", "Unique event checks"),
         ConnectionData("Menu", "Early Passages", "Early Passages"),
-        ConnectionData("Early Passages", "Late Passages", "Late Passages", Simple("Passage-Survivor", locations=True)),
+        ConnectionData("Early Passages", "Late Passages", "Late Passages",
+                       Simple("Passage - The Survivor", locations=True)),
         ConnectionData("Late Passages", "PPwS Passages", "PPwS Passages"),
         ConnectionData("Menu", "Food Quest", "Food Quest"),
     ]
