@@ -5,7 +5,7 @@ from BaseClasses import MultiWorld
 from .classes import RegionData, ConnectionData, room_to_region
 from ..options import RainWorldOptions
 from ..conditions.classes import Simple, ConditionBlank, AllOf
-from ..game_data.watcher import targets, normal_regions
+from ..game_data.watcher import targets, normal_regions, abnormal_regions
 from ..game_data.general import region_code_to_name
 from ..utils import necklace_derangement
 
@@ -89,10 +89,14 @@ def generate(options: RainWorldOptions, rng: Random):
         # Map targets not in the pool to targets in the pool for replacement.
         # Cycle the pool to get an even distribution of replacements for small pools.
         # Pairwise the pool so there is a second option if it would replace a region's target with itself.
-        replacing = dict(zip(list(set(normal_regions).difference(set(pool))), pairwise(cycle(pool))))
+        pool_sampler = pairwise(cycle(pool))
+        replacing = dict(zip(list(set(normal_regions).difference(set(pool))), pool_sampler))
 
-        # Generate a derangement of the normal regions and iterate through it.
-        for source, target_region in necklace_derangement(normal_regions, rng, mnl).items():
+        # Generate a derangement of the normal regions.  Add the abnormal regions to the mapping.
+        mapping = necklace_derangement(normal_regions, rng, mnl)
+        mapping.update({k: v[0] for k, v in zip(abnormal_regions, pool_sampler)})
+
+        for source, target_region in mapping.items():
             # Get the potential replacements for this target if it is not in the pool.
             rep1, rep2 = replacing.get(target_region, (target_region, target_region))
             # Replace the target region, but not with the source region.

@@ -98,3 +98,5 @@ normal_regions = [
     'WVWA', 'WRFB', 'WRFA', 'WSKA', 'WPTA', 'WRRA', 'WSKB', 'WARF', 'WTDB',
     'WARE', 'WTDA', 'WSKC', 'WARD', 'WARB', 'WARC', 'WBLA', 'WARG', 'WSKD',
 ]
+
+abnormal_regions = {"WSUR", "WHIR", "WGWR", "WDSR", "WSSR", "WORA", "WRSA", "WARA", "WAUA"}
