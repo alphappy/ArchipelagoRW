@@ -401,6 +401,7 @@ class ChecksDevTokens(Toggle):
     """Whether dev commentary tokens should be checks.  Requires MSC."""
     display_name = "Dev tokens"
     default = False
+    visibility = Visibility.none
 
 
 class ChecksSheltersanity(Toggle):
@@ -422,6 +423,7 @@ class ChecksKarmaFlowers(Toggle):
     """Whether each static karma flower spawn is a check."""
     display_name = "Karma Flowers"
     default = False
+    visibility = Visibility.none
 
 
 #################################################################
@@ -756,14 +758,16 @@ class WtTrapRain(WtGeneric):
     """The relative weight of rain traps in the trap filler item pool."""
     display_name = "Rain trap"
     item_name = "Rain trap"
-    default = 50
+    default = 0
+    visibility = Visibility.none
 
 
 class WtTrapGravity(WtGeneric):
     """The relative *weight* of gravity traps in the trap filler item pool."""
     display_name = "Gravity trap"
     item_name = "Gravity trap"
-    default = 10
+    default = 0
+    visibility = Visibility.none
 
 
 class WtTrapFog(WtGeneric):

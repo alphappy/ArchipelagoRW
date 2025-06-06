@@ -215,9 +215,6 @@ class RainWorldWorld(World):
         d["predetermined_warps"] = self.predetermined_warps
         d["warp_pool"] = list(self.warp_pool)
 
-        # temp override
-        d["which_campaign"] = self.options.starting_scug
-
         return d
 
     def generate_output(self, output_directory: str) -> None:
