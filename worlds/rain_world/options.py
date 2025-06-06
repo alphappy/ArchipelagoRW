@@ -45,11 +45,11 @@ class WhichGameVersion(Choice):
     alias_1_9_15_3 = 1091503
     alias_1_9_15 = 1091503
     alias_1_9 = 1091503
-    option_1_10_1 = 1100400
+    option_1_10_4 = 1100400
     alias_1_10 = 1100400
-    alias_1_10_2 = 1100200
-    alias_1_10_3 = 1100300
-    alias_1_10_4 = 1100400
+    alias_1_10_1 = 1100400
+    alias_1_10_2 = 1100400
+    alias_1_10_3 = 1100400
     default = 1100400
 
     displaying = {
