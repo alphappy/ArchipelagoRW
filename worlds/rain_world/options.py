@@ -949,6 +949,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def starting_scug(self) -> str: return "Watcher" if self.so_peeping == "OAOAOA!" else self.which_campaign.scug_id
 
     @property
+    def worldstate(self) -> tuple[str, str]: return self.which_game_version.string, self.dlcstate
+
+    @property
     def which_gamestate_integer(self) -> int:
         return int(self.which_campaign) + (10 if self.is_msc_enabled else 0)
 
