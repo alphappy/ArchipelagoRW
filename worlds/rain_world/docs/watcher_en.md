@@ -71,14 +71,14 @@ and the creation of Ripple spawn, remain tied to current Ripple level.
 Most of Watcher's checks fall into one of a few categories.
 See [the naming subpage](/tutorial/Rain%20World/naming/en) for naming of checks not unique to Watcher.
 
-| Check type         | Count | Naming                                                                                                                          |
-|--------------------|------:|---------------------------------------------------------------------------------------------------------------------------------|
-| Fixed warp point   |    78 | `REGION - Warp Point - ROOM_NAME`                                                                                               |
-| Fixed Karma Flower |    76 | `REGION - Karma Flower - ROOM_NAME`                                                                                             |
-| Throne warp point  |     4 | (UNIMPLEMENTED) `Outer Rim - Throne Warp - LOC` where `LOC` is either `upper west`, `lower west`, `upper east`, or `lower east` |
-| Spinning Top       |    14 | `REGION - Spinning Top`                                                                                                         |
-| Spread the Rot     |    18 | `REGION - Spread the Rot`                                                                                                       |
-| The Prince         |    6? | (UNIMPLEMENTED) `Outer Rim - The Prince - NTH encounter` where `NTH` is `first`, `second`, etc.                                 |
+| Check type         | Count | Naming                                                                                                        |
+|--------------------|------:|---------------------------------------------------------------------------------------------------------------|
+| Fixed warp point   |    78 | `REGION - Warp Point - ROOM_NAME`                                                                             |
+| Fixed Karma Flower |    76 | `REGION - Karma Flower - ROOM_NAME`                                                                           |
+| Spinning Top       |    14 | `REGION - Spinning Top`                                                                                       |
+| Spread the Rot     |    18 | `REGION - Spread the Rot`                                                                                     |
+| Throne warp point  |     4 | `Outer Rim - Create LOC warp` where `LOC` is either `upper west`, `lower west`, `upper east`, or `lower east` |
+| The Prince         |     4 | `Outer Rim - Prince encounter #N` where `N` is `1`, `2`, `3`, or `4`                                          |
 
 ### Fixed warp points
 Visting a warp point, which puts it on the map, is a check.
@@ -87,7 +87,6 @@ The check is earned even if the warp is not currently usable
 (e.g., cannot enter Ripplespace or don't have the key).
 
 ### Throne warp points
-(UNIMPLEMENTED) 
 Creating a semipermanent warp point in The Throne is a check.
 
 ### Spinning Top
@@ -106,9 +105,8 @@ The check is earned upon hibernation if the region is sufficiently infected.
 By default (see `checks_spread_rot`), these checks are only generated for the `alternate` victory condition.
 
 ### The Prince
-(UNIMPLEMENTED) 
 Each unique encounter with The Prince is a check.
-These checks are awarded upon visiting the top-left-most screen where The Prince is (or will be).
+These checks are awarded upon visiting The Prince's room (`WORA_AI`).
 
 ### Other
 * (UNIMPLEMENTED) Watcher can earn some passages.
