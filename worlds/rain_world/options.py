@@ -268,6 +268,16 @@ class SpinningTopKeys(Choice):
     visibility = Visibility.none
 
 
+class PriorityThrone(Choice):
+    """Whether Throne warp and Prince checks are priority locations."""
+    display_name = "Priority Throne"
+    option_normal = 1
+    option_priority = 2
+    option_excluded = 3
+    default = 2
+    visibility = Visibility.none
+
+
 class SoPeeping(FreeText):
     visibility = Visibility.none
 
@@ -863,11 +873,12 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     rotted_region_target: RottedRegionTarget
     checks_spread_rot: ChecksSpreadRot
     spinning_top_keys: SpinningTopKeys
+    priority_throne: PriorityThrone
     so_peeping: SoPeeping
 
     group_watcher = [
         LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
-        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, SpinningTopKeys,
+        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, SpinningTopKeys, PriorityThrone
     ]
 
     #################################################################

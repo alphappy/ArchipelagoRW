@@ -1,3 +1,4 @@
+from BaseClasses import MultiWorld
 from .classes import LocationData, RoomLocation
 from ..conditions.classes import Simple
 from ..options import RainWorldOptions
@@ -29,6 +30,10 @@ class PrinceEncounter(RoomLocation):
         super().__init__(f"Prince encounter #{num}", f"Prince-{num}", [], offset, "WORA_AI")
         self.access_condition = Simple("Ripple", 2 * num)
 
+    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+        self.progress_type = options.priority_throne.value
+        return super().make(player, multiworld, options)
+
 
 class ThroneWarp(RoomLocation):
     def __init__(self, offset: int, num: int):
@@ -38,6 +43,10 @@ class ThroneWarp(RoomLocation):
 
     rooms = [f"{a:0>2}" for a in (10, 5, 9, 7)]
     names = ["lower east", "lower west", "upper east", "upper west"]
+
+    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+        self.progress_type = options.priority_throne.value
+        return super().make(player, multiworld, options)
 
 
 def initialize() -> tuple[list[FixedWarpPoint], list[SpinningTop], list[Rottening], list[PrinceEncounter], list[ThroneWarp]]:
