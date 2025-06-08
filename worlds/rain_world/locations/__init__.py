@@ -1,4 +1,4 @@
-from . import passages, echoes, foodquest, unique, tokens_pearls, shelters, portals, flowers
+from . import passages, echoes, foodquest, unique, tokens_pearls, shelters, watcher, flowers
 from .classes import LocationData
 from ..options import RainWorldOptions
 
@@ -12,6 +12,8 @@ from ..options import RainWorldOptions
 # Shelters          5350 -~5550
 # Fixed warps       6000 -~6100
 # Spinning Tops     6100 -~6115
+# Prince encounters 6120 - 6123
+# Throne warp       6125 - 6128
 # Rot spread        6130 - 6147
 
 
@@ -23,7 +25,7 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
         *passages.generate(options),
         *echoes.generate(options),
         *shelters.select(options),
-        *portals.select(options),
+        *watcher.select(options),
     ]
 
 
