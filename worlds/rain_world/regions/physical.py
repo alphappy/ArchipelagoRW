@@ -173,6 +173,16 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     ConnectionData("Western Shattered Terrace", "Shattered Terrace", "WARA_P20 to WARA_P01", Simple("Ripple", 8)),
                 ]
 
+            case "WBLA":
+                silo = {"WBLA_E02"}
+                remainder = rooms.difference(silo)
+
+                ret += [
+                    PhysicalRegion("Badlands", "WBLA", remainder),
+                    PhysicalRegion("Badlands inside silo", "WBLA^1", silo),
+                    ConnectionData("Badlands", "Badlands inside silo", "WBLA_F03 to WBLA_E02", Simple("Ripple", 8)),
+                ]
+
             case _:
                 ret.append(PhysicalRegion(region_code_to_name[region], region, rooms))
 
