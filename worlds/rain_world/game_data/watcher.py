@@ -56,7 +56,7 @@ class PortalData:
             return target_region == "WRSA"
         elif any(x == source_region or x == target_region for x in ["WORA", "WAUA", "WSUR", "WHIR", "WGWR", "WDSR"]):
             return False
-        elif source_region == "WRSA":  # to RSA may have keys, but from RSA may not
+        elif source_region in ["WRSA", "CC", "SH", "LF"]:  # to RSA may have keys, but from RSA may not
             return False
         return True
 
