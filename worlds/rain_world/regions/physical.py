@@ -151,6 +151,28 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                 if options.starting_scug == "Saint":
                     ret += [ConnectionData("Shoreline", "Shoreline above puppet", "Exit top of puppet room")]
 
+            case "WRFA":
+                western = {"WRFA_S08", "WRFA_C11", "WRFA_A21"}
+                remainder = rooms.difference(western)
+
+                ret += [
+                    PhysicalRegion("Coral Caves", "WRFA", remainder),
+                    PhysicalRegion("Coral Caves far west", "WRFA^1", western),
+                    ConnectionData("Coral Caves", "Coral Caves far west", "WRFA_E04 to WRFA_C11", Simple("Ripple", 8)),
+                    ConnectionData("Coral Caves far west", "Coral Caves", "WRFA_C11 to WRFA_E04", Simple("Ripple", 8)),
+                ]
+
+            case "WARA":
+                western = {f"WARA_{r}" for r in {"E08", "P04", "P03", "P08", "P05", "P02", "S23", "P19"}}
+                remainder = rooms.difference(western)
+
+                ret += [
+                    PhysicalRegion("Shattered Terrace", "WARA", remainder),
+                    PhysicalRegion("Western Shattered Terrace", "WARA^1", western),
+                    ConnectionData("Shattered Terrace", "Western Shattered Terrace", "WARA_P20 to WARA_P19", Simple("Ripple", 8)),
+                    ConnectionData("Western Shattered Terrace", "Shattered Terrace", "WARA_P20 to WARA_P01", Simple("Ripple", 8)),
+                ]
+
             case _:
                 ret.append(PhysicalRegion(region_code_to_name[region], region, rooms))
 
