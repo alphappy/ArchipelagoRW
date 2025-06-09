@@ -260,6 +260,13 @@ class ChecksSpreadRot(Choice):
     visibility = Visibility.none
 
 
+class ChecksSpreadRotProgressive(Toggle):
+    """Whether rot spread checks are progressive instead of per-region."""
+    display_name = "Progressive rot spread"
+    default = True
+    visibility = Visibility.none
+
+
 class SpinningTopKeys(Choice):
     """Whether Spinning Top warps require keys."""
     display_name = "Spinning Top keys"
@@ -873,13 +880,15 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     dynamic_warp_pool_size: DynamicWarpPoolSize
     rotted_region_target: RottedRegionTarget
     checks_spread_rot: ChecksSpreadRot
+    checks_spread_rot_progressive: ChecksSpreadRotProgressive
     spinning_top_keys: SpinningTopKeys
     priority_throne: PriorityThrone
     so_peeping: SoPeeping
 
     group_watcher = [
         LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
-        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, SpinningTopKeys, PriorityThrone
+        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, ChecksSpreadRotProgressive,
+        SpinningTopKeys, PriorityThrone,
     ]
 
     #################################################################

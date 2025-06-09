@@ -25,6 +25,12 @@ class Rottening(RoomLocation):
         super().__init__("Spread the Rot", f"SpreadRot-{room.split('_')[0]}", [], offset, room)
 
 
+class RotteningProgressive(LocationData):
+    def __init__(self, num: int, offset: int):
+        cond = Simple([f"Access-{r}" for r in normal_regions], num)
+        super().__init__(f"Spread the Rot - Region #{num}", f"SpreadRot-{num}", [], offset, "Menu", cond)
+
+
 class PrinceEncounter(RoomLocation):
     def __init__(self, offset: int, num: int):
         super().__init__(f"Prince encounter #{num}", f"Prince-{num}", [], offset, "WORA_AI")
@@ -49,17 +55,18 @@ class ThroneWarp(RoomLocation):
         return super().make(player, multiworld, options)
 
 
-def initialize() -> tuple[list[FixedWarpPoint], list[SpinningTop], list[Rottening], list[PrinceEncounter], list[ThroneWarp]]:
+def initialize() -> tuple[list[FixedWarpPoint], list[SpinningTop], list[Rottening], list[RotteningProgressive], list[PrinceEncounter], list[ThroneWarp]]:
     rottening = [[t for t in targets if t.room.startswith(r)][0] for r in normal_regions]
 
     return ([FixedWarpPoint(data, INITIAL_OFFSET + i) for i, data in enumerate(portals)],
             [SpinningTop(data, INITIAL_OFFSET + 100 + i) for i, data in enumerate(portals) if data.check_spinning_top],
             [Rottening(data, INITIAL_OFFSET + 130 + i) for i, data in enumerate(rottening)],
+            [RotteningProgressive(i + 1, INITIAL_OFFSET + 150 + i) for i in range(len(normal_regions))],
             [PrinceEncounter(INITIAL_OFFSET + 120 + i, i + 1) for i in range(4)],
             [ThroneWarp(INITIAL_OFFSET + 125 + i, i) for i in range(4)])
 
 
-fixed_warps, spinning_tops, rottenings, encounters, thrones = initialize()
+fixed_warps, spinning_tops, rottenings, rottening_progs, encounters, thrones = initialize()
 
 
 def select(options: RainWorldOptions) -> list[LocationData]:
@@ -67,5 +74,5 @@ def select(options: RainWorldOptions) -> list[LocationData]:
         return []
     ret = fixed_warps + spinning_tops + encounters + thrones
     if options.should_have_rot_spread_checks:
-        ret += rottenings
+        ret += rottening_progs if options.checks_spread_rot_progressive else rottenings
     return ret

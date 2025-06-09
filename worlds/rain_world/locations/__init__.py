@@ -15,6 +15,7 @@ from ..options import RainWorldOptions
 # Prince encounters 6120 - 6123
 # Throne warp       6125 - 6128
 # Rot spread        6130 - 6147
+# Rot spread prog.  6150 - 6167
 
 
 def generate(options: RainWorldOptions) -> list[LocationData]:
