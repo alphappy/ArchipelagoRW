@@ -2,7 +2,7 @@ from .classes import StaticWorldEvent, StaticWorldEventDetached
 from ..options import RainWorldOptions
 
 from ..conditions.classes import Simple
-from ..game_data.general import scugs_all, scugs_vanilla
+from ..game_data.general import scugs_msc_watcher
 from ..regions.classes import RainWorldRegion, room_to_region
 from ..utils import (placed_object_effective_whitelist as POEW, creature_den_effective_whitelist as CDEW,
                      room_effective_whitelist as REW)
@@ -11,20 +11,19 @@ from ..utils import (placed_object_effective_whitelist as POEW, creature_den_eff
 def generate_events_for_one_gamestate(options: RainWorldOptions, regions: list[RainWorldRegion])\
         -> list[StaticWorldEvent | StaticWorldEventDetached]:
     ret = []
-    scugs = scugs_all if options.is_msc_enabled else scugs_vanilla
     detached: dict[str, list[str]] = {}
 
     for region in regions:
         if (rooms := region.rooms) and len(rooms) > 0:
-            if region_data := options.data_block.get(region.code[:2], {}):
+            if region_data := options.data_block.get(region.code.split("^")[0], {}):
                 for room in rooms:
                     if room_data := region_data.get(room, {}):
                         for obj_type, obj_data in room_data.get("objects", {}).items():
-                            if options.starting_scug in POEW(room_data, obj_data, set(scugs)):
+                            if options.starting_scug in POEW(room_data, obj_data, set(scugs_msc_watcher)):
                                 detached.setdefault(obj_type, []).append(room)
 
                         for crit_type, crit_data in room_data.get("spawners", {}).get("normal", {}).items():
-                            if options.starting_scug in CDEW(room_data, crit_data, set(scugs)):
+                            if options.starting_scug in CDEW(room_data, crit_data, set(scugs_msc_watcher)):
                                 detached.setdefault(crit_type, []).append(room)
 
                         if room_tags := room_data.get("tags", []):
@@ -32,7 +31,8 @@ def generate_events_for_one_gamestate(options: RainWorldOptions, regions: list[R
                                     ("SWARMROOM", "Fly"), ("SCAVOUTPOST", "Toll"), ("SHELTER", "Shelter")
                             ):
                                 if tagname in room_tags:
-                                    whitelist = REW(room_data, set(scugs)).difference(room_data.get("broken", set()))
+                                    whitelist = (REW(room_data, set(scugs_msc_watcher))
+                                                 .difference(room_data.get("broken", set())))
                                     if options.starting_scug in whitelist:
                                         detached.setdefault(eventname, []).append(room)
 

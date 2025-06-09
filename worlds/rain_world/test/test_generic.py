@@ -107,5 +107,6 @@ class TestSpearAlternate(RainWorldTestBase):
     options = {"which_campaign": "spearmaster", "which_victory_condition": "alternate", "is_msc_enabled": True}
 
 
-# class TestWatcher(RainWorldTestBase):
-#     options = {"which_campaign": "watcher", "is_watcher_enabled": True}
+class TestWatcher(RainWorldTestBase):
+    options = {"so_peeping": "OAOAOA!", "is_watcher_enabled": True, "is_msc_enabled": True,
+               "checks_foodquest": "all_slugcats"}
