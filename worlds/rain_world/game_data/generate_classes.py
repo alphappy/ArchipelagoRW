@@ -1,7 +1,6 @@
 from typing import Optional
 
-ALL_SCUGS = {'White', 'Yellow', 'Red', 'Rivulet', 'Artificer', 'Saint', 'Gourmand', 'Spear', 'Inv'}
-ALL_SCUGS_VANILLA = {'White', 'Yellow', 'Red'}
+ALL_SCUGS = {'White', 'Yellow', 'Red', 'Rivulet', 'Artificer', 'Saint', 'Gourmand', 'Spear', 'Inv', 'Watcher'}
 
 
 # From WorldLoader.CreatureTypeFromString()
@@ -198,11 +197,9 @@ class Crit:
 class Spawner:
     crits: list[Crit]
     room: Optional[str]
-    vanilla: bool
 
-    def __init__(self, scuglist, room, den_number, critstring, lineage: bool, vanilla: bool = True):
-        self.vanilla = vanilla
-        self.scugs = ALL_SCUGS_VANILLA if vanilla else ALL_SCUGS
+    def __init__(self, scuglist, room, den_number, critstring, lineage: bool):
+        self.scugs = ALL_SCUGS
         self.update_scuglist(scuglist)
         self.room = room
         self.den_number = den_number
@@ -214,14 +211,14 @@ class Spawner:
 
     def update_scuglist(self, s: str):
         if s is None:
-            self.scugs = ALL_SCUGS_VANILLA if self.vanilla else ALL_SCUGS
+            self.scugs = ALL_SCUGS
         elif s.startswith('X-'):
             self.scugs = self.scugs - set(s[2:].split(','))
         else:
             self.scugs = set(s.split(','))
 
     def scugstring(self):
-        if self.scugs == ALL_SCUGS_VANILLA if self.vanilla else ALL_SCUGS:
+        if self.scugs == ALL_SCUGS:
             return "ALL"
         elif len(self.scugs) > len(ALL_SCUGS) / 2:
             return 'X-' + ','.join(list(ALL_SCUGS - self.scugs))

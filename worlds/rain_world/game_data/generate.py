@@ -171,7 +171,7 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                         # Each entry is LINEAGE : {ROOM} : {DEN NUMBER} : {CREATURE TYPE}-{LINEAGE CHANCE}, repeat.
                         if parts[0] == "LINEAGE":
                             room, den_number, critstring = parts[1:]
-                            spawner = Spawner(scugstring, room, den_number, critstring, True, dlcstate == "Vanilla")
+                            spawner = Spawner(scugstring, room, den_number, critstring, True)
 
                             for i, crit in enumerate(spawner.crits):
                                 if crit.type != "NONE":
@@ -186,7 +186,7 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                             room, critstrings = parts
                             for critstring in critstrings.split(', '):
                                 den_number, critstring = critstring.split('-', 1)
-                                spawner = Spawner(scugstring, room, den_number, critstring, False, dlcstate == "Vanilla")
+                                spawner = Spawner(scugstring, room, den_number, critstring, False)
 
                                 for crit in spawner.crits:
                                     if crit.type != "NONE":
