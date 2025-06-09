@@ -1,7 +1,5 @@
-from BaseClasses import MultiWorld
 from .classes import LocationData, RoomLocation
-from ..conditions import GameStateFlag
-from ..game_data.general import scugs_all, scugs_vanilla
+from ..game_data.general import scugs_msc_watcher
 from ..options import RainWorldOptions
 from ..game_data import static_data
 from ..utils import room_effective_whitelist as REW
@@ -10,12 +8,7 @@ from ..utils import room_effective_whitelist as REW
 class Shelter(RoomLocation):
     def __init__(self, room: str, offset: int):
         super().__init__(f"Shelter - {room}", f"Shelter-{room}", [], offset, room)
-        self.gamestates = GameStateFlag(0)
-
-    def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-        if not options.satisfies(self.gamestates):
-            return False
-        return super().pre_generate(player, multiworld, options)
+        self.use_whitelist()
 
 
 def initialize() -> dict[str, Shelter]:
@@ -32,9 +25,9 @@ def initialize() -> dict[str, Shelter]:
                             ret[room] = shelter_data
                             offset += 1
 
-                        whitelist = REW(room_data, scugs_all if dlcstate == "MSC" else scugs_vanilla)
+                        whitelist = REW(room_data, scugs_msc_watcher)
                         whitelist = whitelist.difference(room_data.get("broken", set()))
-                        shelter_data.gamestates[dlcstate, whitelist] = True
+                        shelter_data.whitelist.update(gameversion, dlcstate, whitelist)
 
     return ret
 

@@ -9,7 +9,7 @@ from ..options import RainWorldOptions
 # Passages          5000 - 5046
 # Echoes            5070 - 5080
 # Food Quest        5250 -~5301
-# Shelters          5350 -~5550
+# Shelters          5350 -~5750
 # Fixed warps       6000 -~6100
 # Spinning Tops     6100 -~6115
 # Prince encounters 6120 - 6123

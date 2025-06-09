@@ -34,6 +34,7 @@ def named_bit_flag(class_name: str, primary_names: list[str], secondary_names: d
         def _mask_from_flags(flags: set[str]) -> int: return sum(bitmap[flag] for flag in flags)
 
         def get_all_primary_flags(self) -> set[str]: return {n for n in primary_names if self._get_flag(n)}
+        def get_all_primary_flags_ordered(self) -> list[str]: return [n for n in primary_names if self._get_flag(n)]
         def add(self, flag: str | set[str]): self._set_flags({flag} if type(flag) == str else flag, True)
         def remove(self, flag: str | set[str]): self._set_flags({flag} if type(flag) == str else flag, False)
         def intersect(self, flags: str | set[str]): self.value &= self._mask_from_flags(flags)
@@ -41,12 +42,12 @@ def named_bit_flag(class_name: str, primary_names: list[str], secondary_names: d
         def __getitem__(self, item: int | str) -> bool:
             return self._get_bit(item) if type(item) == int else self._get_flag(item)
 
-        def __setitem__(self, key: int | str | tuple[str], value: bool) -> None:
+        def __setitem__(self, key: int | str | tuple[str] | set[str], value: bool) -> None:
             if type(key) == int:
                 self._set_bit(key, value)
             elif type(key) == str:
                 self._set_flags({key}, value)
-            elif type(key) == tuple:
+            elif type(key) == tuple or type(key) == str:
                 self._set_flags(set(key), value)
 
         def __contains__(self, item): return self._get_flag(item)
@@ -65,3 +66,23 @@ ScugFlag = named_bit_flag(
     ["Yellow", "White", "Red", "Gourmand", "Artificer", "Rivulet", "Spear", "Saint", "Inv", "Watcher"],
     {"Vanilla": {0, 1, 2}, "MSC": {3, 4, 5, 6, 7, 8}}
 )
+
+
+class ScugFlagMap:
+    _flags: dict[tuple[str, str], ScugFlag]
+
+    def __init__(self):
+        self._flags = {}
+
+    def __getitem__(self, item): return self._flags[item]
+
+    def update(self, gameversion: str, dlcstate: str, scugs: set[str], on: bool = True):
+        self._flags.setdefault((gameversion, dlcstate), ScugFlag())._set_flags(scugs, on)
+
+    def get(self, gameversion: str, dlcstate: str) -> ScugFlag:
+        return self._flags.get((gameversion, dlcstate), ScugFlag())
+
+    @property
+    def dump_list(self): return {' '.join(k): v.get_all_primary_flags_ordered() for k, v in self._flags.items()}
+    @property
+    def dump_int(self): return {' '.join(k): v.value for k, v in self._flags.items()}

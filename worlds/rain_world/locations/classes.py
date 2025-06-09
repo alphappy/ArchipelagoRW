@@ -1,6 +1,8 @@
+import time
 from typing import Optional, Callable
 
 from BaseClasses import MultiWorld, Location, LocationProgressType, Region
+from ..game_data.bitflag import ScugFlagMap
 from ..options import RainWorldOptions
 from ..conditions.classes import ConditionBlank, Condition
 from ..constants import FIRST_ID
@@ -24,6 +26,7 @@ class LocationData:
         self.region = region
         self.access_condition: Condition = access_condition
         self.progress_type: LocationProgressType = LocationProgressType.DEFAULT
+        self.whitelist: ScugFlagMap | None = None
         if offset is not None:
             self.id = offset + FIRST_ID
             location_map[full_name] = self.id
@@ -44,7 +47,11 @@ class LocationData:
 
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         """Prepare to generate the location, or return False if the location should not be generated."""
+        if self.whitelist is not None and not options.satisfies_flagmap(self.whitelist):
+            return False
         return True
+
+    def use_whitelist(self): self.whitelist = ScugFlagMap()
 
 
 class RoomLocation(LocationData):
@@ -60,7 +67,7 @@ class RoomLocation(LocationData):
 
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         self.region = room_to_region[self.room]
-        return True
+        return super().pre_generate(player, multiworld, options)
 
 
 class AbstractLocation(LocationData):

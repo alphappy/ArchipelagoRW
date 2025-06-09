@@ -1,7 +1,5 @@
-from BaseClasses import MultiWorld
 from ..game_data import static_data
-from ..game_data.bitflag import ScugFlag
-from ..game_data.general import scugs_all
+from ..game_data.general import scugs_msc_watcher
 from .classes import RoomLocation
 from ..options import RainWorldOptions
 from ..utils import placed_object_effective_whitelist as POEW
@@ -12,12 +10,7 @@ INITIAL_OFFSET = 1200
 class FlowerLocation(RoomLocation):
     def __init__(self, offset: int, room: str):
         super().__init__(f"Karma Flower - {room}", f"Flower-{room}", [], offset, room)
-        self.flag_map: dict[tuple[str, str], ScugFlag] = {}
-
-    def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-        if options.starting_scug not in self.flag_map.get(options.worldstate, set()):
-            return False
-        return super().pre_generate(player, multiworld, options)
+        self.use_whitelist()
 
 
 def initialize() -> list[FlowerLocation]:
@@ -31,11 +24,11 @@ def initialize() -> list[FlowerLocation]:
                     if "KarmaFlower" in room_data.get("objects", {}).keys():
                         if ret.get(room, None) is None:
                             ret[room] = FlowerLocation(offset, room)
+                            offset += 1
 
-                        whitelist = POEW(room_data, room_data['objects']['KarmaFlower'], set(scugs_all))
-                        ret[room].flag_map[(gameversion, dlcstate)] = whitelist
+                        whitelist = POEW(room_data, room_data['objects']['KarmaFlower'], set(scugs_msc_watcher))
+                        ret[room].whitelist.update(gameversion, dlcstate, whitelist)
 
-                        offset += 1
 
     return list(ret.values())
 

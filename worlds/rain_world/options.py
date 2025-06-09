@@ -4,6 +4,7 @@ from Options import PerGameCommonOptions, Toggle, Range, OptionGroup, Choice, Pr
     Visibility, DeathLinkMixin, DeathLink, FreeText
 from .conditions import GameStateFlag
 from .game_data import static_data
+from .game_data.bitflag import ScugFlagMap
 
 
 #################################################################
@@ -1019,6 +1020,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         ]}
 
     def satisfies(self, flag: GameStateFlag): return flag[self.dlcstate, self.starting_scug]
+
+    def satisfies_flagmap(self, d: ScugFlagMap) -> bool:
+        return self.starting_scug in d.get(self.which_game_version.string, self.dlcstate)
 
     @property
     def should_have_rot_spread_checks(self):
