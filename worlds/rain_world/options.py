@@ -170,6 +170,8 @@ class RippleWarpBehavior(Choice):
     display_name = "Ripple warp behavior"
     option_unaltered = 0
     option_no_ripple_warps = 1
+    alias_true = 1
+    alias_false = 0
     default = 0
     visibility = Visibility.none
 
@@ -226,6 +228,8 @@ class LogicRottedGeneration(Choice):
     option_none = 0
     option_passthrough = 2
     option_full = 3
+    alias_true = 3
+    alias_false = 0
     default = 0
     visibility = Visibility.none
 
@@ -256,6 +260,8 @@ class ChecksSpreadRot(Choice):
     option_off = 0
     option_alternate_only = 1
     option_on = 2
+    alias_true = 2
+    alias_false = 0
     default = 1
     visibility = Visibility.none
 
@@ -272,6 +278,8 @@ class SpinningTopKeys(Choice):
     display_name = "Spinning Top keys"
     option_off = 0
     option_on = 2
+    alias_true = 2
+    alias_false = 0
     default = 2
     visibility = Visibility.none
 
@@ -386,6 +394,8 @@ class ChecksBroadcasts(Choice):
     option_all_slugcats = 2
     option_only_spearmaster = 1
     option_off = 0
+    alias_true = 2
+    alias_false = 0
     default = 1
     visibility = Visibility.none
 
@@ -396,6 +406,8 @@ class ChecksFoodQuest(Choice):
     option_all_slugcats = 2
     option_only_gourmand = 1
     option_off = 0
+    alias_true = 2
+    alias_false = 0
     default = 2
 
 
@@ -433,6 +445,8 @@ class ChecksSubmerged(Choice):
     option_all_slugcats = 2
     option_only_rivulet = 1
     option_off = 0
+    alias_true = 2
+    alias_false = 0
     default = 1
 
 
