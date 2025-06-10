@@ -33,6 +33,7 @@ OBJECT_WHITELIST = [
     "SeedCob",  # for The Monk
     "BubbleGrass",  # for waterway traversal
     "VultureGrub", "DeadVultureGrub",  # expanded food quest
+    "Pomegranate", "RottenDangleFruit", "RottenSeedCob", "SandGrubHole", "PlacedBoxWorm",  # watcher expanded food quest
 ]
 SHINY_LIST = ["BlueToken", "GreenToken", "RedToken", "GoldToken", "WhiteToken", "DevToken",
               "UniqueDataPearl", "DataPearl"]
