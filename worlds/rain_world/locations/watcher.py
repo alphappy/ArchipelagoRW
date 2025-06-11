@@ -1,6 +1,6 @@
 from BaseClasses import MultiWorld
 from .classes import LocationData, RoomLocation
-from ..conditions.classes import Simple
+from ..conditions.classes import Simple, AllOf
 from ..options import RainWorldOptions
 from ..game_data.watcher import portals, PortalData, normal_regions, targets, WarpTargetData
 
@@ -23,11 +23,12 @@ class Rottening(RoomLocation):
     def __init__(self, data: WarpTargetData, offset: int):
         room = data.room.upper()
         super().__init__("Spread the Rot", f"SpreadRot-{room.split('_')[0]}", [], offset, room)
+        self.access_condition = Simple("Access-WORA")
 
 
 class RotteningProgressive(LocationData):
     def __init__(self, num: int, offset: int):
-        cond = Simple([f"Access-{r}" for r in normal_regions], num)
+        cond = AllOf(Simple([f"Access-{r}" for r in normal_regions], num), Simple("Access-WORA"))
         super().__init__(f"Spread the Rot - Region #{num}", f"SpreadRot-{num}", [], offset, "Menu", cond)
 
 
