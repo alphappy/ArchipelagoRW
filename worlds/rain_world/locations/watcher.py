@@ -10,31 +10,31 @@ INITIAL_OFFSET = 6000
 class FixedWarpPoint(RoomLocation):
     def __init__(self, data: PortalData, offset: int):
         room = data.source_room.upper()
-        super().__init__(f"Fixed Warp - {room}", f"Warp-{room}", [], offset, room)
+        super().__init__(f"Fixed Warp - {room}", f"Warp-{room}", ["Warp", "Fixed Warp"], offset, room)
 
 
 class SpinningTop(RoomLocation):
     def __init__(self, data: PortalData, offset: int):
         room = data.source_room.upper()
-        super().__init__("Spinning Top", f"SpinningTop-{room.split('_')[0]}", [], offset, room)
+        super().__init__("Spinning Top", f"SpinningTop-{room.split('_')[0]}", ["Spinning Top"], offset, room)
 
 
 class Rottening(RoomLocation):
     def __init__(self, data: WarpTargetData, offset: int):
         room = data.room.upper()
-        super().__init__("Spread the Rot", f"SpreadRot-{room.split('_')[0]}", [], offset, room)
+        super().__init__("Spread the Rot", f"SpreadRot-{room.split('_')[0]}", ["Spread the Rot"], offset, room)
         self.access_condition = Simple("Access-WORA")
 
 
 class RotteningProgressive(LocationData):
     def __init__(self, num: int, offset: int):
         cond = AllOf(Simple([f"Access-{r}" for r in normal_regions], num), Simple("Access-WORA"))
-        super().__init__(f"Spread the Rot - Region #{num}", f"SpreadRot-{num}", [], offset, "Menu", cond)
+        super().__init__(f"Spread the Rot - Region #{num}", f"SpreadRot-{num}", ["Spread the Rot"], offset, "Menu", cond)
 
 
 class PrinceEncounter(RoomLocation):
     def __init__(self, offset: int, num: int):
-        super().__init__(f"Prince encounter #{num}", f"Prince-{num}", [], offset, "WORA_AI")
+        super().__init__(f"Prince encounter #{num}", f"Prince-{num}", ["Prince", "The Prince", "Prince Encounter"], offset, "WORA_AI")
         self.access_condition = Simple("Ripple", 2 * num)
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
@@ -44,7 +44,7 @@ class PrinceEncounter(RoomLocation):
 
 class ThroneWarp(RoomLocation):
     def __init__(self, offset: int, num: int):
-        super().__init__(f"Create {self.names[num]} warp", f"ThroneWarp-{self.rooms[num]}", [], offset,
+        super().__init__(f"Create {self.names[num]} warp", f"ThroneWarp-{self.rooms[num]}", ["Throne Warp"], offset,
                          f"WORA_THRONE{self.rooms[num]}")
         self.access_condition = Simple("Ripple", 2 * num)
 

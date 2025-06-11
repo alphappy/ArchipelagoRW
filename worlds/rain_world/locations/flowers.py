@@ -9,7 +9,7 @@ INITIAL_OFFSET = 1200
 
 class FlowerLocation(RoomLocation):
     def __init__(self, offset: int, room: str):
-        super().__init__(f"Karma Flower - {room}", f"Flower-{room}", [], offset, room)
+        super().__init__(f"Karma Flower - {room}", f"Flower-{room}", ["Flower"], offset, room)
         self.use_whitelist()
 
 
@@ -28,7 +28,6 @@ def initialize() -> list[FlowerLocation]:
 
                         whitelist = POEW(room_data, room_data['objects']['KarmaFlower'], set(scugs_msc_watcher))
                         ret[room].whitelist.update(gameversion, dlcstate, whitelist)
-
 
     return list(ret.values())
 

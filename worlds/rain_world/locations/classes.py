@@ -61,8 +61,9 @@ class RoomLocation(LocationData):
         Represents a location that exists in a specific room.
         """
         full_with_code = f'{room.split("_")[0]} - {description}'
-        super().__init__(f'{region_code_to_name[room.split("_")[0]]} - {description}',
-                         client_name, alt_names + [full_with_code], offset)
+        region_name = region_code_to_name[room.split("_")[0]]
+        super().__init__(f'{region_name} - {description}',
+                         client_name, alt_names + [region_name, full_with_code], offset)
         self.room = room
 
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
@@ -80,7 +81,8 @@ class Passage(AbstractLocation):
     def __init__(self, name: str, region: str, offset: int,
                  access_condition: Condition = ConditionBlank,
                  access_condition_generator:  Optional[Callable[[RainWorldOptions], Condition]] = None):
-        super().__init__(f"Passage - {self.proper_name(name)}", f"Passage-{name}", [], offset, region, access_condition)
+        super().__init__(f"Passage - {self.proper_name(name)}", f"Passage-{name}", ["Passage"],
+                         offset, region, access_condition)
         self.acc_gen = access_condition_generator
 
     @staticmethod

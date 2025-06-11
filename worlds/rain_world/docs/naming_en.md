@@ -1,5 +1,27 @@
 # Names and groups in Rain World Randomizer
 
+## Location groups
+A number of location groups are defined.
+Location groups can be used in `!hint_location` commands
+and in the `priority_locations` and `exclude_locations` setting values.
+For instance, `priority_locations: [ Echo, Safari Token ]` sets all echoes and Safari tokens as priority locations.
+
+| Group name                                                | Description                      |
+|-----------------------------------------------------------|----------------------------------|
+| `Arena Token`<br>`Blue Token`                             | Non-slugcat arena tokens         |
+| `Broadcast`<br>`White Token`                              | Broadcasts (Spearmaster)         |
+| `Dev Token`                                               | Developer commentary token (MSC) |
+| `Echo`                                                    | Echoes                           |
+| `Gold Token`<br>`Level Token`                             | Arena level tokens               |
+| `Green Token`<br>`Slugcat Token`                          | Slugcat tokens (MSC)             |
+| `Flower`                                                  | Flowersanity                     |
+| `Passage`                                                 | Passages                         |
+| `Pearl`                                                   | Pearls                           |
+| `Red Token`<br>`Safari Token`                             | Safari tokens (MSC)              |
+| `Shelter`                                                 | Sheltersanity                    |
+| `Token`                                                   | All tokens                       |
+| Full physical region name<br>(e.g., `Industrial Complex`) | All checks in that region        |
+
 ## Item names
 ### Gate key names
 Each gate key has several aliases based on the regions it connects.

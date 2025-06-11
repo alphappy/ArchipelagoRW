@@ -8,20 +8,21 @@ from ..game_data import static_data
 from ..regions.classes import room_to_region
 
 name_format = {
-    "BlueToken": "Arena Token - {0}",
-    "GreenToken": "Arena Token - {0}",
-    "GoldToken": "Level Token - {0}",
-    "RedToken": "Safari Token",
-    "WhiteToken": "Broadcast - {0}",
-    "DevToken": "Dev Token - {1}",
-    "UniqueDataPearl": "Pearl - {0}",
-    "DataPearl": "Pearl - {0}",
+    "BlueToken": ("Arena Token - {0}", ["Token", "Blue Token", "Arena Token"]),
+    "GreenToken": ("Arena Token - {0}", ["Token", "Green Token", "Slugcat Token"]),
+    "GoldToken": ("Level Token - {0}", ["Token", "Gold Token", "Level Token"]),
+    "RedToken": ("Safari Token", ["Token", "Red Token", "Safari Token"]),
+    "WhiteToken": ("Broadcast - {0}", ["Token", "White Token", "Broadcast Token", "Broadcast"]),
+    "DevToken": ("Dev Token - {1}", ["Token", "Dev Token"]),
+    "UniqueDataPearl": ("Pearl - {0}", ["Pearl", "Data Pearl"]),
+    "DataPearl": ("Pearl - {0}", ["Pearl", "Data Pearl"]),
 }
 
 
 class TokenOrPearl(RoomLocation):
     def __init__(self, name: str, kind: str, r: str, offset: int, old_name: str):
-        super().__init__(name_format[kind].format(name, r), old_name, [], offset, r)
+        primary, alts = name_format[kind]
+        super().__init__(primary.format(name, r), old_name, alts, offset, r)
         self.generation_flag = GameStateFlag(0)
         self.room = r
         self.kind = kind

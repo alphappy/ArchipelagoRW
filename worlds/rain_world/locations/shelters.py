@@ -7,7 +7,7 @@ from ..utils import room_effective_whitelist as REW
 
 class Shelter(RoomLocation):
     def __init__(self, room: str, offset: int):
-        super().__init__(f"Shelter - {room}", f"Shelter-{room}", [], offset, room)
+        super().__init__(f"Shelter - {room}", f"Shelter-{room}", ["Shelter"], offset, room)
         self.use_whitelist()
 
 
