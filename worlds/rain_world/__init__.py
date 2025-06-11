@@ -198,6 +198,7 @@ class RainWorldWorld(World):
             "spinning_top_keys",  # ...whether Spinning Top should appear without a key.
             "normal_dynamic_warp_behavior", "throne_dynamic_warp_behavior",
             "checks_spread_rot", "checks_spread_rot_progressive",
+            "dynamic_warp_failure_mode",
 
             # External tracker needs to know...
             "difficulty_glow", "difficulty_monk", "difficulty_hunter", "difficulty_outlaw", "difficulty_chieftain",

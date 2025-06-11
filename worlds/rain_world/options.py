@@ -222,6 +222,15 @@ class DynamicWarpPoolSize(Range):
     visibility = Visibility.none
 
 
+class DynamicWarpFailureFallback(Choice):
+    """What should happen if there are no valid targets for a normal dynamic warp."""
+    display_name = "Warp fallback mode"
+    option_nothing = 0
+    option_outer_rim = 1
+    default = 0
+    visibility = Visibility.none
+
+
 class LogicRottedGeneration(Choice):
     """Controls the generation of Crumbling Fringes, Corrupted Factories, Decaying Tunnels, and Infested Wastes."""
     display_name = "Permarotted accessibility"
@@ -892,6 +901,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     throne_dynamic_warp_behavior: ThroneDynamicWarpBehavior
     predetermined_dynamic_warp_network_minimum_necklace_length: PredeterminedDynamicWarpNetworkMinimumNecklaceLength
     dynamic_warp_pool_size: DynamicWarpPoolSize
+    dynamic_warp_failure_mode: DynamicWarpFailureFallback
     rotted_region_target: RottedRegionTarget
     checks_spread_rot: ChecksSpreadRot
     checks_spread_rot_progressive: ChecksSpreadRotProgressive
@@ -900,8 +910,10 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     so_peeping: SoPeeping
 
     group_watcher = [
-        LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
-        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, ChecksSpreadRotProgressive,
+        LogicRottedGeneration, LogicMinRippleTarget,
+        NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
+        DynamicWarpPoolSize, DynamicWarpFailureFallback,
+        RottedRegionTarget, ChecksSpreadRot, ChecksSpreadRotProgressive,
         SpinningTopKeys, PriorityThrone,
     ]
 
