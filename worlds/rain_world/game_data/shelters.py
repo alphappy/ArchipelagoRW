@@ -120,7 +120,7 @@ def get_starts(options: RainWorldOptions) -> list[str]:
     ret = list(start_shelters[code])
 
     # shelter does not exist in vanilla
-    if code == "SU" and not options.msc_enabled:
+    if code == "SU" and ((not options.msc_enabled) or scug not in ("Yellow", "White", "Gourmand")):
         ret.remove("SU_S05")
 
     # going backwards through puppet room not in logic
