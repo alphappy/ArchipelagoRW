@@ -1,6 +1,7 @@
 from BaseClasses import Region, MultiWorld
 from ..options import RainWorldOptions
 from ..conditions.classes import Condition, ConditionBlank, Simple, AnyOf, AllOf
+from ..utils_ap import try_get_region
 
 
 class RainWorldRegion(Region):
@@ -28,9 +29,10 @@ class ConnectionData:
         self.source, self.dest, self.name, self.condition = source, dest, name, condition
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
-        source = multiworld.get_region(self.source, player)
-        dest = multiworld.get_region(self.dest, player)
-        source.connect(dest, self.name, rule=self.condition.check(player))
+        source = try_get_region(multiworld, self.source, player)
+        dest = try_get_region(multiworld, self.dest, player)
+        if source and dest:
+            source.connect(dest, self.name, rule=self.condition.check(player))
 
 
 class Gate(ConnectionData):
@@ -74,10 +76,11 @@ class PhysicalRegion(RegionData):
         self.prefix, self.rooms = prefix, rooms
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
-        room_to_region.update({room: self.name for room in self.rooms})
         self.populate = self._gen(options)
-        region = RainWorldRegion(self.name, player, multiworld, self.populate, self.rooms, self.prefix)
-        multiworld.regions.append(region)
+        room_to_region.update({room: self.name for room in self.rooms})
+        if self.populate:
+            region = RainWorldRegion(self.name, player, multiworld, self.populate, self.rooms, self.prefix)
+            multiworld.regions.append(region)
 
     def _gen(self, options: RainWorldOptions) -> bool:
         rcode, scug = self.prefix.split("^")[0], options.starting_scug
@@ -92,7 +95,9 @@ class PhysicalRegion(RegionData):
         match rcode:
             case "SU":
                 # HARDCODE
-                if self.name != "Outskirts":
+                if self.name in ("Spearmaster spawn area", "Outskirts filtration"):
+                    return scug in ("Yellow", "White", "Gourmand", "Spear")
+                if self.name not in ("Outskirts", "Survivor tutorial area"):
                     return options.msc_enabled and scug in ("Yellow", "White", "Gourmand")
                 return True
             case "HI" | "GW" | "CC" | "SI" | "LF" | "SB":

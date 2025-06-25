@@ -4,6 +4,7 @@ from ..options import RainWorldOptions
 from ..game_data.general import scugs_all
 from ..conditions.classes import Condition, ConditionBlank
 from ..regions.classes import room_to_region, RainWorldRegion
+from ..utils_ap import try_get_region
 
 
 class EventData:
@@ -17,8 +18,7 @@ class EventData:
         self.condition = condition
 
     def make(self, player: int, multiworld: MultiWorld, _: RainWorldOptions):
-        region = multiworld.get_region(self.region, player)
-        if region.populate:
+        if (region := try_get_region(multiworld, self.region, player)) and region.populate:
             item = Item(self.item_name, self.classification, None, player)
             location = Location(player, self.location_item, None, region)
             location.show_in_spoiler = False
@@ -66,7 +66,7 @@ class StaticWorldEventDetached:
         self.name, self.rooms = name, rooms
 
     def make(self, player: int, multiworld: MultiWorld, _: RainWorldOptions):
-        regions = {multiworld.get_region(name, player) for name in {room_to_region[room] for room in self.rooms}}
+        regions = {try_get_region(multiworld, name, player) for name in {room_to_region[room] for room in self.rooms}}.difference({None})
         if regions := {r for r in regions if r.populate}:
             multiworld.regions.append(event_region := RainWorldRegion(self.name, player, multiworld, True))
             event_region.locations.append(location := Location(player, self.name, None, event_region))

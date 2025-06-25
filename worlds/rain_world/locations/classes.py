@@ -9,6 +9,7 @@ from ..constants import FIRST_ID
 from worlds.generic.Rules import add_rule
 from ..regions.classes import room_to_region
 from ..game_data.general import region_code_to_name
+from ..utils_ap import try_get_region
 
 location_map: dict[str, int] = {}
 location_hints: dict[str, set[str]] = {}
@@ -36,7 +37,7 @@ class LocationData:
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         if self.pre_generate(player, multiworld, options):
-            if (region := multiworld.get_region(self.region, player)) and region.populate:
+            if (region := try_get_region(multiworld, self.region, player)) and region.populate:
                 loc = Location(player, self.full_name, self.id, region)
                 loc.progress_type = self.progress_type
                 region.locations.append(loc)

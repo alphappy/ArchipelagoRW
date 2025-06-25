@@ -3,6 +3,7 @@ from .classes import room_to_region
 from ..options import RainWorldOptions
 from ..conditions.classes import Condition, ConditionBlank, Simple, AllOf, AnyOf
 from ..game_data.general import scugs_all, accessible_gates, region_code_to_name, direct_alternate_regions
+from ..utils_ap import try_get_region
 
 
 class GateData:
@@ -20,8 +21,11 @@ class GateData:
         for effective_name, scugs in self.effective_names(options).items():
             _, left_name, right_name = effective_name.split("_")
 
-            left = multiworld.get_region(room_to_region[f'{self.name}[{left_name}]'], player)
-            right = multiworld.get_region(room_to_region[f'{self.name}[{right_name}]'], player)
+            left = try_get_region(multiworld, room_to_region[f'{self.name}[{left_name}]'], player)
+            right = try_get_region(multiworld, room_to_region[f'{self.name}[{right_name}]'], player)
+
+            if not left or not right:
+                continue
 
             match options.which_gate_behavior:
                 case "karma_only":
