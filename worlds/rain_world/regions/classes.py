@@ -96,7 +96,7 @@ class PhysicalRegion(RegionData):
             case "SU":
                 # HARDCODE
                 if self.name in ("Spearmaster spawn area", "Outskirts filtration"):
-                    return scug in ("Yellow", "White", "Gourmand", "Spear")
+                    return scug in ("Yellow", "White", "Gourmand", "Spear") and options.msc_enabled
                 if self.name not in ("Outskirts", "Survivor tutorial area"):
                     return options.msc_enabled and scug in ("Yellow", "White", "Gourmand")
                 return True
@@ -110,6 +110,8 @@ class PhysicalRegion(RegionData):
                 # HARDCODE
                 if self.name == "Shoreline above puppet":
                     return scug in ("Rivulet", "Saint")
+                if self.name == "Broken Precipice":
+                    return options.msc_enabled and scug not in ("Artificer", "Spear", "Saint")
                 return scug not in ("Artificer", "Spear")
 
         if not options.msc_enabled:
