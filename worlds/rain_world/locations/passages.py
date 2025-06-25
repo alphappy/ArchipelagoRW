@@ -91,8 +91,8 @@ def generate_cond_nomad(options: RainWorldOptions) -> Condition:
 # OUTLAW
 def generate_cond_outlaw(options: RainWorldOptions) -> Condition:
     return Simple(
-        # TODO
-        list(set(game_data.general.lizards_any).difference(set(game_data.general.outlaw_insignificant))),
+        list(game_data.general.outlaw_whitelist if options.difficulty_extreme_threats else
+             game_data.general.outlaw_whitelist.difference(game_data.general.extreme_threat_creatures)),
         options.difficulty_outlaw.value
     )
 

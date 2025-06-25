@@ -159,7 +159,10 @@ monk_foods_msc = ['LillyPuck', 'GlowWeed', 'DandelionPeach', 'GooieDuck', 'Seed'
 
 slugpup_normal_regions = ['HI', 'DS', 'GW', 'SH', 'CC', 'SI', 'LF', 'SB', 'VS']
 
-outlaw_insignificant = ["Fly", "SmallCentipede", "Snail", "PoleMimic", "TubeWorm", "Overseer"]
+outlaw_whitelist = lizards_any.union({
+    "BigSpider", "SpitterSpider", "MotherSpider", "Scavenger", "EliteScavenger", "Vulture", "KingVulture",
+    "MirosVulture", "MirosBird", "Centipede", "RedCentipede", "Aquapede", "BigNeedleWorm", "CicadaA", "CicadaB"
+})
 
 scavenger_tolls = ["SU", "GW", "LF", "LC", "CL", "OE", "UG"]
 
