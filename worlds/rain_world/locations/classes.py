@@ -32,7 +32,8 @@ class LocationData:
             self.id = offset + FIRST_ID
             location_map[full_name] = self.id
             for alt_name in self.alt_names + [client_name]:
-                location_hints.setdefault(alt_name, set()).update({full_name})
+                if alt_name != full_name:
+                    location_hints.setdefault(alt_name, set()).update({full_name})
             location_client_map[client_name] = self.full_name
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
