@@ -133,4 +133,8 @@ def get_starts(options: RainWorldOptions) -> list[str]:
             ret.remove("SB_S02")
             ret.remove("SB_S04")
 
+    # UW is basically broken into two for Rivulet with not enough checks on the eastern side.
+    if code == "UW" and scug == "Rivulet":
+        ret = list(set(ret).difference({'UW_S02', 'UW_S07', 'UW_S06', 'UW_S05'}))
+
     return ret
