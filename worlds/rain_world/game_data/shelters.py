@@ -1,3 +1,4 @@
+from Options import OptionError
 from ..options import RainWorldOptions
 from .general import alternate_regions, story_regions_vanilla
 
@@ -91,30 +92,30 @@ def get_starts(options: RainWorldOptions) -> list[str]:
 
     if scug == "Watcher":
         if code != "WSKB":
-            raise ValueError("Watcher must start in Sunlit Port (for now)")
+            raise OptionError("Watcher must start in Sunlit Port (for now)")
         return ["WSKB_C17"]  # TODO
 
     if code is None:
-        raise ValueError(f"Invalid YAML: {scug_name} cannot start in {name}")
+        raise OptionError(f"{scug_name} cannot start in {name}")
 
     if code == "SH" and options.difficulty_glow:
-        raise ValueError("Invalid YAML: Cannot start in Shaded Citadel with 'Glow required for dark places' enabled")
+        raise OptionError("Cannot start in Shaded Citadel with 'Glow required for dark places' enabled")
 
     if not options.msc_enabled and code not in story_regions_vanilla:
-        raise ValueError(f"Invalid YAML: Cannot start in {name} with MSC disabled")
+        raise OptionError(f"Cannot start in {name} with MSC disabled")
 
     if code == "LC":
         if scug != "Artificer":
-            raise ValueError(f"Invalid YAML: {scug_name} cannot start in Metropolis")
+            raise OptionError(f"{scug_name} cannot start in Metropolis")
         elif options.which_victory_condition == "alternate":
-            raise ValueError(f"Invalid YAML: Artificer starting in Metropolis with alternate victory condition is moot")
+            raise OptionError(f"Artificer starting in Metropolis with alternate victory condition is moot")
     elif code == "OE":
         if scug not in ["White", "Yellow", "Gourmand"]:
-            raise ValueError(f"Invalid YAML: {scug_name} cannot start in Outer Expanse")
+            raise OptionError(f"{scug_name} cannot start in Outer Expanse")
         elif options.which_victory_condition == "alternate":
-            raise ValueError(f"Invalid YAML: {scug_name} starting in {name} with alternate victory condition is moot")
+            raise OptionError(f"{scug_name} starting in {name} with alternate victory condition is moot")
     elif code == "DM" and scug != "Spear":
-        raise ValueError(f"Invalid YAML: {scug_name} cannot start in Looks to the Moon")
+        raise OptionError(f"{scug_name} cannot start in Looks to the Moon")
 
     ret = list(start_shelters[code])
 
