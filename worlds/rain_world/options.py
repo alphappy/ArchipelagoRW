@@ -1010,6 +1010,10 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             return ("At least one trap filler weight must be nonzero."
                     "To disable traps, set `pct_traps` to 0.")
 
+        if self.random_starting_region.code == "SS" and not self.checks_sheltersanity:
+            return ("Cannot start in Five Pebbles without sheltersanity enabled "
+                    "(not enough checks on sphere 1).")
+
         return None
 
     @property
