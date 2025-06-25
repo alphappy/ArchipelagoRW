@@ -82,6 +82,10 @@ class GateData:
             right_alt = region_code_to_name[alt]
             ret += [f'Gate: {left_name} to {right_alt}', f'Gate: {right_alt} to {left_name}']
 
+        # HARDCODE: gross bandaid fix for item group name collision with GATE_SL_CL
+        if self.name == "GATE_SH_SL":
+            ret = [r for r in ret if "Silent Construct" not in r]
+
         return ret + [self.name]
 
     def is_accessible(self, options: RainWorldOptions):

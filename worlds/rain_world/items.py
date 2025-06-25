@@ -181,5 +181,5 @@ item_name_to_id: Dict[str, int] = {k: v.code for k, v in all_items.items()}
 
 item_hints: dict[str, set[str]] = {}
 for item in all_items.values():
-    for hint in item.hints:
+    for hint in [h for h in item.hints if h != item.name]:
         item_hints.setdefault(hint, set()).update({item.name})
