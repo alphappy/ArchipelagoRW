@@ -1010,9 +1010,32 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             return ("At least one trap filler weight must be nonzero."
                     "To disable traps, set `pct_traps` to 0.")
 
-        if self.random_starting_region.code == "SS" and not self.checks_sheltersanity:
-            return ("Cannot start in Five Pebbles without sheltersanity enabled "
-                    "(not enough checks on sphere 1).")
+        optional_check_score = (
+            (2 if self.checks_sheltersanity else 0)
+            + (1 if self.checks_flowersanity else 0)
+            + (1 if self.checks_devtokens and self.msc_enabled else 0)
+            + (1 if self.checks_foodquest and self.msc_enabled else 0)
+        )
+
+        if optional_check_score < 2:
+            start = self.random_starting_region.code
+            sphere_1_too_small = False
+            solutions = [
+                "Pick a different starting region.",
+                "Enable sheltersanity.",
+                "Enable at least two of flowersanity, devtokens, and foodquest."
+            ]
+
+            if (start == "SS" and self.starting_scug != "Rivulet") or start == "UW":
+                sphere_1_too_small = True
+            if start == "SB" and self.difficulty_glow:
+                sphere_1_too_small = True
+                solutions.append("Disable `difficulty_glow`.")
+
+            if sphere_1_too_small:
+                solution_string = "\n".join(f"{i+1}) {s}" for i, s in enumerate(solutions))
+                return ("Sphere 1 is too small with these settings.  "
+                        f"Do at least one of the following: \n{solution_string}")
 
         return None
 
