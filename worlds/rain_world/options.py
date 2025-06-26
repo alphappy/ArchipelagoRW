@@ -1023,14 +1023,17 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             solutions = [
                 "Pick a different starting region.",
                 "Enable sheltersanity.",
-                "Enable at least two of flowersanity, devtokens, and foodquest."
+                "Enable MSC and at least two of flowersanity, devtokens, and foodquest."
             ]
 
             if (start == "SS" and self.starting_scug != "Rivulet") or start == "UW":
                 sphere_1_too_small = True
-            if start == "SB" and self.difficulty_glow:
+            elif start == "SB" and self.difficulty_glow:
                 sphere_1_too_small = True
                 solutions.append("Disable `difficulty_glow`.")
+            elif start == "SI" and not self.msc_enabled:
+                sphere_1_too_small = True
+                solutions[2] = "Enable MSC."
 
             if sphere_1_too_small:
                 solution_string = "\n".join(f"{i+1}) {s}" for i, s in enumerate(solutions))
