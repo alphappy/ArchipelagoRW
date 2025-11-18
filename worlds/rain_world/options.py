@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from Options import PerGameCommonOptions, Toggle, Range, OptionGroup, Choice, ProgressionBalancing, Accessibility, \
-    Visibility, DeathLinkMixin, DeathLink, FreeText
+    Visibility, DeathLinkMixin, DeathLink, FreeText, OptionList
 from .conditions import GameStateFlag
 from .game_data import static_data
 from .game_data.bitflag import ScugFlagMap
@@ -55,7 +55,7 @@ class WhichGameVersion(Choice):
 
     displaying = {
         1091503: ("v1.9.15b / v1.9.15.3", "1.9.15.3"),
-        1100400: ("v1.10.0 - v1.10.4", "1.10.4"),
+        1100400: ("v1.10.0 - v1.11.1", "1.11.1"),
     }
 
     @property
@@ -63,6 +63,8 @@ class WhichGameVersion(Choice):
 
     @classmethod
     def get_option_name(cls, value: int) -> str: return cls.displaying[value][0]
+
+    visibility = Visibility.none
 
 
 class WhichCampaign(Choice):
@@ -115,12 +117,19 @@ class WhichCampaign(Choice):
 
 
 class WhichVictoryCondition(Choice):
-    """Whether ascension or a gamestate-specific alternative is the victory condition.
-    The alternative victory condition depends on the selected gamestate.
+    """What the victory condition should be.
+    **Ascension** is the default, and **Story** is the slugcat specific ending.
+    **Echoes** requires meeting enough Echoes to satisfy the Pilgrim passage.
+    **Food Quest** requires eating every edible food in order to fill out the tracker.
+    This includes expanded food quest, if it is enabled.
 
-    **Vanilla**, **Hunter**, **Saint**, or **Sofanthiel**: No alternate.
+    The **Story** victory condition depends on the selected gamestate:
+
+    **Vanilla**, **Saint**, or **Sofanthiel**: No alternate.
 
     **Monk** and **Survivor**: Reach Journey's End in Outer Expanse.
+
+    **Hunter**: Use the green neuron on Looks to the Moon in Shoreline.
 
     **Gourmand**: Receive the Mark and reach Journey's End in Outer Expanse.
 
@@ -134,7 +143,9 @@ class WhichVictoryCondition(Choice):
     """
     display_name = "Victory condition"
     option_ascension = 0
-    option_alternate = 1
+    option_story = 1
+    option_echoes = 2
+    option_food_quest = 3
 
 
 class WhichGateBehavior(Choice):
@@ -373,12 +384,12 @@ class RandomStartingRegion(Choice):
 class PassagePriority(Range):
     """Number of Passages that are randomly marked as priority checks,
     increasing the chance that they will contain progression items.
-    These are in addition to any manually-prioiritized Passages,
+    These are in addition to any manually-prioritized Passages,
     and will not override any manually-excluded Passages."""
     display_name = "Priority Passages"
     range_start = 0
     range_end = 14
-    default = 5
+    default = 3
 
 
 class ExtraKarmaCapIncreases(Range):
@@ -386,7 +397,7 @@ class ExtraKarmaCapIncreases(Range):
     display_name = "Extra karma cap increases"
     range_start = 0
     range_end = 30
-    default = 1
+    default = 3
 
 
 #################################################################
@@ -420,7 +431,7 @@ class ChecksFoodQuestExpanded(Toggle):
     and some slugcats will not be required to kill and eat extreme threats if that setting is enabled.
     Requires MSC."""
     display_name = "Expanded food quest"
-    default = True
+    default = False
 
 
 class ChecksTokensPearls(Toggle):
@@ -549,9 +560,31 @@ class DifficultyEchoLowKarma(Choice):
     option_unaltered = 3
     default = 3
 
+#################################################################
+# UPGRADE SETTINGS
+class UpgradesSpearDamage(Range):
+    """Add an amount of items to the pool that permanently increase the damage of thrown spears.
+    Each progressive upgrade adds 10% damage on top of the slugcat's base damage."""
+    display_name = "Spear damage increases"
+    range_start = 0
+    range_end = 10
+    default = 6
 
 #################################################################
 # FILLER SETTINGS
+class ExpeditionPerks(OptionList):
+    """Choose which Expedition perks will be added to the item pool.
+    If an ability in this list is given to a slugcat that innately has it, there is no effect.
+    Requires MSC.
+
+    Valid Perks: Back Spear Perk, Dual Wielding Perk, Blast Resistance Perk, Explosive Parry Perk,
+    Explosive Jump Perk, Crafting Perk, Aquatic Perk, Agility Perk"""
+    display_name = "Expedition Perks"
+    valid_keys = ["back spear perk", "dual wielding perk", "blast resistance perk", "explosive parry perk",
+                  "explosive jump perk", "crafting perk", "aquatic perk", "agility perk"]
+    valid_keys_casefold = True
+
+
 class PctTraps(Range):
     """The percentage of filler items that will be traps.  Set to 0 to remove traps entirely."""
     display_name = "Trap percentage"
@@ -624,10 +657,24 @@ class WtCherrybomb(WtGeneric):
     default = 30
 
 
+class WtBubbleWeed(WtGeneric):
+    """The relative weight of bubble weed in the non-trap filler item pool."""
+    display_name = "Bubble Weed"
+    item_name = "Bubble Weed"
+    default = 20
+
+
 class WtLillyPuck(WtGeneric):
     """The relative weight of lilypucks in the non-trap filler item pool."""
     display_name = "Lilypuck (MSC)"
     item_name = "Lilypuck"
+    default = 20
+
+
+class WtDandelionPeach(WtGeneric):
+    """The relative weight of dandelion peaches in the non-trap filler item pool."""
+    display_name = "Dandelion Peach (MSC)"
+    item_name = "Dandelion Peach"
     default = 20
 
 
@@ -862,12 +909,14 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     #################################################################
     # ITEM POOL SETTINGS
+    expedition_perks: ExpeditionPerks
     pct_traps: PctTraps
     weight_jitter: FillerJitter
     extra_karma_cap_increases: ExtraKarmaCapIncreases
+    damage_upgrades: UpgradesSpearDamage
 
     group_itempool = [
-        ExtraKarmaCapIncreases, PctTraps, FillerJitter
+        ExtraKarmaCapIncreases, UpgradesSpearDamage, ExpeditionPerks, PctTraps, FillerJitter
     ]
 
     #################################################################
@@ -917,9 +966,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_flashbangs: WtFlashbang
     wt_sporepuffs: WtSporePuff
     wt_cherrybombs: WtCherrybomb
+    wt_bubble_weed: WtBubbleWeed
     wt_lanterns: WtLantern
     wt_vulture_masks: WtVultureMask
     wt_lilypucks: WtLillyPuck
+    wt_dandelion_peaches: WtDandelionPeach
     wt_electric_spears: WtElectricSpear
     wt_singularity_bombs: WtSingularityBomb
     wt_joke_rifles: WtJokeRifle
@@ -935,10 +986,10 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_glowweed: WtGlowWeed
 
     group_filler = [
-        WtRock, WtSpear, WtExplosiveSpear, WtGrenade, WtFlashbang, WtSporePuff, WtCherrybomb, WtLantern, WtVultureMask,
-        WtFruit, WtBubbleFruit, WtEggbugEgg, WtJellyfish, WtMushroom, WtSlimeMold, WtKarmaFlower,
+        WtRock, WtSpear, WtExplosiveSpear, WtGrenade, WtFlashbang, WtSporePuff, WtCherrybomb, WtBubbleWeed, WtLantern,
+        WtVultureMask, WtFruit, WtBubbleFruit, WtEggbugEgg, WtJellyfish, WtMushroom, WtSlimeMold, WtKarmaFlower,
 
-        WtLillyPuck, WtElectricSpear, WtSingularityBomb, WtJokeRifle,
+        WtLillyPuck, WtDandelionPeach, WtElectricSpear, WtSingularityBomb, WtJokeRifle,
         WtFireEgg, WtGlowWeed
     ]
 
@@ -1043,6 +1094,13 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
                 return ("Sphere 1 is too small with these settings.  "
                         f"Do at least one of the following: \n{solution_string}")
 
+        if self.which_victory_condition == 3:
+            if not self.msc_enabled:
+                return (f"Food quest victory condition cannot be selected "
+                        f"without More Slugcats Expansion enabled.")
+            if (self.starting_scug == "Gourmand") + self.checks_foodquest.value < 2:
+                return "Food quest checks must be enabled to use food quest victory condition."
+
         return None
 
     @property
@@ -1054,14 +1112,14 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def get_nontrap_weight_dict(self) -> dict[str, float]:
         ret = {a.item_name: a.value for a in [
             self.wt_rocks, self.wt_spears, self.wt_explosive_spears, self.wt_grenades,
-            self.wt_flashbangs, self.wt_sporepuffs, self.wt_cherrybombs, self.wt_lilypucks,
-            self.wt_fruit, self.wt_bubblefruit, self.wt_eggbugeggs, self.wt_jellyfish,
-            self.wt_mushrooms, self.wt_slimemold, self.wt_fireeggs, self.wt_glowweed,
-            self.wt_electric_spears, self.wt_singularity_bombs, self.wt_lanterns,
-            self.wt_karma_flowers, self.wt_vulture_masks, self.wt_joke_rifles,
+            self.wt_flashbangs, self.wt_sporepuffs, self.wt_cherrybombs, self.wt_bubble_weed,
+            self.wt_lilypucks, self.wt_dandelion_peaches, self.wt_fruit, self.wt_bubblefruit,
+            self.wt_eggbugeggs, self.wt_jellyfish, self.wt_mushrooms, self.wt_slimemold,
+            self.wt_fireeggs, self.wt_glowweed, self.wt_electric_spears, self.wt_singularity_bombs,
+            self.wt_lanterns, self.wt_karma_flowers, self.wt_vulture_masks, self.wt_joke_rifles,
         ]}
         if not self.msc_enabled:
-            for key in ("Lilypuck", "Fire Egg", "Glow Weed", "Electric Spear", "Singularity Bomb", "Joke Rifle"):
+            for key in ("Lilypuck", "Dandelion Peach", "Fire Egg", "Glow Weed", "Electric Spear", "Singularity Bomb", "Joke Rifle"):
                 ret[f"{key}"] = 0
 
         return ret
@@ -1083,7 +1141,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     @property
     def should_have_rot_spread_checks(self):
         return (self.starting_scug == "Watcher" and
-                (self.checks_spread_rot + (self.which_victory_condition == "alternate")) > 1)
+                (self.checks_spread_rot + (self.which_victory_condition == "story")) > 1)
 
 
 option_groups = [

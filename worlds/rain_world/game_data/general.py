@@ -51,14 +51,17 @@ region_code_to_name = {
     'WRRA': 'Rusted Wrecks',
     'WRSA': 'Daemon',
     'WSKA': 'Torrential Railways',
-    'WSKB': 'Sunlit Port',
+    'WSKB': 'Sunbaked Alley',
     'WSKC': 'Stormy Coast',
-    'WSKD': 'Shrouded Coast',
+    'WSKD': 'Shrouded Stacks',
     'WSSR': 'Unfortunate Evolution',
     'WSUR': 'Crumbling Fringes',
     'WTDA': 'Torrid Desert',
     'WTDB': 'Desolate Tract',
     'WVWA': 'Verdant Waterways',
+    'WPGA': 'Pillar Grove',
+    'WMPA': 'Migration Path',
+    'WVWB': 'Fractured Gateways'
 }
 
 regions_all = list(region_code_to_name.keys())
@@ -131,9 +134,11 @@ direct_alternate_regions = {"DS": ["UG"], "SH": ["CL"], "SL": ["LM"], "SS": ["RM
 
 #################################################################
 # SCUG DATA
-scugs_all = ['Yellow', 'White', 'Red', 'Gourmand', 'Artificer', 'Rivulet', 'Spear', 'Saint', 'Inv']
-scugs_msc_watcher = ['Yellow', 'White', 'Red', 'Gourmand', 'Artificer', 'Rivulet', 'Spear', 'Saint', 'Inv', 'Watcher']
 scugs_vanilla = ['Yellow', 'White', 'Red']
+scugs_msc = ['Yellow', 'White', 'Red', 'Gourmand', 'Artificer', 'Rivulet', 'Spear', 'Saint', 'Inv']
+scugs_watcher = {"Yellow", "White", "Red", "Watcher"}
+scugs_msc_watcher = ['Yellow', 'White', 'Red', 'Gourmand', 'Artificer', 'Rivulet', 'Spear', 'Saint', 'Inv', "Watcher"]
+scugs_all = ['Yellow', 'White', 'Red', 'Gourmand', 'Artificer', 'Rivulet', 'Spear', 'Saint', 'Inv', "Watcher"]
 
 #################################################################
 # PASSAGE DATA

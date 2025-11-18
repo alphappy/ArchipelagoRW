@@ -76,7 +76,7 @@ def get_default_start(scug: str) -> str:
     elif scug == "Inv":
         return "SH_E03"
     elif scug == "Watcher":
-        return "WSKB_C17"
+        return "WSKB_C15"
     else:
         return "SU_C04"
 
@@ -90,10 +90,11 @@ def get_starts(options: RainWorldOptions) -> list[str]:
 
     code = alternate_regions.get(code, {}).get(scug, code)
 
+    # All possible Watcher starts should be a room with a Warp Destination for the client to place the player correctly.
     if scug == "Watcher":
         if code != "WSKB":
             raise OptionError("Watcher must start in Sunlit Port (for now)")
-        return ["WSKB_C17"]  # TODO
+        return ["WSKB_C15"]  # TODO
 
     if code is None:
         raise OptionError(f"{scug_name} cannot start in {name}")

@@ -88,27 +88,71 @@ class TestSofanthiel(RainWorldTestBase):
 
 
 class TestMonkMSCAlternate(RainWorldTestBase):
-    options = {"which_campaign": "monk", "which_victory_condition": "alternate", "is_msc_enabled": True}
+    options = {"which_campaign": "monk", "which_victory_condition": "story", "is_msc_enabled": True}
 
 
 class TestSurvivorMSCAlternate(RainWorldTestBase):
-    options = {"which_campaign": "survivor", "which_victory_condition": "alternate", "is_msc_enabled": True}
+    options = {"which_campaign": "survivor", "which_victory_condition": "story", "is_msc_enabled": True}
+
+
+class TestHunterAlternate(RainWorldTestBase):
+    options = {"which_campaign": "hunter", "which_victory_condition": "story"}
 
 
 class TestGourmandAlternate(RainWorldTestBase):
-    options = {"which_campaign": "gourmand", "which_victory_condition": "alternate", "is_msc_enabled": True}
+    options = {"which_campaign": "gourmand", "which_victory_condition": "story", "is_msc_enabled": True}
 
 
 class TestArtificerAlternate(RainWorldTestBase):
-    options = {"which_campaign": "artificer", "which_victory_condition": "alternate", "is_msc_enabled": True}
+    options = {"which_campaign": "artificer", "which_victory_condition": "story", "is_msc_enabled": True}
 
 
 class TestRivuletAlternate(RainWorldTestBase):
-    options = {"which_campaign": "rivulet", "which_victory_condition": "alternate", "is_msc_enabled": True}
+    options = {"which_campaign": "rivulet", "which_victory_condition": "story", "is_msc_enabled": True}
 
 
 class TestSpearAlternate(RainWorldTestBase):
-    options = {"which_campaign": "spearmaster", "which_victory_condition": "alternate", "is_msc_enabled": True}
+    options = {"which_campaign": "spearmaster", "which_victory_condition": "story", "is_msc_enabled": True}
+
+
+class TestEchoes(RainWorldTestBase):
+    options = {"which_victory_condition": "echoes"}
+
+
+class TestSaintEchoes(RainWorldTestBase):
+    options = {"which_campaign": "saint", "which_victory_condition": "echoes", "is_msc_enabled": True}
+
+
+class TestFoodQuest(RainWorldTestBase):
+    options = {"which_campaign": "survivor", "which_victory_condition": "food_quest", "is_msc_enabled": True}
+
+
+class TestMSCFoodQuest(RainWorldTestBase):
+    options = {"which_campaign": "survivor", "which_victory_condition": "food_quest", "is_msc_enabled": True}
+
+
+class TestHunterFoodQuest(RainWorldTestBase):
+    options = {"which_campaign": "hunter", "which_victory_condition": "food_quest", "is_msc_enabled": True}
+
+
+class TestGourmandFoodQuest(RainWorldTestBase):
+    options = {"which_campaign": "gourmand", "which_victory_condition": "food_quest", "is_msc_enabled": True}
+
+
+class TestArtificerFoodQuest(RainWorldTestBase):
+    options = {"which_campaign": "artificer", "which_victory_condition": "food_quest", "is_msc_enabled": True}
+
+
+class TestRivuletFoodQuest(RainWorldTestBase):
+    options = {"which_campaign": "rivulet", "which_victory_condition": "food_quest", "is_msc_enabled": True}
+
+
+class TestSpearFoodQuest(RainWorldTestBase):
+    options = {"which_campaign": "spearmaster", "which_victory_condition": "food_quest", "is_msc_enabled": True}
+
+
+class TestSaintFoodQuest(RainWorldTestBase):
+    options = {"which_campaign": "saint", "which_victory_condition": "food_quest", "is_msc_enabled": True}
 
 
 class TestWatcher(RainWorldTestBase):

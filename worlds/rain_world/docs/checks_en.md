@@ -23,10 +23,6 @@ they are not considered two separate checks.
 `Misc2` pearls, such as the one in Subterranean,
 though they appear on the interactive map, are not unique and are not checks.
 
-## Karma flowers
-If `checks_flowersanity` is enabled, eating a fixed karma flower spawn is a check.
-If two karma flowers exist in the same room, they are not two separate checks.
-
 ## Echoes
 Visiting an echo is a check, and the karma cap increases they would normally give are placed in the item pool.
 Whether an echo appears depends on some combination of 
@@ -175,6 +171,10 @@ Shelters which do not function in a given worldstate are not counted.
 | Submerged Superstructure |                       | 10                | 1 is broken for all slugcats except Monk.<br/>3 others are only accessible for Rivulet.                                |
 | Undergrowth              |                       | 4                 |                                                                                                                        |
 | Waterfront Facility      |                       | 10                | 1 is only accessible for Spearmaster.                                                                                  |
+
+## Karma flowers
+If `checks_flowersanity` is enabled, eating a fixed karma flower spawn is a check.
+If two karma flowers exist in the same room, they are not two separate checks.
 
 ## Notes
 
