@@ -108,12 +108,12 @@ def get_starts(options: RainWorldOptions) -> list[str]:
     if code == "LC":
         if scug != "Artificer":
             raise OptionError(f"{scug_name} cannot start in Metropolis")
-        elif options.which_victory_condition == "alternate":
+        elif options.which_victory_condition == "story":
             raise OptionError(f"Artificer starting in Metropolis with alternate victory condition is moot")
     elif code == "OE":
         if scug not in ["White", "Yellow", "Gourmand"]:
             raise OptionError(f"{scug_name} cannot start in Outer Expanse")
-        elif options.which_victory_condition == "alternate":
+        elif options.which_victory_condition == "story":
             raise OptionError(f"{scug_name} starting in {name} with alternate victory condition is moot")
     elif code == "DM" and scug != "Spear":
         raise OptionError(f"{scug_name} cannot start in Looks to the Moon")

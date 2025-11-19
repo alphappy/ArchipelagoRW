@@ -580,9 +580,9 @@ class ExpeditionPerks(OptionList):
     Valid Perks: Back Spear Perk, Dual Wielding Perk, Blast Resistance Perk, Explosive Parry Perk,
     Explosive Jump Perk, Crafting Perk, Aquatic Perk, Agility Perk"""
     display_name = "Expedition Perks"
-    valid_keys = ["back spear perk", "dual wielding perk", "blast resistance perk", "explosive parry perk",
-                  "explosive jump perk", "crafting perk", "aquatic perk", "agility perk"]
-    valid_keys_casefold = True
+    valid_keys = ["Back Spear Perk", "Dual Wielding Perk", "Blast Resistance Perk", "Explosive Parry Perk",
+                  "Explosive Jump Perk", "Crafting Perk", "Aquatic Perk", "Agility Perk"]
+    verify_item_name = True
 
 
 class PctTraps(Range):
