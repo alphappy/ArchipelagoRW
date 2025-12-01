@@ -48,7 +48,7 @@ class ThroneWarp(RoomLocation):
                          f"WORA_THRONE{self.rooms[num]}")
         self.access_condition = Simple("Ripple", 2 * num)
 
-    rooms = [f"{a:0>2}" for a in (10, 5, 9, 7)]
+    rooms = [f"{a:0>2}" for a in (10, 5, 7, 9)]
     names = ["lower east", "lower west", "upper east", "upper west"]
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
