@@ -43,6 +43,12 @@ class GateData:
                 case _:
                     raise ValueError(f"invalid setting: {options.which_gate_behavior=}")
 
+            # Some gates are always open to prevent softlocks
+            if self.left < 0:
+                left_cost = ConditionBlank
+            if self.right < 0:
+                right_cost = ConditionBlank
+
             _l, _r = self.additional_conditions(options)
             left_condition = AllOf(_l, Simple([f"Scug-{s}" for s in scugs], 1), left_cost)
             right_condition = AllOf(_r, Simple([f"Scug-{s}" for s in scugs], 1), right_cost)
@@ -165,11 +171,9 @@ gates = [
     GateData("GATE_SI_LF", 3, 3),
     GateData("GATE_SS_UW", 1, 1),
     GateData("GATE_UW_SS", 5, 1),
-    GateData("GATE_SL_MS", 999, 5),
     GateData("GATE_MS_SL", 1, 5, True),
     GateData("GATE_SB_OE", 1, 5, True),
-    GateData("GATE_UW_LC", -1, 5),
-    GateData("GATE_OE_SU", 1, 5),
+    GateData("GATE_UW_LC", 0, 5),
     GateData("GATE_SL_DM", 5, 1),
     GateData("GATE_UW_SL", 1, 1),
     GateData("GATE_GW_SH", 4, 2),
@@ -182,6 +186,12 @@ gates = [
     GateData("GATE_DM_SL", 1, 1),
 ]
 
+# These gates are always open, and should not have an item associated with them
+gates_no_item = [
+    GateData("GATE_SL_MS", 999, -1),
+    GateData("GATE_OE_SU", -1, -1),
+]
+
 
 def generate(_: RainWorldOptions) -> list[GateData]:
-    return gates
+    return [*gates, *gates_no_item]
