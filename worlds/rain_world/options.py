@@ -879,8 +879,8 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     debug_output: DebugOutput
 
     group_important = [
-        WhichGameVersion, IsMSCEnabled, IsWatcherEnabled, WhichCampaign,
-        PassageProgressWithoutSurvivor, WhichVictoryCondition, WhichGateBehavior, DeathLink, RandomStartingRegion
+        WhichGameVersion, IsMSCEnabled, IsWatcherEnabled, WhichCampaign, PassageProgressWithoutSurvivor,
+        WhichVictoryCondition, WhichGateBehavior, DeathLink, RandomStartingRegion, DebugOutput
     ]
 
     #################################################################
@@ -944,9 +944,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     so_peeping: SoPeeping
 
     group_watcher = [
-        LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
+        SoPeeping, LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
         DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot,
-        SpinningTopKeys, PriorityThrone,
+        SpinningTopKeys, PriorityThrone, PredeterminedDynamicWarpNetworkMinimumNecklaceLength,
     ]
 
     #################################################################
@@ -1141,7 +1141,7 @@ option_groups = [
     OptionGroup("Difficulty settings", RainWorldOptions.group_difficulty, True),
     OptionGroup("Check pool settings", RainWorldOptions.group_checkpool, True),
     OptionGroup("Item pool settings", RainWorldOptions.group_itempool, True),
-    # OptionGroup("Watcher-specific settings (spoilers)", RainWorldOptions.group_watcher, True),
+    OptionGroup("Watcher-specific settings", RainWorldOptions.group_watcher, True),
     OptionGroup("Filler item relative weights", RainWorldOptions.group_filler, True),
     OptionGroup("Trap relative weights", RainWorldOptions.group_traps, True),
 ]
