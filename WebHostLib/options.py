@@ -6,14 +6,13 @@ from typing import Dict, Union
 from docutils.core import publish_parts
 
 import yaml
-from flask import redirect, render_template, request, Response, abort
+from flask import redirect, render_template, request, Response
 
 import Options
 from Utils import local_path
 from worlds.AutoWorld import AutoWorldRegister
 from . import app, cache
 from .generate import get_meta
-from .misc import get_world_theme
 
 
 def create() -> None:
@@ -21,6 +20,12 @@ def create() -> None:
     yaml_folder = os.path.join(target_folder, "configs")
 
     Options.generate_yaml_templates(yaml_folder)
+
+
+def get_world_theme(game_name: str) -> str:
+    if game_name in AutoWorldRegister.world_types:
+        return AutoWorldRegister.world_types[game_name].web.theme
+    return 'grass'
 
 
 def render_options_page(template: str, world_name: str, is_complex: bool = False) -> Union[Response, str]:
@@ -71,7 +76,7 @@ def filter_rst_to_html(text: str) -> str:
         lines = text.splitlines()
         text = lines[0] + "\n" + dedent("\n".join(lines[1:]))
 
-    return publish_parts(text, writer='html', settings=None, settings_overrides={
+    return publish_parts(text, writer_name='html', settings=None, settings_overrides={
         'raw_enable': False,
         'file_insertion_enabled': False,
         'output_encoding': 'unicode'
@@ -103,7 +108,7 @@ def option_presets(game: str) -> Response:
                     f"Expected {option.special_range_names.keys()} or {option.range_start}-{option.range_end}."
 
                 presets[preset_name][preset_option_name] = option.value
-            elif isinstance(option, (Options.Range, Options.OptionSet, Options.OptionList, Options.OptionCounter)):
+            elif isinstance(option, (Options.Range, Options.OptionSet, Options.OptionList, Options.ItemDict)):
                 presets[preset_name][preset_option_name] = option.value
             elif isinstance(preset_option, str):
                 # Ensure the option value is valid for Choice and Toggle options
@@ -137,10 +142,7 @@ def weighted_options_old():
 @app.route("/games/<string:game>/weighted-options")
 @cache.cached()
 def weighted_options(game: str):
-    try:
-        return render_options_page("weightedOptions/weightedOptions.html", game, is_complex=True)
-    except KeyError:
-        return abort(404)
+    return render_options_page("weightedOptions/weightedOptions.html", game, is_complex=True)
 
 
 @app.route("/games/<string:game>/generate-weighted-yaml", methods=["POST"])
@@ -150,9 +152,7 @@ def generate_weighted_yaml(game: str):
         options = {}
 
         for key, val in request.form.items():
-            if val == "_ensure-empty-list":
-                options[key] = {}
-            elif "||" not in key:
+            if "||" not in key:
                 if len(str(val)) == 0:
                     continue
 
@@ -197,10 +197,7 @@ def generate_weighted_yaml(game: str):
 @app.route("/games/<string:game>/player-options")
 @cache.cached()
 def player_options(game: str):
-    try:
-        return render_options_page("playerOptions/playerOptions.html", game, is_complex=False)
-    except KeyError:
-        return abort(404)
+    return render_options_page("playerOptions/playerOptions.html", game, is_complex=False)
 
 
 # YAML generator for player-options
@@ -209,11 +206,8 @@ def generate_yaml(game: str):
     if request.method == "POST":
         options = {}
         intent_generate = False
-
         for key, val in request.form.items(multi=True):
-            if val == "_ensure-empty-list":
-                options[key] = []
-            elif options.get(key):
+            if key in options:
                 if not isinstance(options[key], list):
                     options[key] = [options[key]]
                 options[key].append(val)
@@ -222,11 +216,11 @@ def generate_yaml(game: str):
 
         for key, val in options.copy().items():
             key_parts = key.rsplit("||", 2)
-            # Detect and build OptionCounter options from their name pattern
+            # Detect and build ItemDict options from their name pattern
             if key_parts[-1] == "qty":
                 if key_parts[0] not in options:
                     options[key_parts[0]] = {}
-                if val and val != "0":
+                if val != "0":
                     options[key_parts[0]][key_parts[1]] = int(val)
                 del options[key]
 

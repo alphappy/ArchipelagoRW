@@ -1,4 +1,4 @@
-from ..bases import SVTestBase
+from .. import SVTestBase
 from ...mods.mod_data import ModNames
 from ...options import Mods, BackpackProgression
 

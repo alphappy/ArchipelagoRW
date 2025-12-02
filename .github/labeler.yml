@@ -21,6 +21,7 @@
     - '!data/**'
     - '!.run/**'
     - '!.github/**'
+    - '!worlds_disabled/**'
     - '!worlds/**'
     - '!WebHost.py'
     - '!WebHostLib/**'

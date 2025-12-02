@@ -1,4 +1,4 @@
-from ..test.bases import WitnessMultiworldTestBase, WitnessTestBase
+from ..test import WitnessMultiworldTestBase, WitnessTestBase
 
 
 class TestSymbols(WitnessTestBase):

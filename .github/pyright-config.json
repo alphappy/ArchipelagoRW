@@ -2,7 +2,6 @@
   "include": [
     "../BizHawkClient.py",
     "../Patch.py",
-    "../test/param.py",
     "../test/general/test_groups.py",
     "../test/general/test_helpers.py",
     "../test/general/test_memory.py",
@@ -29,7 +28,7 @@
   "reportMissingImports": true,
   "reportMissingTypeStubs": true,
 
-  "pythonVersion": "3.11",
+  "pythonVersion": "3.10",
   "pythonPlatform": "Windows",
 
   "executionEnvironments": [

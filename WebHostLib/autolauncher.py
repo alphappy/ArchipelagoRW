@@ -9,7 +9,7 @@ from threading import Event, Thread
 from typing import Any
 from uuid import UUID
 
-from pony.orm import db_session, select, commit, PrimaryKey
+from pony.orm import db_session, select, commit
 
 from Utils import restricted_loads
 from .locker import Locker, AlreadyRunningException
@@ -17,7 +17,7 @@ from .locker import Locker, AlreadyRunningException
 _stop_event = Event()
 
 
-def stop() -> None:
+def stop():
     """Stops previously launched threads"""
     global _stop_event
     stop_event = _stop_event
@@ -36,39 +36,16 @@ def handle_generation_failure(result: BaseException):
         logging.exception(e)
 
 
-def _mp_gen_game(
-    gen_options: dict,
-    meta: dict[str, Any] | None = None,
-    owner=None,
-    sid=None,
-    timeout: int|None = None,
-) -> PrimaryKey | None:
-    from setproctitle import setproctitle
-
-    setproctitle(f"Generator ({sid})")
-    try:
-        return gen_game(gen_options, meta=meta, owner=owner, sid=sid, timeout=timeout)
-    finally:
-        setproctitle(f"Generator (idle)")
-
-
-def launch_generator(pool: multiprocessing.pool.Pool, generation: Generation, timeout: int|None) -> None:
+def launch_generator(pool: multiprocessing.pool.Pool, generation: Generation):
     try:
         meta = json.loads(generation.meta)
         options = restricted_loads(generation.options)
         logging.info(f"Generating {generation.id} for {len(options)} players")
-        pool.apply_async(
-            _mp_gen_game,
-            (options,),
-            {
-                "meta": meta,
-                "sid": generation.id,
-                "owner": generation.owner,
-                "timeout": timeout,
-            },
-            handle_generation_success,
-            handle_generation_failure,
-        )
+        pool.apply_async(gen_game, (options,),
+                         {"meta": meta,
+                          "sid": generation.id,
+                          "owner": generation.owner},
+                         handle_generation_success, handle_generation_failure)
     except Exception as e:
         generation.state = STATE_ERROR
         commit()
@@ -78,10 +55,6 @@ def launch_generator(pool: multiprocessing.pool.Pool, generation: Generation, ti
 
 
 def init_generator(config: dict[str, Any]) -> None:
-    from setproctitle import setproctitle
-
-    setproctitle("Generator (idle)")
-
     try:
         import resource
     except ModuleNotFoundError:
@@ -149,7 +122,6 @@ def autogen(config: dict):
 
                 with multiprocessing.Pool(config["GENERATORS"], initializer=init_generator,
                                           initargs=(config,), maxtasksperchild=10) as generator_pool:
-                    job_time = config["JOB_TIME"]
                     with db_session:
                         to_start = select(generation for generation in Generation if generation.state == STATE_STARTED)
 
@@ -160,7 +132,7 @@ def autogen(config: dict):
                                 if sid:
                                     generation.delete()
                                 else:
-                                    launch_generator(generator_pool, generation, timeout=job_time)
+                                    launch_generator(generator_pool, generation)
 
                             commit()
                         select(generation for generation in Generation if generation.state == STATE_ERROR).delete()
@@ -172,11 +144,14 @@ def autogen(config: dict):
                                 generation for generation in Generation
                                 if generation.state == STATE_QUEUED).for_update()
                             for generation in to_start:
-                                launch_generator(generator_pool, generation, timeout=job_time)
+                                launch_generator(generator_pool, generation)
         except AlreadyRunningException:
             logging.info("Autogen reports as already running, not starting another.")
 
     Thread(target=keep_running, name="AP_Autogen").start()
+
+
+multiworlds: typing.Dict[type(Room.id), MultiworldInstance] = {}
 
 
 class MultiworldInstance():

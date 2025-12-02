@@ -1,6 +1,6 @@
 from BaseClasses import Item, ItemClassification, Tutorial, Location, MultiWorld
 from .Items import item_table, create_item, relic_groups, act_contracts, create_itempool, get_shop_trap_name, \
-    calculate_yarn_costs, alps_hooks, junk_weights
+    calculate_yarn_costs, alps_hooks
 from .Regions import create_regions, randomize_act_entrances, chapter_act_info, create_events, get_shuffled_region
 from .Locations import location_table, contract_locations, is_location_valid, get_location_names, TASKSANITY_START_ID, \
     get_total_locations
@@ -12,13 +12,13 @@ from .DeathWishRules import set_dw_rules, create_enemy_events, hit_list, bosses
 from worlds.AutoWorld import World, WebWorld, CollectionState
 from worlds.generic.Rules import add_rule
 from typing import List, Dict, TextIO
-from worlds.LauncherComponents import Component, components, icon_paths, launch as launch_component, Type
+from worlds.LauncherComponents import Component, components, icon_paths, launch_subprocess, Type
 from Utils import local_path
 
 
-def launch_client(*args: str):
+def launch_client():
     from .Client import launch
-    launch_component(launch, name="AHITClient", args=args)
+    launch_subprocess(launch, name="AHITClient")
 
 
 components.append(Component("A Hat in Time Client", "AHITClient", func=launch_client,
@@ -34,7 +34,7 @@ class AWebInTime(WebWorld):
         "Multiworld Setup Guide",
         "A guide for setting up A Hat in Time to be played in Archipelago.",
         "English",
-        "setup_en.md",
+        "ahit_en.md",
         "setup/en",
         ["CookieCat"]
     )]
@@ -77,9 +77,6 @@ class HatInTimeWorld(World):
         self.dw_shuffle: List[str] = []
         self.nyakuza_thug_items: Dict[str, int] = {}
         self.badge_seller_count: int = 0
-
-    def get_filler_item_name(self) -> str:
-        return self.random.choices(list(junk_weights.keys()), weights=junk_weights.values(), k=1)[0]
 
     def generate_early(self):
         adjust_options(self)
@@ -260,7 +257,11 @@ class HatInTimeWorld(World):
                                        f"{item_name} ({self.multiworld.get_player_name(loc.item.player)})")
 
         slot_data["ShopItemNames"] = shop_item_names
-        slot_data.update(self.options.as_dict(*slot_data_options))
+
+        for name, value in self.options.as_dict(*self.options_dataclass.type_hints).items():
+            if name in slot_data_options:
+                slot_data[name] = value
+
         return slot_data
 
     def extend_hint_information(self, hint_data: Dict[int, Dict[int, str]]):

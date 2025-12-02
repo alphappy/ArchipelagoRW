@@ -95,7 +95,7 @@ class LingoPlayerLogic:
 
     painting_mapping: Dict[str, str]
 
-    good_item_options: List[str]
+    forced_good_item: str
 
     panel_reqs: Dict[str, Dict[str, AccessRequirements]]
     door_reqs: Dict[str, Dict[str, AccessRequirements]]
@@ -151,7 +151,7 @@ class LingoPlayerLogic:
         self.mastery_location = ""
         self.level_2_location = ""
         self.painting_mapping = {}
-        self.good_item_options = []
+        self.forced_good_item = ""
         self.panel_reqs = {}
         self.door_reqs = {}
         self.mastery_reqs = []
@@ -344,23 +344,23 @@ class LingoPlayerLogic:
 
             # Starting Room - Back Right Door gives access to OPEN and DEAD END.
             # Starting Room - Exit Door gives access to OPEN and TRACE.
-            self.good_item_options = ["Starting Room - Back Right Door", "Second Room - Exit Door"]
+            good_item_options: List[str] = ["Starting Room - Back Right Door", "Second Room - Exit Door"]
 
             if not color_shuffle:
                 if not world.options.enable_pilgrimage:
                     # HOT CRUST and THIS.
-                    self.good_item_options.append("Pilgrim Room - Sun Painting")
+                    good_item_options.append("Pilgrim Room - Sun Painting")
 
                 if world.options.group_doors:
                     # WELCOME BACK, CLOCKWISE, and DRAWL + RUNS.
-                    self.good_item_options.append("Welcome Back Doors")
+                    good_item_options.append("Welcome Back Doors")
                 else:
                     # WELCOME BACK and CLOCKWISE.
-                    self.good_item_options.append("Welcome Back Area - Shortcut to Starting Room")
+                    good_item_options.append("Welcome Back Area - Shortcut to Starting Room")
 
             if world.options.group_doors:
                 # Color hallways access (NOTE: reconsider when sunwarp shuffling exists).
-                self.good_item_options.append("Rhyme Room Doors")
+                good_item_options.append("Rhyme Room Doors")
 
             # When painting shuffle is off, most Starting Room paintings give color hallways access. The Wondrous's
             # painting does not, but it gives access to SHRINK and WELCOME BACK.
@@ -376,7 +376,30 @@ class LingoPlayerLogic:
                     continue
 
                 pdoor = DOORS_BY_ROOM[painting_obj.required_door.room][painting_obj.required_door.door]
-                self.good_item_options.append(pdoor.item_name)
+                good_item_options.append(pdoor.item_name)
+
+            # Copied from The Witness -- remove any plandoed items from the possible good items set.
+            for v in world.multiworld.plando_items[world.player]:
+                if v.get("from_pool", True):
+                    for item_key in {"item", "items"}:
+                        if item_key in v:
+                            if type(v[item_key]) is str:
+                                if v[item_key] in good_item_options:
+                                    good_item_options.remove(v[item_key])
+                            elif type(v[item_key]) is dict:
+                                for item, weight in v[item_key].items():
+                                    if weight and item in good_item_options:
+                                        good_item_options.remove(item)
+                            else:
+                                # Other type of iterable
+                                for item in v[item_key]:
+                                    if item in good_item_options:
+                                        good_item_options.remove(item)
+
+            if len(good_item_options) > 0:
+                self.forced_good_item = world.random.choice(good_item_options)
+                self.real_items.remove(self.forced_good_item)
+                self.real_locations.remove("Second Room - Good Luck")
 
     def randomize_paintings(self, world: "LingoWorld") -> bool:
         self.painting_mapping.clear()
@@ -394,7 +417,7 @@ class LingoPlayerLogic:
                     or painting.room in required_painting_rooms:
                 return False
 
-            if world.options.shuffle_doors != ShuffleDoors.option_doors:
+            if world.options.shuffle_doors == ShuffleDoors.option_none:
                 if painting.req_blocked_when_no_doors:
                     return False
 

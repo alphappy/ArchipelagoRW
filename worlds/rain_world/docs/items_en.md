@@ -20,23 +20,6 @@ and completing a passage does not necessarily award a fast-travel token.
 | Spearmaster's unique data pearl                             | `Spearmaster's Pearl`         | One, for Spearmaster only               |
 | Moon's final message to the local group                     | `Moon's final message`        | One, for Spearmaster only               |
 
-### Expedition Perks
-Optionally, certain perks present in the game's Expedition mode can be added to the item pool.
-These can each be added individually via the "Expedition Perks" option in the yaml.
-Perks that the chosen slugcat innately has will have no effect when received.
-
-| Name             | Description                                                                 |
-|:-----------------|-----------------------------------------------------------------------------|
-| Back Spear       | Enables storing a spear on your back.                                       |
-| Dual Wielding    | Enables holding two spears at one time.                                     |
-| Blast Resistance | Explosions are unable to kill you.                                          |
-| Explosive Jump   | Enables you to perform Artificer's special jump ability.                    |
-| Explosive Parry  | Enables you to perform Artificer's special parry ability.                   |
-| Item Crafting    | Enables crafting items together to make new things. No effect on Artificer. |
-| Aquatic          | Greatly extends underwater lung capacity.                                   |
-| Agility          | Greatly increases speed and movement capabilities.                          |
-
-
 ### Filler
 Randomization adds the following filler items to the pool:
 - Several vanilla weapons

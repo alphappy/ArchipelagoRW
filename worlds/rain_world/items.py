@@ -147,19 +147,6 @@ all_items: Dict[str, RainWorldItemData] = {
     "Spitter Spider trap": TrapItemData("Spitter Spider trap", "Trap-SpitterSpider", 332 + offset),
     "Brother Long Legs trap": TrapItemData("Brother Long Legs trap", "Trap-BrotherLongLegs", 333 + offset),
     "Daddy Long Legs trap": TrapItemData("Daddy Long Legs trap", "Trap-DaddyLongLegs", 334 + offset),
-
-    #################################################################
-    # FILLER - UPGRADES
-    "Spear Damage Increase": RainWorldItemData("Spear Damage Increase", "Upgrade-SpearDamage", 370 + offset, ItemClassification.useful),
-    # FILLER - EXPEDITION PERKS
-    "Back Spear Perk": RainWorldItemData("Back Spear Perk", "Exp-BackSpear", 380 + offset, ItemClassification.useful),
-    "Dual Wielding Perk": RainWorldItemData("Dual Wielding Perk", "Exp-DualWielding", 381 + offset, ItemClassification.useful),
-    "Blast Resistance Perk": RainWorldItemData("Blast Resistance Perk", "Exp-ExplosionResistance", 382 + offset, ItemClassification.useful),
-    "Explosive Parry Perk": RainWorldItemData("Explosive Parry Perk", "Exp-ExplosiveParry", 383 + offset, ItemClassification.useful),
-    "Explosive Jump Perk": RainWorldItemData("Explosive Jump Perk", "Exp-ExplosiveJump", 384 + offset, ItemClassification.useful),
-    "Crafting Perk": RainWorldItemData("Crafting Perk", "Exp-ItemCrafting", 385 + offset, ItemClassification.useful),
-    "Aquatic Perk": RainWorldItemData("Aquatic Perk", "Exp-Aquatic", 386 + offset, ItemClassification.useful | ItemClassification.progression),
-    "Agility Perk": RainWorldItemData("Agility Perk", "Exp-Agility", 387 + offset, ItemClassification.useful),
 }
 
 #################################################################

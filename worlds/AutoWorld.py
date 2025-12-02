@@ -12,18 +12,13 @@ from typing import (Any, Callable, ClassVar, Dict, FrozenSet, Iterable, List, Ma
 
 from Options import item_and_loc_options, ItemsAccessibility, OptionGroup, PerGameCommonOptions
 from BaseClasses import CollectionState
-from Utils import Version
 
 if TYPE_CHECKING:
     from BaseClasses import MultiWorld, Item, Location, Tutorial, Region, Entrance
-    from NetUtils import GamesPackage, MultiData
+    from . import GamesPackage
     from settings import Group
 
 perf_logger = logging.getLogger("performance")
-
-
-class InvalidItemError(KeyError):
-    pass
 
 
 class AutoWorldRegister(type):
@@ -75,20 +70,24 @@ class AutoWorldRegister(type):
                 if "required_client_version" in base.__dict__:
                     dct["required_client_version"] = max(dct["required_client_version"],
                                                          base.__dict__["required_client_version"])
-        if "world_version" in dct:
-            if dct["world_version"] != Version(0, 0, 0):
-                raise RuntimeError(f"{name} is attempting to set 'world_version' from within the class. world_version "
-                                   f"can only be set from manifest.")
+
+        # create missing options_dataclass from legacy option_definitions
+        # TODO - remove this once all worlds use options dataclasses
+        if "options_dataclass" not in dct and "option_definitions" in dct:
+            # TODO - switch to deprecate after a version
+            if __debug__:
+                logging.warning(f"{name} Assigned options through option_definitions which is now deprecated. "
+                                "Please use options_dataclass instead.")
+            dct["options_dataclass"] = make_dataclass(f"{name}Options", dct["option_definitions"].items(),
+                                                      bases=(PerGameCommonOptions,))
 
         # construct class
         new_class = super().__new__(mcs, name, bases, dct)
-        new_class.__file__ = sys.modules[new_class.__module__].__file__
         if "game" in dct:
             if dct["game"] in AutoWorldRegister.world_types:
-                raise RuntimeError(f"""Game {dct["game"]} already registered in 
-                {AutoWorldRegister.world_types[dct["game"]].__file__} when attempting to register from
-                {new_class.__file__}.""")
+                raise RuntimeError(f"""Game {dct["game"]} already registered.""")
             AutoWorldRegister.world_types[dct["game"]] = new_class
+        new_class.__file__ = sys.modules[new_class.__module__].__file__
         if ".apworld" in new_class.__file__:
             new_class.zip_path = pathlib.Path(new_class.__file__).parents[1]
         if "settings_key" not in dct:
@@ -111,16 +110,6 @@ class AutoLogicRegister(type):
             elif not item_name.startswith("__"):
                 if hasattr(CollectionState, item_name):
                     raise Exception(f"Name conflict on Logic Mixin {name} trying to overwrite {item_name}")
-
-                assert callable(function) or "init_mixin" in dct, (
-                    f"{name} defined class variable {item_name} without also having init_mixin.\n\n"
-                    "Explanation:\n"
-                    "Class variables that will be mutated need to be inintialized as instance variables in init_mixin.\n"
-                    "If your LogicMixin variables aren't actually mutable / you don't intend to mutate them, "
-                    "there is no point in using LogixMixin.\n"
-                    "LogicMixin exists to track custom state variables that change when items are collected/removed."
-                )
-
                 setattr(CollectionState, item_name, function)
         return new_class
 
@@ -224,7 +213,7 @@ class WebWorld(metaclass=WebWorldRegister):
     tutorials: List["Tutorial"]
     """docs folder will also be scanned for tutorial guides. Each Tutorial class is to be used for one guide."""
 
-    theme: str = "grass"
+    theme = "grass"
     """Choose a theme for you /game/* pages.
     Available: dirt, grass, grassFlowers, ice, jungle, ocean, partyTime, stone"""
 
@@ -341,8 +330,6 @@ class World(metaclass=AutoWorldRegister):
     """If loaded from a .apworld, this is the Path to it."""
     __file__: ClassVar[str]
     """path it was loaded from"""
-    world_version: ClassVar[Version] = Version(0, 0, 0)
-    """Optional world version loaded from archipelago.json"""
 
     def __init__(self, multiworld: "MultiWorld", player: int):
         assert multiworld is not None
@@ -383,7 +370,7 @@ class World(metaclass=AutoWorldRegister):
     def create_items(self) -> None:
         """
         Method for creating and submitting items to the itempool. Items and Regions must *not* be created and submitted
-        to the MultiWorld after this step. If items need to be placed during pre_fill use `get_pre_fill_items`.
+        to the MultiWorld after this step. If items need to be placed during pre_fill use `get_prefill_items`.
         """
         pass
 
@@ -451,7 +438,7 @@ class World(metaclass=AutoWorldRegister):
         """
         pass
 
-    def modify_multidata(self, multidata: "MultiData") -> None:
+    def modify_multidata(self, multidata: Dict[str, Any]) -> None:  # TODO: TypedDict for multidata?
         """For deeper modification of server multidata."""
         pass
 
@@ -486,7 +473,7 @@ class World(metaclass=AutoWorldRegister):
     def get_filler_item_name(self) -> str:
         """Called when the item pool needs to be filled with additional items to match location count."""
         logging.warning(f"World {self} is generating a filler item without custom filler pool.")
-        return self.random.choice(tuple(self.item_name_to_id.keys()))
+        return self.multiworld.random.choice(tuple(self.item_name_to_id.keys()))
 
     @classmethod
     def create_group(cls, multiworld: "MultiWorld", new_player_id: int, players: Set[int]) -> World:
@@ -494,6 +481,9 @@ class World(metaclass=AutoWorldRegister):
         Creates a group, which is an instance of World that is responsible for multiple others.
         An example case is ItemLinks creating these.
         """
+        # TODO remove loop when worlds use options dataclass
+        for option_key, option in cls.options_dataclass.type_hints.items():
+            getattr(multiworld, option_key)[new_player_id] = option.from_any(option.default)
         group = cls(multiworld, new_player_id)
         group.options = cls.options_dataclass(**{option_key: option.from_any(option.default)
                                                  for option_key, option in cls.options_dataclass.type_hints.items()})
@@ -526,7 +516,7 @@ class World(metaclass=AutoWorldRegister):
         """Called when an item is collected in to state. Useful for things such as progressive items or currency."""
         name = self.collect_item(state, item)
         if name:
-            state.add_item(name, self.player)
+            state.prog_items[self.player][name] += 1
             return True
         return False
 
@@ -534,7 +524,9 @@ class World(metaclass=AutoWorldRegister):
         """Called when an item is removed from to state. Useful for things such as progressive items or currency."""
         name = self.collect_item(state, item, True)
         if name:
-            state.remove_item(name, self.player)
+            state.prog_items[self.player][name] -= 1
+            if state.prog_items[self.player][name] < 1:
+                del (state.prog_items[self.player][name])
             return True
         return False
 

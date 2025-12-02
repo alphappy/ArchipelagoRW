@@ -1,6 +1,6 @@
 import unittest
 
-from .bases import SVTestBase
+from . import SVTestBase
 from .. import BundleRandomization
 from ..data.bundle_data import all_bundle_items_except_money, quality_crops_items_thematic, quality_foraging_items, quality_fish_items
 from ..options import BundlePlando
@@ -87,3 +87,4 @@ class TestRemixedAnywhereBundles(SVTestBase):
         for bundle_name in self.fish_bundle_names:
             with self.subTest(f"{bundle_name}"):
                 self.assertIn(bundle_name, location_names)
+

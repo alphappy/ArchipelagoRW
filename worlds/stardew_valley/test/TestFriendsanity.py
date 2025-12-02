@@ -2,7 +2,7 @@ import unittest
 from collections import Counter
 from typing import ClassVar, Set
 
-from .bases import SVTestBase
+from . import SVTestBase
 from ..content.feature import friendsanity
 from ..options import Friendsanity, FriendsanityHeartSize
 

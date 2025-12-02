@@ -10,7 +10,7 @@ class WalletLogicMixin(BaseLogicMixin):
         self.wallet = WalletLogic(*args, **kwargs)
 
 
-class WalletLogic(BaseLogic):
+class WalletLogic(BaseLogic[ReceivedLogicMixin]):
 
     def can_speak_dwarf(self) -> StardewRule:
         return self.logic.received(Wallet.dwarvish_translation_guide)

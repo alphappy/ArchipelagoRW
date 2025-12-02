@@ -2,7 +2,7 @@ from BaseClasses import MultiWorld
 from .classes import RoomLocation
 from ..conditions import GameStateFlag
 from ..conditions.classes import Simple
-from ..game_data.general import scugs_vanilla, scugs_msc, scugs_watcher, scugs_msc_watcher
+from ..game_data.general import scugs_all, scugs_vanilla
 from ..options import RainWorldOptions
 from ..game_data import static_data
 from ..regions.classes import room_to_region
@@ -69,7 +69,7 @@ def initialize() -> dict[str, TokenOrPearl]:
     offset = 0
     ret = {}
 
-    for scuglist, (dlcstate, dlcstate_data) in zip((scugs_vanilla, scugs_msc, scugs_watcher, scugs_msc_watcher), static_data["1.11.1"].items()):
+    for scuglist, (dlcstate, dlcstate_data) in zip((scugs_vanilla, scugs_all), static_data["1.10.4"].items()):
         for region, region_data in dlcstate_data.items():
             for room, room_data in region_data.items():
                 if "shinies" in room_data.keys():

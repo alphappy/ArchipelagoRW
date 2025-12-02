@@ -1,6 +1,6 @@
-from ..bases import SVTestBase
 from ...locations import LocationTags, location_table
 from ...options import BuildingProgression, Shipsanity
+from ...test import SVTestBase
 
 
 class TestShipsanityNone(SVTestBase):
@@ -76,8 +76,10 @@ class TestShipsanityEverything(SVTestBase):
 
         for location in shipsanity_locations:
             with self.subTest(location.name):
-                self.assert_cannot_reach_location(location.name)
+                self.assertFalse(self.world.logic.region.can_reach_location(location.name)(self.multiworld.state))
 
                 self.collect(bin_item)
-                self.assert_can_reach_location(location.name)
+                shipsanity_rule = self.world.logic.region.can_reach_location(location.name)
+                self.assert_rule_true(shipsanity_rule, self.multiworld.state)
+
                 self.remove(bin_item)

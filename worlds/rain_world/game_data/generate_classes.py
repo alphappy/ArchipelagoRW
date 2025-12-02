@@ -145,13 +145,10 @@ critname_dict = {
     'indigo lizard': 'IndigoLizard',
     'indigo': 'IndigoLizard',
     'skink': 'IndigoLizard',
-    'peach': 'PeachLizard',
     'rat': 'Rat',
     'frog': 'Frog',
     'tardigrade': 'Tardigrade',
     'seapig': 'Tardigrade',
-    'angler': 'Angler',
-    'mothgrub': 'MothGrub'
 }
 
 

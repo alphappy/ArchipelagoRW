@@ -51,11 +51,4 @@ resource_rows = [
 	ResourceRow('Clay Ore'),
 	ResourceRow('Onion'),
 	ResourceRow('Potato'),
-	ResourceRow('Big Bones'),
-	ResourceRow('Duck'),
-	ResourceRow('Makeover'),
-	ResourceRow('Limpwurt Root'),
-	ResourceRow('Bar'),
-	ResourceRow('Haystack'),
-	ResourceRow('Red Spider Eggs'),
 ]

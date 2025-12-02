@@ -7,7 +7,9 @@ h2b = binascii.unhexlify
 
 
 class ROM:
-    def __init__(self, data, patches=None):
+    def __init__(self, filename, patches=None):
+        data = open(Utils.user_path(filename), "rb").read()
+
         if patches:
             for patch in patches:
                 data = bsdiff4.patch(data, patch)
@@ -62,10 +64,18 @@ class ROM:
         self.banks[0][0x14E] = checksum >> 8
         self.banks[0][0x14F] = checksum & 0xFF
 
-    def save(self):
+    def save(self, file, *, name=None):
         # don't pass the name to fixHeader
         self.fixHeader()
-        return b"".join(self.banks)
+        if isinstance(file, str):
+            f = open(file, "wb")
+            for bank in self.banks:
+                f.write(bank)
+            f.close()
+            print("Saved:", file)
+        else:
+            for bank in self.banks:
+                file.write(bank)
 
     def readHexSeed(self):
         return self.banks[0x3E][0x2F00:0x2F10].hex().upper()

@@ -352,14 +352,14 @@ direction_matching_group_lookup = {
 
 Terrain matching or dungeon shuffle:
 ```python
-def randomize_within_same_group(group: int) -> list[int]:
+def randomize_within_same_group(group: int) -> List[int]:
     return [group]
 identity_group_lookup = bake_target_group_lookup(world, randomize_within_same_group)
 ```
 
 Directional + area shuffle:
 ```python
-def get_target_groups(group: int) -> list[int]:
+def get_target_groups(group: int) -> List[int]:
     # example group: LEFT | CAVE
     # example result: [RIGHT | CAVE, DOOR | CAVE]
     direction = group & Groups.DIRECTION_MASK

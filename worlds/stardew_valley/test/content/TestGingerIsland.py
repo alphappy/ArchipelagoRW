@@ -1,5 +1,5 @@
 from . import SVContentPackTestBase
-from ..bases import SVTestBase
+from .. import SVTestBase
 from ... import options
 from ...content import content_packs
 from ...data.artisan import MachineSource

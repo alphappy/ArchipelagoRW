@@ -1,7 +1,7 @@
 from copy import deepcopy
 from typing import TYPE_CHECKING
 
-from BaseClasses import CollectionState
+from BaseClasses import CollectionState, PlandoOptions
 from Options import PlandoConnection
 
 if TYPE_CHECKING:
@@ -252,7 +252,9 @@ def shuffle_portals(world: "MessengerWorld") -> None:
     world.random.shuffle(available_portals)
 
     plando = world.options.portal_plando.value
-    if plando and not world.plando_portals:
+    if not plando:
+        plando = world.options.plando_connections.value
+    if plando and world.multiworld.plando_options & PlandoOptions.connections and not world.plando_portals:
         try:
             handle_planned_portals(plando)
         # any failure i expect will trigger on available_portals.remove
@@ -292,10 +294,12 @@ def disconnect_portals(world: "MessengerWorld") -> None:
 
 
 def validate_portals(world: "MessengerWorld") -> bool:
-    new_state = CollectionState(world.multiworld, True)
+    # if world.options.shuffle_transitions:
+    #     return True
+    new_state = CollectionState(world.multiworld)
     new_state.update_reachable_regions(world.player)
     reachable_locs = 0
-    for loc in world.get_locations():
+    for loc in world.multiworld.get_locations(world.player):
         reachable_locs += loc.can_reach(new_state)
         if reachable_locs > 5:
             return True

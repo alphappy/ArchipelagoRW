@@ -280,19 +280,16 @@ def set_boss_door_requirements_rules(player, world):
     set_rule(world.get_entrance("Boss Door", player), has_3_swords)
 
 
-def set_lfod_self_obtained_items_rules(world_options, player, multiworld):
+def set_lfod_self_obtained_items_rules(world_options, player, world):
     if world_options.item_shuffle != Options.ItemShuffle.option_disabled:
         return
-    world = multiworld.worlds[player]
-    set_rule(world.get_entrance("Vines"),
+    set_rule(world.get_entrance("Vines", player),
              lambda state: state.has("Incredibly Important Pack", player))
-    set_rule(world.get_entrance("Behind Rocks"),
+    set_rule(world.get_entrance("Behind Rocks", player),
              lambda state: state.can_reach("Cut Content", 'region', player))
-    multiworld.register_indirect_condition(world.get_region("Cut Content"), world.get_entrance("Behind Rocks"))
-    set_rule(world.get_entrance("Pickaxe Hard Cave"),
+    set_rule(world.get_entrance("Pickaxe Hard Cave", player),
              lambda state: state.can_reach("Cut Content", 'region', player) and
                            state.has("Name Change Pack", player))
-    multiworld.register_indirect_condition(world.get_region("Cut Content"), world.get_entrance("Pickaxe Hard Cave"))
 
 
 def set_lfod_shuffled_items_rules(world_options, player, world):

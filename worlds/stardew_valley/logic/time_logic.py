@@ -22,7 +22,7 @@ class TimeLogicMixin(BaseLogicMixin):
         self.time = TimeLogic(*args, **kwargs)
 
 
-class TimeLogic(BaseLogic):
+class TimeLogic(BaseLogic[Union[TimeLogicMixin, HasLogicMixin]]):
 
     @cache_self1
     def has_lived_months(self, number: int) -> StardewRule:

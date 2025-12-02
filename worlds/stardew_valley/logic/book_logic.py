@@ -1,5 +1,9 @@
+from typing import Union
+
 from Utils import cache_self1
 from .base_logic import BaseLogicMixin, BaseLogic
+from .has_logic import HasLogicMixin
+from .received_logic import ReceivedLogicMixin
 from ..stardew_rule import StardewRule
 
 
@@ -9,7 +13,7 @@ class BookLogicMixin(BaseLogicMixin):
         self.book = BookLogic(*args, **kwargs)
 
 
-class BookLogic(BaseLogic):
+class BookLogic(BaseLogic[Union[ReceivedLogicMixin, HasLogicMixin]]):
 
     @cache_self1
     def has_book_power(self, book: str) -> StardewRule:

@@ -1,5 +1,5 @@
 from ..rules import _has_lasers
-from ..test.bases import WitnessTestBase
+from ..test import WitnessTestBase
 
 
 class TestDisableNonRandomized(WitnessTestBase):

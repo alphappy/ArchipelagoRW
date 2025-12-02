@@ -11,7 +11,6 @@ from typing import List
 
 
 import Utils
-from settings import get_settings
 from NetUtils import ClientStatus
 from Utils import async_start
 from CommonClient import CommonContext, server_loop, gui_enabled, ClientCommandProcessor, logger, \
@@ -81,8 +80,8 @@ class AdventureContext(CommonContext):
         self.local_item_locations = {}
         self.dragon_speed_info = {}
 
-        options = get_settings().adventure_options
-        self.display_msgs = options.display_msgs
+        options = Utils.get_settings()
+        self.display_msgs = options["adventure_options"]["display_msgs"]
 
     async def server_auth(self, password_requested: bool = False):
         if password_requested and not self.password:
@@ -103,7 +102,7 @@ class AdventureContext(CommonContext):
     def on_package(self, cmd: str, args: dict):
         if cmd == 'Connected':
             self.locations_array = None
-            if get_settings().adventure_options.as_dict().get("death_link", False):
+            if Utils.get_settings()["adventure_options"].get("death_link", False):
                 self.set_deathlink = True
             async_start(self.get_freeincarnates_used())
         elif cmd == "RoomInfo":
@@ -407,7 +406,6 @@ async def atari_sync_task(ctx: AdventureContext):
                 except ConnectionRefusedError:
                     logger.debug("Connection Refused, Trying Again")
                     ctx.atari_status = CONNECTION_REFUSED_STATUS
-                    await asyncio.sleep(1)
                     continue
                 except CancelledError:
                     pass
@@ -417,9 +415,8 @@ async def atari_sync_task(ctx: AdventureContext):
 
 
 async def run_game(romfile):
-    options = get_settings().adventure_options
-    auto_start = options.rom_start
-    rom_args = options.rom_args
+    auto_start = Utils.get_settings()["adventure_options"].get("rom_start", True)
+    rom_args = Utils.get_settings()["adventure_options"].get("rom_args")
     if auto_start is True:
         import webbrowser
         webbrowser.open(romfile)
@@ -514,7 +511,7 @@ if __name__ == '__main__':
 
     import colorama
 
-    colorama.just_fix_windows_console()
+    colorama.init()
 
     asyncio.run(main())
     colorama.deinit()

@@ -23,7 +23,6 @@ class EntranceType(Flag):
     SUNWARP = auto()
     WARP = auto()
     CROSSROADS_ROOF_ACCESS = auto()
-    STATIC_PAINTING = auto()
 
 
 class RoomEntrance(NamedTuple):

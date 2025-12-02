@@ -1,6 +1,6 @@
 from BaseClasses import CollectionState
 
-from ..test.bases import WitnessMultiworldTestBase, WitnessTestBase
+from worlds.witness.test import WitnessMultiworldTestBase, WitnessTestBase
 
 
 class TestMaxPanelHuntMinChecks(WitnessTestBase):

@@ -1,7 +1,16 @@
 from functools import cached_property
-from typing import List
+from typing import Union, List
 
 from .base_logic import BaseLogicMixin, BaseLogic
+from .fishing_logic import FishingLogicMixin
+from .has_logic import HasLogicMixin
+from .money_logic import MoneyLogicMixin
+from .quality_logic import QualityLogicMixin
+from .quest_logic import QuestLogicMixin
+from .received_logic import ReceivedLogicMixin
+from .region_logic import RegionLogicMixin
+from .skill_logic import SkillLogicMixin
+from .time_logic import TimeLogicMixin
 from ..bundles.bundle import Bundle
 from ..stardew_rule import StardewRule, True_
 from ..strings.ap_names.community_upgrade_names import CommunityUpgrade
@@ -18,7 +27,8 @@ class BundleLogicMixin(BaseLogicMixin):
         self.bundle = BundleLogic(*args, **kwargs)
 
 
-class BundleLogic(BaseLogic):
+class BundleLogic(BaseLogic[Union[ReceivedLogicMixin, HasLogicMixin, TimeLogicMixin, RegionLogicMixin, MoneyLogicMixin, QualityLogicMixin, FishingLogicMixin,
+SkillLogicMixin, QuestLogicMixin]]):
     # Should be cached
     def can_complete_bundle(self, bundle: Bundle) -> StardewRule:
         item_rules = []
@@ -66,7 +76,7 @@ class BundleLogic(BaseLogic):
                 self.logic.region.can_reach_location("Complete Boiler Room"))
 
     def can_access_raccoon_bundles(self) -> StardewRule:
-        if self.options.quest_locations.has_no_story_quests():
+        if self.options.quest_locations < 0:
             return self.logic.received(CommunityUpgrade.raccoon, 1) & self.logic.quest.can_complete_quest(Quest.giant_stump)
 
         # 1 - Break the tree

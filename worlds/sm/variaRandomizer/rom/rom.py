@@ -89,12 +89,9 @@ class ROM(object):
 
 class FakeROM(ROM):
     # to have the same code for real ROM and the webservice
-    def __init__(self, data=None):
+    def __init__(self, data={}):
         super(FakeROM, self).__init__()
-        if data is None:
-            self.data = {}
-        else:
-            self.data = data
+        self.data = data
         self.ipsPatches = []
 
     def write(self, bytes):

@@ -1,6 +1,4 @@
 import asyncio
-import time
-
 import Utils
 import websockets
 import functools
@@ -210,9 +208,6 @@ async def proxy(websocket, path: str = "/", ctx: AHITContext = None):
                     if not ctx.is_proxy_connected():
                         break
 
-                    if msg["cmd"] == "Bounce" and msg.get("tags") == ["DeathLink"] and "data" in msg:
-                        msg["data"]["time"] = time.time()
-
                     await ctx.send_msgs([msg])
 
     except Exception as e:
@@ -243,10 +238,10 @@ async def proxy_loop(ctx: AHITContext):
         logger.info("Aborting AHIT Proxy Client due to errors")
 
 
-def launch(*launch_args: str):
+def launch():
     async def main():
         parser = get_base_parser()
-        args = parser.parse_args(launch_args)
+        args = parser.parse_args()
 
         ctx = AHITContext(args.connect, args.password)
         logger.info("Starting A Hat in Time proxy server")
@@ -266,6 +261,6 @@ def launch(*launch_args: str):
     # options = Utils.get_options()
 
     import colorama
-    colorama.just_fix_windows_console()
+    colorama.init()
     asyncio.run(main())
     colorama.deinit()

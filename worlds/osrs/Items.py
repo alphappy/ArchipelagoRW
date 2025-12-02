@@ -62,7 +62,7 @@ chunksanity_starting_chunks: typing.List[str] = [
     ItemNames.South_Of_Varrock,
     ItemNames.Central_Varrock,
     ItemNames.Varrock_Palace,
-    ItemNames.Lumberyard,
+    ItemNames.East_Of_Varrock,
     ItemNames.West_Varrock,
     ItemNames.Edgeville,
     ItemNames.Barbarian_Village,

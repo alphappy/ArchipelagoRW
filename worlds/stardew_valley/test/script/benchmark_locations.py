@@ -15,9 +15,8 @@ import typing
 
 from BaseClasses import CollectionState, Location
 from Utils import init_logging
-from ..bases import setup_solo_multiworld
-from ..options import presets
-from ...stardew_rule.rule_explain import explain
+from worlds.stardew_valley.stardew_rule.rule_explain import explain
+from ... import test
 
 
 def run_locations_benchmark():
@@ -57,12 +56,12 @@ def run_locations_benchmark():
                 parser.add_argument('--state', help="Define the state in which the location will be benchmarked.", type=str, default=None)
                 args = parser.parse_args()
                 options_set = args.options
-                options = getattr(presets, options_set)()
+                options = getattr(test, options_set)()
                 seed = args.seed
                 location = args.location
                 state = args.state
 
-                multiworld = setup_solo_multiworld(options, seed)
+                multiworld = test.setup_solo_multiworld(options, seed)
                 gc.collect()
 
                 if location:

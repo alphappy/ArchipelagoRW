@@ -1,4 +1,3 @@
-
 import Utils
 from Utils import read_snes_rom
 from worlds.AutoWorld import World
@@ -736,9 +735,9 @@ def get_base_rom_bytes(file_name: str = "") -> bytes:
     return base_rom_bytes
 
 def get_base_rom_path(file_name: str = "") -> str:
+    options = Utils.get_options()
     if not file_name:
-        from settings import get_settings
-        file_name = get_settings()["dkc3_options"]["rom_file"]
+        file_name = options["dkc3_options"]["rom_file"]
     if not os.path.exists(file_name):
         file_name = Utils.user_path(file_name)
     return file_name

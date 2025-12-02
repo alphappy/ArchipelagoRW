@@ -33,12 +33,6 @@ class FoodQuestPip(AbstractLocation):
         return ret
 
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-        if not self.should_generate(options):
-            return False
-        return super().pre_generate(player, multiworld, options)
-
-    # Logic split into its own function so it can be used for a victory condition as well
-    def should_generate(self, options: RainWorldOptions) -> bool:
         if options.starting_scug not in self.scugflag:
             return False
         if self.items[0] in extreme_threat_creatures and not options.difficulty_extreme_threats:
@@ -48,7 +42,8 @@ class FoodQuestPip(AbstractLocation):
         # HARDCODE: Sofanthiel's only glow weed is in MS.  The interactive map is wrong.
         if options.starting_scug == "Inv" and options.checks_submerged < 2 and self.items[0] == "GlowWeed":
             return False
-        return True
+        return super().pre_generate(player, multiworld, options)
+
 
 pips: list[FoodQuestPip] = [
     FoodQuestPip(0b1_110_111_111, "SlimeMold"),

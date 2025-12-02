@@ -1,7 +1,24 @@
-from typing import Dict
+from typing import Dict, Union
 
 from ..mod_data import ModNames
+from ... import options
 from ...logic.base_logic import BaseLogicMixin, BaseLogic
+from ...logic.combat_logic import CombatLogicMixin
+from ...logic.cooking_logic import CookingLogicMixin
+from ...logic.crafting_logic import CraftingLogicMixin
+from ...logic.farming_logic import FarmingLogicMixin
+from ...logic.fishing_logic import FishingLogicMixin
+from ...logic.has_logic import HasLogicMixin
+from ...logic.money_logic import MoneyLogicMixin
+from ...logic.museum_logic import MuseumLogicMixin
+from ...logic.quest_logic import QuestLogicMixin
+from ...logic.received_logic import ReceivedLogicMixin
+from ...logic.region_logic import RegionLogicMixin
+from ...logic.relationship_logic import RelationshipLogicMixin
+from ...logic.season_logic import SeasonLogicMixin
+from ...logic.skill_logic import SkillLogicMixin
+from ...logic.time_logic import TimeLogicMixin
+from ...logic.tool_logic import ToolLogicMixin
 from ...stardew_rule import StardewRule
 from ...strings.artisan_good_names import ModArtisanGood
 from ...strings.craftable_names import ModCraftable
@@ -23,7 +40,9 @@ class ModItemLogicMixin(BaseLogicMixin):
         self.item = ModItemLogic(*args, **kwargs)
 
 
-class ModItemLogic(BaseLogic):
+class ModItemLogic(BaseLogic[Union[CombatLogicMixin, ReceivedLogicMixin, CookingLogicMixin, FishingLogicMixin, HasLogicMixin, MoneyLogicMixin,
+RegionLogicMixin, SeasonLogicMixin, RelationshipLogicMixin, MuseumLogicMixin, ToolLogicMixin, CraftingLogicMixin, SkillLogicMixin, TimeLogicMixin, QuestLogicMixin,
+FarmingLogicMixin]]):
 
     def get_modded_item_rules(self) -> Dict[str, StardewRule]:
         items = dict()
@@ -61,7 +80,7 @@ class ModItemLogic(BaseLogic):
             # Gingerbread House
         }
 
-        if self.content.features.tool_progression.is_progressive:
+        if self.options.tool_progression & options.ToolProgression.option_progressive:
             options_to_update.update({
                 Ore.iridium: items[Ore.iridium] | self.logic.tool.can_use_tool_at(Tool.axe, ToolMaterial.iridium, DeepWoodsRegion.floor_50),  # Iridium Tree
             })

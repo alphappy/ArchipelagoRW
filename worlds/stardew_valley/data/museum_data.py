@@ -3,13 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Tuple, Union, Optional
 
-from ..strings.animal_product_names import AnimalProduct
+from ..strings.monster_names import Monster
 from ..strings.fish_names import WaterChest
 from ..strings.forageable_names import Forageable
-from ..strings.geode_names import Geode
 from ..strings.metal_names import Mineral, Artifact, Fossil
-from ..strings.monster_names import Monster
 from ..strings.region_names import Region
+from ..strings.geode_names import Geode
 
 
 @dataclass(frozen=True)
@@ -106,7 +105,7 @@ class Artifact:
                                     geodes=(Geode.artifact_trove, WaterChest.fishing_chest))
     ornamental_fan = create_artifact("Ornamental Fan", 7.4, (Region.beach, Region.forest, Region.town),
                                      geodes=(Geode.artifact_trove, WaterChest.fishing_chest))
-    dinosaur_egg = create_artifact(AnimalProduct.dinosaur_egg, 11.4, (Region.skull_cavern),
+    dinosaur_egg = create_artifact("Dinosaur Egg", 11.4, (Region.skull_cavern),
                                    monsters=Monster.pepper_rex)
     rare_disc = create_artifact("Rare Disc", 5.6, Region.stardew_valley,
                                 geodes=(Geode.artifact_trove, WaterChest.fishing_chest),

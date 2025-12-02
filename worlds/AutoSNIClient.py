@@ -9,8 +9,7 @@ from worlds.LauncherComponents import Component, SuffixIdentifier, Type, compone
 if TYPE_CHECKING:
     from SNIClient import SNIContext
 
-component = Component('SNI Client', 'SNIClient', component_type=Type.CLIENT, file_identifier=SuffixIdentifier(".apsoe"),
-                      description="A client for connecting to SNES consoles via Super Nintendo Interface.")
+component = Component('SNI Client', 'SNIClient', component_type=Type.CLIENT, file_identifier=SuffixIdentifier(".apsoe"))
 components.append(component)
 
 

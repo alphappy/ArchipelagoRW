@@ -1,6 +1,5 @@
 {% extends 'pageWrapper.html' %}
 {% import "macros.html" as macros %}
-{% set show_footer = True %}
 
 {% block head %}
     <title>View Seed {{ seed.id|suuid }}</title>
@@ -51,4 +50,5 @@
             </table>
         </div>
     </div>
+    {% include 'islandFooter.html' %}
 {% endblock %}

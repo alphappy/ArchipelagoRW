@@ -286,14 +286,16 @@ async def gba_sync_task(ctx: MMBN3Context):
             except ConnectionRefusedError:
                 logger.debug("Connection Refused, Trying Again")
                 ctx.gba_status = CONNECTION_REFUSED_STATUS
-                await asyncio.sleep(1)
                 continue
 
 
 async def run_game(romfile):
-    from worlds.mmbn3 import MMBN3World
-    auto_start = MMBN3World.settings.rom_start
-    if auto_start is True:
+    options = Utils.get_options().get("mmbn3_options", None)
+    if options is None:
+        auto_start = True
+    else:
+        auto_start = options.get("rom_start", True)
+    if auto_start:
         import webbrowser
         webbrowser.open(romfile)
     elif os.path.isfile(auto_start):
@@ -368,7 +370,7 @@ if __name__ == "__main__":
 
     import colorama
 
-    colorama.just_fix_windows_console()
+    colorama.init()
 
     asyncio.run(main())
     colorama.deinit()

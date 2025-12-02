@@ -424,6 +424,7 @@ class Item:
         ]
 
         for item in itemPool:
+            item.Progression = True
             item.World = world
 
         return itemPool
@@ -438,6 +439,7 @@ class Item:
         ]
 
         for item in itemPool:
+            item.Progression = True
             item.World = world
 
         return itemPool

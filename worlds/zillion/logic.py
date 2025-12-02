@@ -25,15 +25,15 @@ def set_randomizer_locs(cs: CollectionState, p: int, zz_r: Randomizer) -> int:
     z_world = cs.multiworld.worlds[p]
     assert isinstance(z_world, ZillionWorld)
 
-    hash_ = p
+    _hash = p
     for z_loc in z_world.my_locations:
         zz_name = z_loc.zz_loc.name
         zz_item = z_loc.item.zz_item \
             if isinstance(z_loc.item, ZillionItem) and z_loc.item.player == p \
             else zz_empty
         zz_r.locations[zz_name].item = zz_item
-        hash_ += (hash(zz_name) * (z_loc.zz_loc.req.gun + 2)) ^ hash(zz_item)
-    return hash_
+        _hash += (hash(zz_name) * (z_loc.zz_loc.req.gun + 2)) ^ hash(zz_item)
+    return _hash
 
 
 def item_counts(cs: CollectionState, p: int) -> tuple[tuple[str, int], ...]:
@@ -67,11 +67,11 @@ class ZillionLogicCache:
         returns frozenset of accessible zilliandomizer locations
         """
         # caching this function because it would be slow
-        hash_ = set_randomizer_locs(cs, self._player, self._zz_r)
+        _hash = set_randomizer_locs(cs, self._player, self._zz_r)
         counts = item_counts(cs, self._player)
-        hash_ += hash(counts)
+        _hash += hash(counts)
 
-        cntr, locs = self._cache.get(hash_, _cache_miss)
+        cntr, locs = self._cache.get(_hash, _cache_miss)
         if cntr == cs.prog_items[self._player]:
             # print("cache hit")
             return locs
@@ -90,6 +90,6 @@ class ZillionLogicCache:
         tr = frozenset(self._zz_r.get_locations(have_req))
 
         # save result in cache
-        self._cache[hash_] = (cs.prog_items[self._player].copy(), tr)
+        self._cache[_hash] = (cs.prog_items[self._player].copy(), tr)
 
         return tr

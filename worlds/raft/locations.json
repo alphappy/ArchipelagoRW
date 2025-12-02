@@ -810,10 +810,7 @@
     {
         "id": 48105,
         "name": "Engine controls blueprint",
-        "region": "CaravanIsland",
-        "requiresAccessToItems": [
-            "Zipline tool"
-        ]
+        "region": "CaravanIsland"
     },
     {
         "id": 48106,

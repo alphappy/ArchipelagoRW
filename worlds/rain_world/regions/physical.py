@@ -1,13 +1,13 @@
 from ..game_data.general import region_code_to_name, scugs_all
 from ..game_data import static_data
-from ..conditions.classes import Simple, AnyOf, AllOf, ConditionBlank
+from ..conditions.classes import Simple, AllOf, ConditionBlank
 from ..options import RainWorldOptions
 from .classes import ConnectionData, PhysicalRegion
 
 
 def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData]:
     ret = []
-    for region, region_data in static_data["1.11.1"]["MSC_Watcher"].items():
+    for region, region_data in static_data["1.10.4"]["MSC_Watcher"].items():
         rooms = set(region_data.keys())
 
         match region:
@@ -96,15 +96,9 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     PhysicalRegion("Pipeyard", "VS", rooms.difference(sump.union(filt))),
                     PhysicalRegion("Sump Tunnel", "VS^", sump),
                     ConnectionData("Pipeyard", "Sump Tunnel", "Enter Sump Tunnel",
-                                   AnyOf(
-                                       Simple(list(set(scugs_all).difference({"Artificer"})), 1),
-                                       Simple("Aquatic Perk")
-                                   )),
+                                   Simple(list(set(scugs_all).difference({"Artificer"})), 1)),
                     ConnectionData("Sump Tunnel", "Pipeyard", "Exit Sump Tunnel",
-                                   AnyOf(
-                                       Simple(list(set(scugs_all).difference({"Artificer"})), 1),
-                                       Simple("Aquatic Perk")
-                                   )),
+                                   Simple(list(set(scugs_all).difference({"Artificer"})), 1)),
                     PhysicalRegion("Pipeyard filtration", "VS^2", filt),
                     ConnectionData("Pipeyard", "Pipeyard filtration", "Enter dark filtration area",
                                    Simple("The Glow") if options.difficulty_glow else ConditionBlank),

@@ -1,5 +1,13 @@
-from ..mod_data import ModNames
+from typing import Union
+
 from ...logic.base_logic import BaseLogicMixin, BaseLogic
+from ...logic.combat_logic import CombatLogicMixin
+from ...logic.cooking_logic import CookingLogicMixin
+from ...logic.has_logic import HasLogicMixin
+from ...logic.received_logic import ReceivedLogicMixin
+from ...logic.skill_logic import SkillLogicMixin
+from ...logic.tool_logic import ToolLogicMixin
+from ...mods.mod_data import ModNames
 from ...options import ElevatorProgression
 from ...stardew_rule import StardewRule, True_, true_
 from ...strings.ap_names.mods.mod_items import DeepWoodsItem
@@ -17,7 +25,8 @@ class DeepWoodsLogicMixin(BaseLogicMixin):
         self.deepwoods = DeepWoodsLogic(*args, **kwargs)
 
 
-class DeepWoodsLogic(BaseLogic):
+class DeepWoodsLogic(BaseLogic[Union[SkillLogicMixin, ReceivedLogicMixin, HasLogicMixin, CombatLogicMixin, ToolLogicMixin, SkillLogicMixin,
+CookingLogicMixin]]):
 
     def can_reach_woods_depth(self, depth: int) -> StardewRule:
         # Assuming you can always do the 10 first floor

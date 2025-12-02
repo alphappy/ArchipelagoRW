@@ -1,3 +1,4 @@
+from .buildings_logic import ModBuildingLogicMixin
 from .deepwoods_logic import DeepWoodsLogicMixin
 from .elevator_logic import ModElevatorLogicMixin
 from .item_logic import ModItemLogicMixin
@@ -15,6 +16,6 @@ class ModLogicMixin(BaseLogicMixin):
         self.mod = ModLogic(*args, **kwargs)
 
 
-class ModLogic(ModElevatorLogicMixin, MagicLogicMixin, ModSkillLogicMixin, ModItemLogicMixin, ModQuestLogicMixin,
+class ModLogic(ModElevatorLogicMixin, MagicLogicMixin, ModSkillLogicMixin, ModItemLogicMixin, ModQuestLogicMixin, ModBuildingLogicMixin,
                ModSpecialOrderLogicMixin, DeepWoodsLogicMixin, SVELogicMixin):
     pass

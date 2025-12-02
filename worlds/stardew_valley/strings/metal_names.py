@@ -142,3 +142,5 @@ class ModFossil:
     pterodactyl_phalange = "Pterodactyl Phalange"
     pterodactyl_vertebra = "Pterodactyl Vertebra"
     pterodactyl_claw = "Pterodactyl Claw"
+
+

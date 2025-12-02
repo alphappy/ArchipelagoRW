@@ -1,4 +1,4 @@
-from ..test.bases import WitnessTestBase
+from ..test import WitnessTestBase
 
 
 class TestSymbolsRequiredToWinElevatorNormal(WitnessTestBase):

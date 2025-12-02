@@ -706,7 +706,7 @@ location_tables: Dict[str, List[DS3LocationData]] = {
         DS3LocationData("US: Whip - back alley, behind wooden wall", "Whip", hidden=True),
         DS3LocationData("US: Great Scythe - building by white tree, balcony", "Great Scythe"),
         DS3LocationData("US: Homeward Bone - foot, drop overlook", "Homeward Bone",
-                        static='02,0:53100950::'),
+                        static='02,0:53100540::'),
         DS3LocationData("US: Large Soul of a Deserted Corpse - around corner by Cliff Underside",
                         "Large Soul of a Deserted Corpse", hidden=True),  # Hidden corner
         DS3LocationData("US: Ember - behind burning tree", "Ember"),
@@ -732,9 +732,8 @@ location_tables: Dict[str, List[DS3LocationData]] = {
                         missable=True),  # requires projectile
         DS3LocationData("US: Flame Stoneplate Ring - hanging corpse by Mound-Maker transport",
                         "Flame Stoneplate Ring"),
-        DS3LocationData("US: Red and White Round Shield - chasm, hanging corpse",
-                        "Red and White Round Shield", static="02,0:53100740::",
-                        missable=True),  # requires projectile
+        DS3LocationData("US: Red and White Shield - chasm, hanging corpse", "Red and White Shield",
+                        static="02,0:53100740::", missable=True),  # requires projectile
         DS3LocationData("US: Small Leather Shield - first building, hanging corpse by entrance",
                         "Small Leather Shield"),
         DS3LocationData("US: Pale Tongue - tower village, hanging corpse", "Pale Tongue"),
@@ -884,7 +883,7 @@ location_tables: Dict[str, List[DS3LocationData]] = {
         DS3LocationData("RS: Homeward Bone - balcony by Farron Keep", "Homeward Bone x2"),
         DS3LocationData("RS: Titanite Shard - woods, surrounded by enemies", "Titanite Shard"),
         DS3LocationData("RS: Twin Dragon Greatshield - woods by Crucifixion Woods bonfire",
-                        "Twin Dragon Greatshield", missable=True), # After Eclipse
+                        "Twin Dragon Greatshield"),
         DS3LocationData("RS: Sorcerer Hood - water beneath stronghold", "Sorcerer Hood",
                         hidden=True),  # Hidden fall
         DS3LocationData("RS: Sorcerer Robe - water beneath stronghold", "Sorcerer Robe",
@@ -931,7 +930,7 @@ location_tables: Dict[str, List[DS3LocationData]] = {
                         "Great Swamp Ring", miniboss=True),  # Giant Crab drop
         DS3LocationData("RS: Blue Sentinels - Horace", "Blue Sentinels",
                         missable=True, npc=True),  # Horace quest
-        DS3LocationData("RS: Crystal Gem - stronghold, lizard", "Crystal Gem", lizard=True),
+        DS3LocationData("RS: Crystal Gem - stronghold, lizard", "Crystal Gem"),
         DS3LocationData("RS: Fading Soul - woods by Crucifixion Woods bonfire", "Fading Soul",
                         static='03,0:53300210::'),
 
@@ -1887,7 +1886,7 @@ location_tables: Dict[str, List[DS3LocationData]] = {
         DS3LocationData("AL: Twinkling Titanite - lizard after light cathedral #2",
                         "Twinkling Titanite", lizard=True),
         DS3LocationData("AL: Aldrich's Ruby - dark cathedral, miniboss", "Aldrich's Ruby",
-                        miniboss=True, missable=True),  # Deep Accursed drop, missable after defeating Aldrich
+                        miniboss=True),  # Deep Accursed drop
         DS3LocationData("AL: Aldrich Faithful - water reserves, talk to McDonnel", "Aldrich Faithful",
                         hidden=True),  # Behind illusory wall
 
