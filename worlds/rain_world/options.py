@@ -79,7 +79,7 @@ class WhichCampaign(Choice):
     option_spearmaster = 6
     option_saint = 7
     option_sofanthiel = 8
-    # option_watcher = 9
+    option_watcher = 9
 
     alias_yellow = 0
     alias_white = 1

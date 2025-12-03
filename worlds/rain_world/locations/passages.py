@@ -211,7 +211,7 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
     keys = ["Survivor", "Friend", "Traveller", "Monk", "Saint"]
 
     if options.starting_scug == "Watcher":
-        return []
+        return [locations["Survivor"]] # TODO Passages
 
     if options.starting_scug != "Artificer":
         keys.append("Chieftain")
