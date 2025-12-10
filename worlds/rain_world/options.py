@@ -185,7 +185,7 @@ class RippleWarpBehavior(Choice):
     alias_true = 1
     alias_false = 0
     default = 0
-    visibility = Visibility.none
+    # visibility = Visibility.none
 
 
 class NormalDynamicWarpBehavior(Choice):
@@ -244,7 +244,7 @@ class LogicRottedGeneration(Choice):
     alias_true = 3
     alias_false = 0
     default = 0
-    visibility = Visibility.none
+    # visibility = Visibility.none
 
 
 class LogicMinRippleTarget(Range):
@@ -254,17 +254,17 @@ class LogicMinRippleTarget(Range):
     range_start = 5
     range_end = 9
     default = 5
-    visibility = Visibility.none
+    # visibility = Visibility.none
 
 
 class RottedRegionTarget(Range):
     """The number of regions that must be rotted for the Rot ending.
-    The default, 18, matches the unaltered game behavior."""
+    The default, 21, matches the unaltered game behavior."""
     display_name = "Rotted region target"
     range_start = 2
-    range_end = 18
-    default = 18
-    visibility = Visibility.none
+    range_end = 21
+    default = 21
+    # visibility = Visibility.none
 
 
 class ChecksSpreadRot(Choice):
@@ -276,7 +276,7 @@ class ChecksSpreadRot(Choice):
     alias_true = 2
     alias_false = 0
     default = 1
-    visibility = Visibility.none
+    # visibility = Visibility.none
 
 
 class SpinningTopKeys(Choice):
@@ -287,7 +287,7 @@ class SpinningTopKeys(Choice):
     alias_true = 2
     alias_false = 0
     default = 2
-    visibility = Visibility.none
+    # visibility = Visibility.none
 
 
 class PriorityThrone(Choice):
@@ -297,7 +297,7 @@ class PriorityThrone(Choice):
     option_priority = 2
     option_excluded = 3
     default = 2
-    visibility = Visibility.none
+    # visibility = Visibility.none
 
 
 class SoPeeping(FreeText):

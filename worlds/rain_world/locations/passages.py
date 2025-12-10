@@ -184,7 +184,7 @@ locations: dict[str, LocationData] = {
     "Martyr": Passage("Martyr", "Early Passages", 5000),
     "Mother": Passage("Mother", "Early Passages", 5001, cond_mother),
     "Pilgrim": Passage("Pilgrim", "Early Passages", 5002, access_condition_generator=generate_cond_pilgrim),
-    "Survivor": Passage("Survivor", "Early Passages", 5003, Simple("Karma", 4)),
+    "Survivor": Passage("Survivor", "Early Passages", 5003, AnyOf(Simple("Karma", 4), Simple("Scug-Watcher"))),
 
     "DragonSlayer": Passage("DragonSlayer", "PPwS Passages", 5020,
                             access_condition_generator=generate_cond_dragonslayer),
