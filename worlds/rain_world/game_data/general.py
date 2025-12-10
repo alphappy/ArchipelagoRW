@@ -122,6 +122,11 @@ story_regions_rivulet = story_regions_msc.union({"RM", "MS"}).difference({"SS"})
 story_regions_spearmaster = story_regions_msc.union({"DM", "LM"}).difference({"SL"})
 story_regions_saint = story_regions_msc.union({"UG", "CL", "HR"}).difference({"DS", "SH", "UW", "SS"})
 
+story_regions_watcher = {
+    'WARB', 'WARC', 'WARD', 'WARE', 'WARF', 'WARG', 'WBLA', 'WMPA', 'WPGA', 'WPTA', 'WRFA', 'WRFB',
+    'WRRA', 'WSKA', 'WSKB', 'WSKC', 'WSKD', 'WTDA', 'WTDB', 'WVWA', 'WVWB'
+}
+
 alternate_regions = {
     "DS": {"Saint": "UG"},
     "SH": {"Saint": "CL"},

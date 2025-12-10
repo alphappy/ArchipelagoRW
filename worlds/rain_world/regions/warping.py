@@ -80,6 +80,10 @@ def generate(options: RainWorldOptions, rng: Random):
         ConnectionData("From any normal region", "Infested Wastes", "Bad dynamic warp to Infested Wastes"),
     ]
 
+    # Everything below this appears to be for the extra dynamic warp options.
+    # Looks like the case for the "visited" option isn't covered, just return early for now
+    return ret
+
     ####################################################################################################################
     pool_size = int(options.dynamic_warp_pool_size)
     pool = normal_regions if pool_size == 18 else rng.sample(normal_regions, pool_size)

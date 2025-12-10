@@ -330,7 +330,27 @@ class RandomStartingRegion(Choice):
     option_metropolis = 23
     option_looks_to_the_moon = 24
 
-    # option_sunlit_port = 30
+    option_sunbaked_alley = 30
+    option_coral_caves = 31
+    option_torrential_railways = 32
+    option_aether_ridge = 33
+    option_badlands = 34
+    option_cold_storage = 35
+    option_desolate_tract = 36
+    option_fetid_glen = 37
+    option_fractured_gateways = 38
+    option_heat_ducts = 39
+    option_migration_path = 40
+    option_pillar_grove = 41
+    option_rusted_wrecks = 42
+    option_salination = 43
+    option_shrouded_stacks = 44
+    option_signal_spires = 45
+    option_stormy_coast = 46
+    option_the_surface = 47
+    option_torrid_desert = 48
+    option_turbulent_pump = 49
+    option_verdant_waterways = 50
 
     alias_undergrowth = 3
     alias_waterfront_facility = 5
@@ -358,7 +378,27 @@ class RandomStartingRegion(Choice):
         23: ("Metropolis", "LC"),
         24: ("Looks to the Moon", "DM"),
 
-        30: ("Sunlit Port", "WSKB"),
+        30: ("Sunbaked Alley", "WSKB"),
+        31: ("Coral Caves", "WRFA"),
+        32: ("Torrential Railways", "WSKA"),
+        33: ("Aether Ridge", "WARF"),
+        34: ("Badlands", "WBLA"),
+        35: ("Cold Storage", "WARD"),
+        36: ("Desolate Tract", "WTDB"),
+        37: ("Fetid Glen", "WARC"),
+        38: ("Fractured Gateways", "WVWB"),
+        39: ("Heat Ducts", "WARE"),
+        40: ("Migration Path", "WMPA"),
+        41: ("Pillar Grove", "WPGA"),
+        42: ("Rusted Wrecks", "WRRA"),
+        43: ("Salination", "WARB"),
+        44: ("Shrouded Stacks", "WSKD"),
+        45: ("Signal Spires", "WPTA"),
+        46: ("Stormy Coast", "WSKC"),
+        47: ("The Surface", "WARG"),
+        48: ("Torrid Desert", "WTDA"),
+        49: ("Turbulent Pump", "WRFB"),
+        50: ("Verdant Waterways", "WVWA"),
     }
 
     @classmethod
