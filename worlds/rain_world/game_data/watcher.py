@@ -22,7 +22,7 @@ class PortalData:
         # See `OverWorld.InitiateSpecialWarp_WarpPoint`.
         if self.target_room == "NULL":
             if self.source_room[3] == "R":  # rotted FP region
-                self.target_room = "WORA_START"  # TODO this needs to be a room in lower WORA
+                self.target_room = "WORA_START"
             elif self.source_room.startswith("WARA"):
                 self.target_room = "WAUA_E01"  # first WAUA spawn
             elif self.source_room.startswith("WAUA"):
