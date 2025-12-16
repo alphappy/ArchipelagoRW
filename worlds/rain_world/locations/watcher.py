@@ -54,7 +54,7 @@ def initialize() -> tuple[list[FixedWarpPoint], list[SpinningTop], list[Rottenin
             [Rottening(i + 1, INITIAL_OFFSET + 150 + i) for i in range(len(normal_regions))],
             [PrinceEncounter(INITIAL_OFFSET + 120 + i, i + 1) for i in range(4)],
             [ThroneWarp(INITIAL_OFFSET + 125 + i, i) for i in range(4)],
-            [RoomLocation("Meet Elder Ripple Spawn", "Dial_Sidequest", ["Dial Sidequest"],
+            [RoomLocation("Meet Elder Ripple Spawn", "Meet_Ripple_Elder", [],
                           INITIAL_OFFSET + 130, "WORA_EGG")])
 
 

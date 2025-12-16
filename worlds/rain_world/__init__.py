@@ -157,6 +157,7 @@ class RainWorldWorld(World):
             pool = {
                 "Ripple": 12 + self.options.extra_karma_cap_increases.value,
                 **{k: 1 for k in portal_keys.keys()},
+                "Dial Warp Ability": 1,
             }
             if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:
                 pool.update({f"Dynamic: {k}": 1 for k in (normal_regions if ndwb.predetermined else self.warp_pool)})
