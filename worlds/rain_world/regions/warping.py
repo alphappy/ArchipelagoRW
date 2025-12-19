@@ -4,7 +4,7 @@ from random import Random
 from BaseClasses import MultiWorld
 from .classes import RegionData, ConnectionData, room_to_region
 from ..options import RainWorldOptions
-from ..conditions.classes import Simple, ConditionBlank, AllOf
+from ..conditions.classes import Simple, ConditionBlank, AllOf, AnyOf
 from ..game_data.watcher import targets, normal_regions, abnormal_regions
 from ..game_data.general import region_code_to_name
 from ..utils import necklace_derangement
@@ -73,7 +73,9 @@ def generate(options: RainWorldOptions, rng: Random):
     ret = [
         RegionData("From any normal region"),
 
-        ConnectionData("Menu", "From any normal region", "Create a dynamic warp", Simple("Ripple", 2)),
+        # Dial warp ability also grants the ability to dynamic warp
+        ConnectionData("Menu", "From any normal region", "Create a dynamic warp",
+                       AnyOf(Simple("Ripple", 2), Simple("Dial Warp Ability"))),
         ConnectionData("From any normal region", "Crumbling Fringes", "Bad dynamic warp to Crumbling Fringes"),
         ConnectionData("From any normal region", "Corrupted Factories", "Bad dynamic warp to Corrupted Factories"),
         ConnectionData("From any normal region", "Decaying Tunnels", "Bad dynamic warp to Decaying Tunnels"),
