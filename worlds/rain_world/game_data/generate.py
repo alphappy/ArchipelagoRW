@@ -21,7 +21,7 @@ from generate_methods import parse_placed_objects, splitstrip, setdefaultchain a
 ROOT_FP = "D:/RW files"
 
 ########################################################################################################################
-re_room_settings_filename = re_rsf = re.compile(r'((\S+)_\S+)_settings(?:-(\S+))?\.txt')
+re_room_settings_filename = re_rsf = re.compile(r'(((?:[^_]\S)+)_\S+)_settings(?:-(\S+))?\.txt')
 # No point documenting every placedobject - whitelist the ones relevant for logic here.
 OBJECT_WHITELIST = [
     # food quest
