@@ -114,6 +114,8 @@ class PhysicalRegion(RegionData):
                     return scug in ("Rivulet", "Saint")
                 if self.name == "Broken Precipice":
                     return options.msc_enabled and scug not in ("Artificer", "Spear", "Saint")
+                if self.name == "Shoreline near gate to Submerged":
+                    return options.submerged_should_populate and scug not in ("Artificer", "Spear")
                 return scug not in ("Artificer", "Spear")
 
         if not options.msc_enabled:
@@ -138,4 +140,4 @@ class PhysicalRegion(RegionData):
                 # HARDCODE
                 if self.name == "Bitter Aerie":
                     return scug == "Rivulet"
-                return scug not in ("Artificer", "Spear")
+                return options.submerged_should_populate and scug not in ("Artificer", "Spear")

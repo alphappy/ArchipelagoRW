@@ -454,13 +454,18 @@ class ChecksSheltersanity(Toggle):
 
 
 class ChecksSubmerged(Choice):
-    """Whether Submerged Superstructure has any checks."""
+    """Whether Submerged Superstructure has any checks.
+    If only aquatic is chosen, checks will only be generated
+    if playing Rivulet or the Aquatic perk is in the item pool."""
     display_name = "Include Submerged"
     option_all_slugcats = 2
-    option_only_rivulet = 1
+    option_only_aquatic = 1
     option_off = 0
+
     alias_true = 2
     alias_false = 0
+    alias_only_rivulet = 1
+
     default = 1
 
 
@@ -530,14 +535,25 @@ class DifficultyExtremeThreats(Toggle):
     default = 0
 
 
-class DifficultySubmerged(Toggle):
-    """Whether Submerged Superstructure is logically locked behind advancing the story state for Rivulet.
-    Advancing the story state - normally done by removing the rarefaction cell from The Rot -
-    causes the cycle duration to increase significantly, making Submerged Superstructure significantly easier.
+class DifficultySubmerged(Choice):
+    """Changes the logical requirement for entering Submerged Superstructure.
 
-    This setting only impacts Rivulet."""
+    If off, Submerged has no additional requirement to enter.
+
+    If set to aquatic, access to Submerged will expect you to have longer breath time from the Aquatic perk
+    or to be playing as Rivulet. If the Aquatic perk is not in the item pool, this acts the same as "off".
+
+    If set to longer cycles, Rivulet will not be expected to enter Submerged until the Longer Cycles item is obtained."""
     display_name = "Late Submerged"
-    default = True
+    option_longer_cycles = 2
+    option_aquatic = 1
+    option_off = 0
+
+    alias_true = 2
+    alias_false = 0
+    alias_only_rivulet = 2
+
+    default = 1
 
 
 class DifficultyEchoLowKarma(Choice):
@@ -1094,6 +1110,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
                 return ("Sphere 1 is too small with these settings.  "
                         f"Do at least one of the following: \n{solution_string}")
 
+        if self.which_victory_condition == 1 and self.starting_scug == "Rivulet" and not self.submerged_should_populate:
+            return f"Rivulet's story ending requires checks in Submerged Superstructure to be enabled."
+
         if self.which_victory_condition == 3:
             if not self.msc_enabled:
                 return (f"Food quest victory condition cannot be selected "
@@ -1107,7 +1126,8 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def data_block(self) -> dict: return static_data[self.which_game_version.string][self.dlcstate]
 
     @property
-    def submerged_should_populate(self) -> bool: return self.checks_submerged + (self.starting_scug == "Rivulet") > 1
+    def submerged_should_populate(self) -> bool:
+        return self.checks_submerged + (self.starting_scug == "Rivulet" or "Aquatic Perk" in self.expedition_perks.value) > 1
 
     def get_nontrap_weight_dict(self) -> dict[str, float]:
         ret = {a.item_name: a.value for a in [

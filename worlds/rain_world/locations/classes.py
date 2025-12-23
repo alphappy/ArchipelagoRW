@@ -73,7 +73,8 @@ class RoomLocation(LocationData):
         self.region = room_to_region[self.room]
 
         if not options.submerged_should_populate:
-            if self.region in ("Submerged Superstructure", "Bitter Aerie", "Shoreline above puppet room"):
+            if self.region in ("Submerged Superstructure", "Bitter Aerie", "Shoreline above puppet room",
+                               "Shoreline near gate to Submerged"):
                 return False
 
         return super().pre_generate(player, multiworld, options)

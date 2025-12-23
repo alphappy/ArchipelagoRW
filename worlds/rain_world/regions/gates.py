@@ -117,7 +117,7 @@ class GateData:
                 left = ["Impossible"]
             left += ["The Mark", "Citizen ID Drone"]
 
-        if gg == "MS_SL" and options.starting_scug == "Rivulet" and options.difficulty_submerged:
+        if gg == "MS_SL" and options.starting_scug == "Rivulet" and options.difficulty_submerged == 2:
             left.append("Disconnect_FP")
 
         return Simple(left), Simple(right)
