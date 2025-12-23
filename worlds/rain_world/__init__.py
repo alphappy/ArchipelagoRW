@@ -14,8 +14,8 @@ from .events import get_events
 from .regions.classes import room_to_region
 from .regions.gates import gates
 from .utils import normalize, flounder2
-from .items import RainWorldItem, all_items, RainWorldItemData, portal_keys, dynamic_warp_keys
-from . import regions, locations, options
+from .items import RainWorldItem, portal_keys
+from . import regions, locations, options, items
 from .game_data.general import prioritizable_passages, passages_all, passages_vanilla, accessible_gates
 
 
@@ -58,6 +58,8 @@ class RainWorldWorld(World):
     predetermined_warps = {}
     warp_pool = set()
 
+    ut_can_gen_without_yaml = True
+
     def generate_early(self) -> None:
         # This is the earliest that the options are available.  Player YAML failures should be tripped here.
 
@@ -68,6 +70,26 @@ class RainWorldWorld(World):
         # STARTING REGION
         self.starting_room = self.random.choice(get_starts(self.options))
         self.start_is_default = (self.options.random_starting_region == 0) and self.options.starting_scug != "Watcher"
+
+        #################################################################
+        # Universal Tracker support - use options from slot data if this is a fake generation
+        re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
+        if re_gen_passthrough and self.game in re_gen_passthrough:
+            # Get the passed through slot data from the real generation
+            slot_data = re_gen_passthrough[self.game]
+
+            # Set options based on slot data
+            start_room = ""
+            for key, value in slot_data.items():
+                opt = getattr(self.options, key, None)
+                if opt is not None:
+                    setattr(self.options, key, opt.from_any(value))
+                elif key == "starting_room":
+                    start_room = value
+
+            self.start_is_default = start_room == ""
+            self.starting_room = get_default_start(self.options.starting_scug) \
+                if start_room == "" else start_room.upper()
 
     def create_regions(self):
         for data in regions.generate(self.options, self.random):
@@ -96,9 +118,8 @@ class RainWorldWorld(World):
                 loc.progress_type = LocationProgressType.PRIORITY
 
         #################################################################
-        # STARTING REGION - defer this step for UT.
-        if not hasattr(self.multiworld, "generation_is_fake"):
-            self.connect_starting_region(self.starting_room)
+        # STARTING REGION
+        self.connect_starting_region(self.starting_room)
 
     def connect_starting_region(self, room: str):
         if not self.start_is_connected:
@@ -140,6 +161,11 @@ class RainWorldWorld(World):
             if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:
                 pool.update({f"Dynamic: {k}": 1 for k in (normal_regions if ndwb.predetermined else self.warp_pool)})
 
+        if self.options.damage_upgrades > 0:
+            pool.update({"Spear Damage Increase" : self.options.damage_upgrades})
+        if self.options.msc_enabled:
+            pool.update(**{perk : 1 for perk in self.options.expedition_perks})
+
         precollect = {
             "MSC": 1 if self.options.msc_enabled else 0,
             f"Scug-{self.options.starting_scug}": 1,
@@ -171,6 +197,18 @@ class RainWorldWorld(World):
     def jitter(self, d: dict[Any, float]) -> dict[Any, float]:
         return {k: 0 if v == 0 else (v + self.random.random() * self.options.weight_jitter) for k, v in d.items()}
 
+    def get_filler_item_name(self) -> str:
+        # Get a single random filler item, weighted by options
+        weights = normalize(self.jitter(self.options.get_nontrap_weight_dict()))
+        r = self.random.random()
+        count = 0.0
+        for k, v in weights.items():
+            count += v
+            if r <= count:
+                return k
+
+        return "Rock"
+
     def set_rules(self) -> None:
         # ascension_item = Item("Ascension", ItemClassification.progression, None, self.player)
         # self.multiworld.get_location("Ascension", self.player).place_locked_item(ascension_item)
@@ -201,7 +239,7 @@ class RainWorldWorld(World):
 
             # External tracker needs to know...
             "difficulty_glow", "difficulty_monk", "difficulty_hunter", "difficulty_outlaw", "difficulty_chieftain",
-            "difficulty_nomad", "checks_submerged",
+            "difficulty_nomad", "difficulty_extreme_threats", "checks_submerged", "checks_foodquest_expanded"
         )
         # backwards compatibility
         d["which_gamestate"] = self.options.which_gamestate_integer
@@ -218,6 +256,12 @@ class RainWorldWorld(World):
         # temp override
         d["which_campaign"] = self.options.starting_scug
 
+        # TODO: Change this when an official way to fetch world version from manifest exists
+        import pkgutil
+        from orjson import orjson
+        apworld_manifest = orjson.loads(pkgutil.get_data(__name__, "archipelago.json").decode("utf-8"))
+        d["apworld_version"] = apworld_manifest["world_version"]
+
         return d
 
     def generate_output(self, output_directory: str) -> None:
@@ -230,6 +274,7 @@ class RainWorldWorld(World):
                     "slot_data": self.fill_slot_data()
                 })
 
-    def interpret_slot_data(self, slot_data: dict[str, Any]) -> None:
+    @staticmethod
+    def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:
         """Universal Tracker support - synchronize UT internal multiworld with actual slot data."""
-        self.connect_starting_region(slot_data["starting_room"].upper())
+        return slot_data
