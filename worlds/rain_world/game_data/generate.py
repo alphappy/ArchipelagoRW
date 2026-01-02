@@ -297,9 +297,12 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
                 for shiny_name, shiny_data in r_data['shinies'].items():
                     # On the rare off-chance that an alt settings file blacklist the scug in question.
                     if scug not in shiny_data["filter"]:
-                        # Update the room data - importantly updating the whitelist
-                        room_data.setdefault("shinies", {}).setdefault(shiny_name, {})["kind"] = shiny_data["kind"]
-                        room_data.setdefault("shinies", {}).setdefault(shiny_name, {}).setdefault("whitelist", ScugFlag()).add(scug)
+                        # Update the room data - importantly updating the whitelist.
+                        if shiny_name not in room_data.setdefault("shinies", {}):
+                            # If this shiny only exists in alt files, set this flag to indicate it
+                            room_data["shinies"].setdefault(shiny_name, {})["alt_whitelist"] = True
+                        room_data["shinies"][shiny_name]["kind"] = shiny_data["kind"]
+                        room_data["shinies"][shiny_name].setdefault("whitelist", ScugFlag()).add(scug)
 
                 for object_name, object_data in r_data['objects'].items():
                     if scug not in object_data["filter"]:
