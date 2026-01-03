@@ -131,15 +131,14 @@ class WhichVictoryCondition(Choice):
 
     **Hunter**: Use the green neuron on Looks to the Moon in Shoreline.
 
-    **Gourmand**: Receive the Mark and reach Journey's End in Outer Expanse.
+    **Gourmand**: Receive the Mark in order to reach Outer Expanse, and subsequently reach Journey's End.
 
-    **Artificer**: Receive the Mark and kill the Chieftain in Metropolis.
+    **Artificer**: Receive the Mark and the Citizen ID drone in order to reach Metropolis and kill the Chieftain Scavenger.
 
     **Rivulet**: Receive the Rarefaction Cell and deliver it to Submerged Superstructure,
     then meet Looks to the Moon.
 
-    **Spearmaster**: Receive the Mark, the SM pearl, and Moon's message,
-    then deliver it to Communications Array in Sky Islands.
+    **Spearmaster**: Receive the SM pearl and Moon's message, then deliver it to Communications Array in Sky Islands.
     """
     display_name = "Victory condition"
     option_ascension = 0
