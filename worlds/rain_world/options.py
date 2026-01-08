@@ -1085,6 +1085,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def msc_enabled(self) -> bool: return self.is_msc_enabled == 1
 
     @property
+    def any_dlc_enabled(self) -> bool: return self.is_msc_enabled == 1 or self.is_watcher_enabled == 1
+
+    @property
     def dlcstate(self) -> str:
         if self.is_msc_enabled:
             if self.is_watcher_enabled:
@@ -1187,7 +1190,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         if not self.is_watcher_enabled:
             for key in ("Boomerang", "Poison Spear", "Graffiti Bomb", "Rot Fruit"):
                 ret[f"{key}"] = 0
-        if not self.msc_enabled and not self.is_watcher_enabled:
+        if not self.any_dlc_enabled:
             for key in ("Lilypuck", "Dandelion Peach", "Glow Weed", "Singularity Bomb"):
                 ret[f"{key}"] = 0
 
