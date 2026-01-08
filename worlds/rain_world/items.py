@@ -123,6 +123,7 @@ all_items: Dict[str, RainWorldItemData] = {
     "Gooieduck": FillerItemData("Gooieduck", "Object-GooieDuck", 249 + offset, ["MSC"]),
     "Dandelion Peach": FillerItemData("Dandelion Peach", "Object-DandelionPeach", 250 + offset, ["MSC"]),
     "Rot Fruit": FillerItemData("Rot Fruit", "Object-RotFruit", 251 + offset, ["Watcher"]),
+    "Fire Sprite Larva": FillerItemData("Fire Sprite Larva", "Object-FireSpriteLarva", 252 + offset, ["Watcher"]),
 
     #################################################################
     # FILLER - OTHER

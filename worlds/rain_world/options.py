@@ -832,6 +832,11 @@ class WtRotFruit(WtGeneric):
     item_name = "Rot Fruit"
     default = 0
 
+class WtFireSpriteLarva(WtGeneric):
+    """The relative weight of fire sprite larvae in the non-trap filler item pool."""
+    display_name = "Fire Sprite Larva (Watcher)"
+    item_name = "Fire Sprite Larva"
+    default = 30
 
 #################################################################
 # TRAP SETTINGS
@@ -1044,6 +1049,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_fireeggs: WtFireEgg
     wt_glowweed: WtGlowWeed
     wt_rot_fruit: WtRotFruit
+    wt_fire_sprite_larva: WtFireSpriteLarva
 
     group_filler = [
         WtRock, WtSpear, WtExplosiveSpear, WtGrenade, WtFlashbang, WtSporePuff, WtCherrybomb, WtBubbleWeed, WtLantern,
@@ -1052,7 +1058,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         WtLillyPuck, WtDandelionPeach, WtElectricSpear, WtSingularityBomb, WtJokeRifle,
         WtFireEgg, WtGlowWeed,
 
-        WtBoomerang, WtPoisonSpear, WtGraffitiBomb, WtRotFruit
+        WtBoomerang, WtPoisonSpear, WtGraffitiBomb, WtRotFruit, WtFireSpriteLarva
     ]
 
     #################################################################
@@ -1183,12 +1189,13 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             self.wt_fireeggs, self.wt_glowweed, self.wt_electric_spears, self.wt_singularity_bombs,
             self.wt_lanterns, self.wt_karma_flowers, self.wt_vulture_masks, self.wt_joke_rifles,
             self.wt_boomerangs, self.wt_poison_spears, self.wt_graffiti_bombs, self.wt_rot_fruit,
+            self.wt_fire_sprite_larva,
         ]}
         if not self.msc_enabled:
             for key in ("Fire Egg", "Electric Spear", "Joke Rifle"):
                 ret[f"{key}"] = 0
         if not self.is_watcher_enabled:
-            for key in ("Boomerang", "Poison Spear", "Graffiti Bomb", "Rot Fruit"):
+            for key in ("Boomerang", "Poison Spear", "Graffiti Bomb", "Rot Fruit", "Fire Sprite Larva"):
                 ret[f"{key}"] = 0
         if not self.any_dlc_enabled:
             for key in ("Lilypuck", "Dandelion Peach", "Glow Weed", "Singularity Bomb"):
