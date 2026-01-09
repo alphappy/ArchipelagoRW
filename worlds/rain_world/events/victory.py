@@ -19,7 +19,7 @@ def generate(options: RainWorldOptions) -> list[EventData]:
                 Simple([f"Access-{r}" for r in normal_regions], options.rotted_region_target.value)
             )
             return [VictoryEvent("Purpose", "Outer Rim", cond)]
-        else:
+        elif options.which_victory_condition == 0:
             return [VictoryEvent("Peace", "Ancient Urban")]
 
     # Watcher victory conditions should end with this one

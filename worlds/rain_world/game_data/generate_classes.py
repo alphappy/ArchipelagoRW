@@ -151,7 +151,9 @@ critname_dict = {
     'tardigrade': 'Tardigrade',
     'seapig': 'Tardigrade',
     'angler': 'Angler',
-    'mothgrub': 'MothGrub'
+    'mothgrub': 'MothGrub',
+    'ripplespider': 'RippleSpider',
+    'anglerfish': 'Angler',
 }
 
 
