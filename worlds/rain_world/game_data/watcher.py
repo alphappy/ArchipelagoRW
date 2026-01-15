@@ -103,3 +103,10 @@ normal_regions = [
 ]
 
 abnormal_regions = {"WSUR", "WHIR", "WGWR", "WDSR", "WSSR", "WORA", "WRSA", "WARA", "WAUA"}
+
+# Defines karma flowers that should not generate for whatever reason
+watcher_blacklisted_flowers = {
+    "WORA_CITY2X", "WORA_CITY10X", "WORA_DESERT4X", "WORA_DESERT8", "WORA_EGG02X", # Post rot ending
+    "WTDA_B12", # Inaccessible ogscule room
+    "WARB_F01", "WSKD_B01", "WPTA_B10", "WBLA_C01", # Flowers that vanish when a static warp is created
+}
