@@ -147,6 +147,11 @@ class WhichVictoryCondition(Choice):
     option_echoes = 2
     option_food_quest = 3
 
+    alias_spinning_top = 0
+    alias_prince = 1
+    option_weaver = 4
+    option_true_ending = 5
+
 
 class WhichGateBehavior(Choice):
     """
