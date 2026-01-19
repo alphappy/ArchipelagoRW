@@ -32,7 +32,7 @@ def generate(options: RainWorldOptions) -> list[EventData]:
                 # and close all the warps. This will have to change when Weaver
                 # ability gets randomized
                 Simple("Ripple", 8),
-                Simple([f"Access-{r}" for r in normal_regions.append("WARA")])
+                Simple([f"Access-{r}" for r in [*normal_regions, "WARA"]])
             )
             return [VictoryEvent("An Understanding", "Events", cond)]
         if true_ending:
