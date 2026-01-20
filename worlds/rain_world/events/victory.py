@@ -29,14 +29,21 @@ def generate(options: RainWorldOptions) -> list[EventData]:
         if weaver:
             cond = AllOf(
                 # With these conditions you should be able to get the Weaver ability
-                # and close all the warps. This will have to change when Weaver
-                # ability gets randomized
+                # and close all the warps. This will have to change when Weaver ability gets randomized.
+                # Ripple not technically required, but is needed to find Weaver spots "naturally" rather than looking at a map
                 Simple("Ripple", 8),
                 Simple([f"Access-{r}" for r in [*normal_regions, "WARA"]])
             )
             return [VictoryEvent("An Understanding", "Events", cond)]
         if true_ending:
-            pass
+            cond = AllOf(
+                # Must be able to reach Ancient Urban for Spinning Top ending,
+                # Outer Rim and enough Ripple to wake the Prince,
+                # And every normal region for warp sealing.
+                # Ripple requirement handled by Daemon access
+                Simple([f"Access-{r}" for r in [*normal_regions, "WARA", "WAUA", "WORA"]])
+            )
+            return [VictoryEvent("The Choice", "Daemon", cond)]
 
 
     # Watcher victory conditions should end with this one
