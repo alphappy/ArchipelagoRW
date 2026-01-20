@@ -158,3 +158,16 @@ class TestSaintFoodQuest(RainWorldTestBase):
 class TestWatcher(RainWorldTestBase):
     options = {"so_peeping": "OAOAOA!", "is_watcher_enabled": True, "is_msc_enabled": True,
                "checks_foodquest": "all_slugcats"}
+
+class TestWatcherRot(RainWorldTestBase):
+    options = {"so_peeping": "OAOAOA!", "is_watcher_enabled": True, "is_msc_enabled": True,
+               "checks_foodquest": "all_slugcats", "which_victory_condition": "story"}
+
+class TestWatcherWeaver(RainWorldTestBase):
+    options = {"so_peeping": "OAOAOA!", "is_watcher_enabled": True, "is_msc_enabled": True,
+               "checks_foodquest": "all_slugcats", "which_victory_condition": "weaver"}
+
+class TestWatcherTrueEnding(RainWorldTestBase):
+    options = {"so_peeping": "OAOAOA!", "is_watcher_enabled": True, "is_msc_enabled": True,
+               "checks_foodquest": "all_slugcats", "which_victory_condition": "true_ending"}
+
