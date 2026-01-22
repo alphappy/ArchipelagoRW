@@ -82,6 +82,9 @@ def generate(options: RainWorldOptions, rng: Random):
         ConnectionData("From any normal region", "Infested Wastes", "Bad dynamic warp to Infested Wastes"),
     ]
 
+    if options.logic_rotted_generation == 1:
+        ret.append(ConnectionData("From any normal region", "Outer Rim", "Bad dynamic warp to Outer Rim"))
+
     # Everything below this appears to be for the extra dynamic warp options.
     # Looks like the case for the "visited" option isn't covered, just return early for now
     return ret

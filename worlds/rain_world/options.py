@@ -244,9 +244,9 @@ class LogicRottedGeneration(Choice):
     """Controls the generation of Crumbling Fringes, Corrupted Factories, Decaying Tunnels, and Infested Wastes."""
     display_name = "Permarotted accessibility"
     option_none = 0
-    option_passthrough = 2
-    option_full = 3
-    alias_true = 3
+    option_passthrough = 1
+    option_full = 2
+    alias_true = 2
     alias_false = 0
     default = 0
     # visibility = Visibility.none
