@@ -273,10 +273,11 @@ class RottedRegionTarget(Range):
 
 
 class ChecksSpreadRot(Choice):
-    """Whether spreading the Rot to a new region is a check."""
+    """Whether spreading the Rot to a new region is a check.
+    When Weaver or True ending is chosen, rot checks will not generate regardless of chosen value"""
     display_name = "Rot spread checks"
     option_off = 0
-    option_alternate_only = 1
+    option_prince_ending_only = 1
     option_on = 2
     alias_true = 2
     alias_false = 0
@@ -1218,8 +1219,14 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     @property
     def should_have_rot_spread_checks(self):
-        return (self.starting_scug == "Watcher" and
+        return (self.starting_scug == "Watcher" and not self.will_be_weaving and
                 (self.checks_spread_rot + (self.which_victory_condition == "story")) > 1)
+
+    @property
+
+    def will_be_weaving(self):
+        """Whether the player will need to seal portals during this run (Watcher with Weaver or True Ending goal)"""
+        return self.starting_scug == "Watcher" and (self.which_victory_condition == 4 or 5)
 
 
 option_groups = [
