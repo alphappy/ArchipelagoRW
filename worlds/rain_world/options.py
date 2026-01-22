@@ -305,11 +305,6 @@ class PriorityThrone(Choice):
     # visibility = Visibility.none
 
 
-class SoPeeping(FreeText):
-    """Temporary setting for allowing Watcher generation."""
-    visibility = Visibility.none
-
-
 #################################################################
 # GENERAL SETTINGS
 class RandomStartingRegion(Choice):
@@ -1015,10 +1010,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     checks_spread_rot: ChecksSpreadRot
     spinning_top_keys: SpinningTopKeys
     priority_throne: PriorityThrone
-    so_peeping: SoPeeping
 
     group_watcher = [
-        SoPeeping, LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
+        LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
         DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot,
         SpinningTopKeys, PriorityThrone, PredeterminedDynamicWarpNetworkMinimumNecklaceLength,
     ]
@@ -1111,7 +1105,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             return "Vanilla"
 
     @property
-    def starting_scug(self) -> str: return "Watcher" if self.so_peeping == "OAOAOA!" else self.which_campaign.scug_id
+    def starting_scug(self) -> str: return self.which_campaign.scug_id
 
     @property
     def worldstate(self) -> tuple[str, str]: return self.which_game_version.string, self.dlcstate
