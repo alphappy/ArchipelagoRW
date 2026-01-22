@@ -3,7 +3,7 @@ from typing import Optional, Dict
 from . import constants, game_data
 from .regions.gates import gates
 from .game_data.general import region_code_to_name, alternate_regions
-from .game_data.watcher import keys as pkeys, normal_regions
+from .game_data.watcher import keys as pkeys, normal_regions, PortalKeyData
 
 item_client_names: dict[str, str] = {}
 
@@ -31,6 +31,13 @@ class GateKeyItemData(RainWorldItemData):
         super().__init__(names[0], names[-1], code, ItemClassification.progression)
         _, left_code, right_code = names[-1].split("_")
         self.hints = names[1:] + [region_code_to_name[left_code], region_code_to_name[right_code]]
+
+
+class PortalKeyItemData(RainWorldItemData):
+    def __init__(self, data: PortalKeyData, code: Optional[int]):
+        super().__init__(data.name, data.client_name, code, ItemClassification.progression)
+        _, left_code, right_code = data.client_name.split("-")
+        self.hints = [data.client_name, region_code_to_name[left_code], region_code_to_name[right_code]]
 
 
 class PassageTokenItemData(RainWorldItemData):
@@ -179,10 +186,7 @@ all_items.update(gate_keys)
 #################################################################
 # PORTAL KEYS
 portal_keys: dict[str, RainWorldItemData] = {
-    data.name: RainWorldItemData(
-        data.name, data.client_name,
-        offset + 600 + i, ItemClassification.progression
-    )
+    data.name: PortalKeyItemData(data, offset + 600 + i)
     for i, data in enumerate(pkeys.values())
 }
 all_items.update(portal_keys)
