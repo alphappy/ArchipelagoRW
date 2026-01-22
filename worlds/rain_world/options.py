@@ -218,7 +218,7 @@ class PredeterminedDynamicWarpNetworkMinimumNecklaceLength(Range):
     range_start = 2
     range_end = 18
     default = 3
-    visibility = Visibility.spoiler
+    visibility = Visibility.none
 
 
 class ThroneDynamicWarpBehavior(Choice):
@@ -286,23 +286,23 @@ class ChecksSpreadRot(Choice):
 
 
 class SpinningTopKeys(Choice):
-    """Whether Spinning Top warps require keys."""
+    """Whether keys are required to travel through Spinning Top warps."""
     display_name = "Spinning Top keys"
     option_off = 0
-    option_on = 2
-    alias_true = 2
+    option_on = 1
+    alias_true = 1
     alias_false = 0
-    default = 2
+    default = 1
     # visibility = Visibility.none
 
 
 class PriorityThrone(Choice):
-    """Whether Throne warp and Prince checks are priority locations."""
+    """Whether Prince checks should be normal, priority, or excluded locations."""
     display_name = "Priority Throne"
     option_normal = 1
     option_priority = 2
     option_excluded = 3
-    default = 2
+    default = 1
     # visibility = Visibility.none
 
 
@@ -427,7 +427,8 @@ class PassagePriority(Range):
 
 
 class ExtraKarmaCapIncreases(Range):
-    """Number of extra karma cap increases in the pool beyond the minimum required for ascension."""
+    """Number of extra karma cap increases in the pool beyond the minimum required for ascension.
+    For Watcher, this option will also apply to Ripple."""
     display_name = "Extra karma cap increases"
     range_start = 0
     range_end = 30
