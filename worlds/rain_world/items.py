@@ -106,6 +106,8 @@ all_items: Dict[str, RainWorldItemData] = {
     "Cherrybomb": FillerItemData("Cherrybomb", "Object-FirecrackerPlant", 207 + offset),
     "Singularity Bomb": FillerItemData("Singularity Bomb", "Object-SingularityBomb", 208 + offset, ["MSC"]),
     "Lilypuck": FillerItemData("Lilypuck", "Object-LillyPuck", 209 + offset, ["MSC"]),
+    "Poison Spear": FillerItemData("Poison Spear", "Object-PoisonSpear", 210 + offset, ["Watcher"]),
+    "Boomerang": FillerItemData("Boomerang", "Object-Boomerang", 211 + offset, ["Watcher"]),
 
     #################################################################
     # FILLER - FOOD
@@ -120,6 +122,8 @@ all_items: Dict[str, RainWorldItemData] = {
     "Seed": FillerItemData("Seed", "Object-Seed", 248 + offset, ["MSC"]),
     "Gooieduck": FillerItemData("Gooieduck", "Object-GooieDuck", 249 + offset, ["MSC"]),
     "Dandelion Peach": FillerItemData("Dandelion Peach", "Object-DandelionPeach", 250 + offset, ["MSC"]),
+    "Rot Fruit": FillerItemData("Rot Fruit", "Object-RotFruit", 251 + offset, ["Watcher"]),
+    "Fire Sprite Larva": FillerItemData("Fire Sprite Larva", "Object-FireSpriteLarva", 252 + offset, ["Watcher"]),
 
     #################################################################
     # FILLER - OTHER
@@ -129,6 +133,7 @@ all_items: Dict[str, RainWorldItemData] = {
     "Karma Flower": FillerItemData("Karma Flower", "Object-KarmaFlower", 273 + offset),
     "Vulture Mask": FillerItemData("Vulture Mask", "Object-VultureMask", 274 + offset),
     "Joke Rifle": FillerItemData("Joke Rifle", "Object-JokeRifle", 275 + offset, ["MSC"]),
+    "Graffiti Bomb": FillerItemData("Graffiti Bomb", "Object-GraffitiBomb", 276 + offset, ["Watcher"]),
 
     #################################################################
     # FILLER - NON-CREATURE TRAPS

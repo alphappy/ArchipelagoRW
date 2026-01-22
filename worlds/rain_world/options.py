@@ -147,6 +147,11 @@ class WhichVictoryCondition(Choice):
     option_echoes = 2
     option_food_quest = 3
 
+    alias_spinning_top = 0
+    alias_prince = 1
+    option_weaver = 4
+    option_true_ending = 5
+
 
 class WhichGateBehavior(Choice):
     """
@@ -808,6 +813,35 @@ class WtJokeRifle(WtGeneric):
     item_name = "Joke Rifle"
     default = 1
 
+class WtBoomerang(WtGeneric):
+    """The relative weight of boomerangs in the non-trap filler item pool."""
+    display_name = "Boomerang (Watcher)"
+    item_name = "Boomerang"
+    default = 20
+
+class WtPoisonSpear(WtGeneric):
+    """The relative weight of poison spears in the non-trap filler item pool."""
+    display_name = "Poison Spear (Watcher)"
+    item_name = "Poison Spear"
+    default = 15
+
+class WtGraffitiBomb(WtGeneric):
+    """The relative weight of graffiti bombs in the non-trap filler item pool."""
+    display_name = "Graffiti Bomb (Watcher)"
+    item_name = "Graffiti Bomb"
+    default = 20
+
+class WtRotFruit(WtGeneric):
+    """The relative weight of rot fruits in the non-trap filler item pool."""
+    display_name = "Rot Fruit (Watcher)"
+    item_name = "Rot Fruit"
+    default = 0
+
+class WtFireSpriteLarva(WtGeneric):
+    """The relative weight of fire sprite larvae in the non-trap filler item pool."""
+    display_name = "Fire Sprite Larva (Watcher)"
+    item_name = "Fire Sprite Larva"
+    default = 30
 
 #################################################################
 # TRAP SETTINGS
@@ -1006,6 +1040,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_electric_spears: WtElectricSpear
     wt_singularity_bombs: WtSingularityBomb
     wt_joke_rifles: WtJokeRifle
+    wt_boomerangs: WtBoomerang
+    wt_poison_spears: WtPoisonSpear
+    wt_graffiti_bombs: WtGraffitiBomb
 
     wt_fruit: WtFruit
     wt_bubblefruit: WtBubbleFruit
@@ -1016,13 +1053,17 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_karma_flowers: WtKarmaFlower
     wt_fireeggs: WtFireEgg
     wt_glowweed: WtGlowWeed
+    wt_rot_fruit: WtRotFruit
+    wt_fire_sprite_larva: WtFireSpriteLarva
 
     group_filler = [
         WtRock, WtSpear, WtExplosiveSpear, WtGrenade, WtFlashbang, WtSporePuff, WtCherrybomb, WtBubbleWeed, WtLantern,
         WtVultureMask, WtFruit, WtBubbleFruit, WtEggbugEgg, WtJellyfish, WtMushroom, WtSlimeMold, WtKarmaFlower,
 
         WtLillyPuck, WtDandelionPeach, WtElectricSpear, WtSingularityBomb, WtJokeRifle,
-        WtFireEgg, WtGlowWeed
+        WtFireEgg, WtGlowWeed,
+
+        WtBoomerang, WtPoisonSpear, WtGraffitiBomb, WtRotFruit, WtFireSpriteLarva
     ]
 
     #################################################################
@@ -1053,6 +1094,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     @property
     def msc_enabled(self) -> bool: return self.is_msc_enabled == 1
+
+    @property
+    def any_dlc_enabled(self) -> bool: return self.is_msc_enabled == 1 or self.is_watcher_enabled == 1
 
     @property
     def dlcstate(self) -> str:
@@ -1149,9 +1193,17 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             self.wt_eggbugeggs, self.wt_jellyfish, self.wt_mushrooms, self.wt_slimemold,
             self.wt_fireeggs, self.wt_glowweed, self.wt_electric_spears, self.wt_singularity_bombs,
             self.wt_lanterns, self.wt_karma_flowers, self.wt_vulture_masks, self.wt_joke_rifles,
+            self.wt_boomerangs, self.wt_poison_spears, self.wt_graffiti_bombs, self.wt_rot_fruit,
+            self.wt_fire_sprite_larva,
         ]}
         if not self.msc_enabled:
-            for key in ("Lilypuck", "Dandelion Peach", "Fire Egg", "Glow Weed", "Electric Spear", "Singularity Bomb", "Joke Rifle"):
+            for key in ("Fire Egg", "Electric Spear", "Joke Rifle"):
+                ret[f"{key}"] = 0
+        if not self.is_watcher_enabled:
+            for key in ("Boomerang", "Poison Spear", "Graffiti Bomb", "Rot Fruit", "Fire Sprite Larva"):
+                ret[f"{key}"] = 0
+        if not self.any_dlc_enabled:
+            for key in ("Lilypuck", "Dandelion Peach", "Glow Weed", "Singularity Bomb"):
                 ret[f"{key}"] = 0
 
         return ret
