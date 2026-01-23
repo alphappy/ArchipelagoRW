@@ -1182,7 +1182,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             if (self.starting_scug == "Gourmand") + self.checks_foodquest.value < 2:
                 return "Food quest checks must be enabled to use food quest victory condition."
 
-        if self.starting_scug != "Watcher" and self.which_victory_condition == 4 or 5:
+        if self.starting_scug != "Watcher" and (self.which_victory_condition == 4 or self.which_victory_condition == 5):
             return "Victory conditions 'Weaver' and 'True Ending' are not valid for any slugcat other than Watcher."
 
         if self.which_victory_condition == 2 and self.starting_scug == "Watcher":
@@ -1239,10 +1239,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
                 (self.checks_spread_rot + (self.which_victory_condition == "story")) > 1)
 
     @property
-
     def will_be_weaving(self):
         """Whether the player will need to seal portals during this run (Watcher with Weaver or True Ending goal)"""
-        return self.starting_scug == "Watcher" and (self.which_victory_condition == 4 or 5)
+        return self.starting_scug == "Watcher" and (self.which_victory_condition == 4 or self.which_victory_condition == 5)
 
 
 option_groups = [
