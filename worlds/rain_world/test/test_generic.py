@@ -156,18 +156,17 @@ class TestSaintFoodQuest(RainWorldTestBase):
 
 
 class TestWatcher(RainWorldTestBase):
-    options = {"so_peeping": "OAOAOA!", "is_watcher_enabled": True, "is_msc_enabled": True,
-               "checks_foodquest": "all_slugcats"}
+    options = {"which_campaign": "watcher", "is_watcher_enabled": True, "is_msc_enabled": True}
 
 class TestWatcherRot(RainWorldTestBase):
-    options = {"so_peeping": "OAOAOA!", "is_watcher_enabled": True, "is_msc_enabled": True,
-               "checks_foodquest": "all_slugcats", "which_victory_condition": "story"}
+    options = {"which_campaign": "watcher", "is_watcher_enabled": True, "is_msc_enabled": True,
+               "which_victory_condition": "story"}
 
 class TestWatcherWeaver(RainWorldTestBase):
-    options = {"so_peeping": "OAOAOA!", "is_watcher_enabled": True, "is_msc_enabled": True,
-               "checks_foodquest": "all_slugcats", "which_victory_condition": "weaver"}
+    options = {"which_campaign": "watcher", "is_watcher_enabled": True, "is_msc_enabled": True,
+               "which_victory_condition": "weaver"}
 
 class TestWatcherTrueEnding(RainWorldTestBase):
-    options = {"so_peeping": "OAOAOA!", "is_watcher_enabled": True, "is_msc_enabled": True,
-               "checks_foodquest": "all_slugcats", "which_victory_condition": "true_ending"}
+    options = {"which_campaign": "watcher", "is_watcher_enabled": True, "is_msc_enabled": True,
+               "which_victory_condition": "true_ending"}
 
