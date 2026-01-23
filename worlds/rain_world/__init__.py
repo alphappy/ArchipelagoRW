@@ -14,7 +14,7 @@ from .events import get_events
 from .regions.classes import room_to_region
 from .regions.gates import gates
 from .utils import normalize, flounder2
-from .items import RainWorldItem, portal_keys
+from .items import RainWorldItem, portal_keys, PortalKeyItemData
 from . import regions, locations, options, items
 from .game_data.general import prioritizable_passages, passages_all, passages_vanilla, accessible_gates
 
@@ -156,7 +156,7 @@ class RainWorldWorld(World):
         else:
             pool = {
                 "Ripple": 12 + self.options.extra_karma_cap_increases.value,
-                **{k: 1 for k in portal_keys.keys()},
+                **{k: 1 for k, v in portal_keys.items() if not v.spinning_top or self.options.spinning_top_keys},
                 "Dial Warp Ability": 1,
             }
             if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:

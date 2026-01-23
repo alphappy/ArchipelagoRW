@@ -292,14 +292,10 @@ class ChecksSpreadRot(Choice):
     # visibility = Visibility.none
 
 
-class SpinningTopKeys(Choice):
+class SpinningTopKeys(Toggle):
     """Whether keys are required to travel through Spinning Top warps."""
     display_name = "Spinning Top keys"
-    option_off = 0
-    option_on = 1
-    alias_true = 1
-    alias_false = 0
-    default = 1
+    default = True
     # visibility = Visibility.none
 
 
