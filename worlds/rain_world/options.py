@@ -140,6 +140,12 @@ class WhichVictoryCondition(Choice):
 
     **Spearmaster**: Receive the Mark, the SM pearl, and Moon's message,
     then deliver it to Communications Array in Sky Islands.
+
+    When playing as the Watcher, these options are different:
+    **Ascension** / **Spinning Top**: Complete the Spinning Top ending.
+    **Story** / **Prince**: Complete the Prince ending.
+    **Weaver**: Complete the Weaver ending.
+    **True Ending**: Complete the True ending.
     """
     display_name = "Victory condition"
     option_ascension = 0
@@ -1175,6 +1181,12 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
                         f"without More Slugcats Expansion enabled.")
             if (self.starting_scug == "Gourmand") + self.checks_foodquest.value < 2:
                 return "Food quest checks must be enabled to use food quest victory condition."
+
+        if self.starting_scug != "Watcher" and self.which_victory_condition == 4 or 5:
+            return "Victory conditions 'Weaver' and 'True Ending' are not valid for any slugcat other than Watcher."
+
+        if self.which_victory_condition == 2 and self.starting_scug == "Watcher":
+            return f"Watcher cannot currently use Echoes victory condition."
 
         return None
 
