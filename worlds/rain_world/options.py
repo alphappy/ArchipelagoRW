@@ -241,14 +241,21 @@ class DynamicWarpPoolSize(Range):
 
 
 class LogicRottedGeneration(Choice):
-    """Controls the generation of Crumbling Fringes, Corrupted Factories, Decaying Tunnels, and Infested Wastes."""
+    """Controls the generation of Crumbling Fringes, Corrupted Factories, Decaying Tunnels, and Infested Wastes.
+
+    **None**: There will be no checks in rotted vanilla regions, and bad warping will not be required to reach Outer Rim.
+
+    **Passthrough**: There will be no checks in rotted vanilla regions, but you may still have to bad warp to reach Outer Rim.
+
+    **Full**: Checks will be present in rotted vanilla regions
+    """
     display_name = "Permarotted accessibility"
     option_none = 0
     option_passthrough = 1
     option_full = 2
     alias_true = 2
     alias_false = 0
-    default = 0
+    default = 1
     # visibility = Visibility.none
 
 
