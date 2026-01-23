@@ -130,6 +130,16 @@ Watcher cannot earn The Pilgrim, The Nomad, The Scholar, The Wanderer, or The Mo
 
 ## Settings
 
+### Applicable non-Watcher settings
+Some yaml settings are no longer applicable when playing as Watcher.
+* `which_gate_behavior` - Warps do not behave the same as gates and never require Ripple.
+* `checks_dev_tokens` - There are no developer commentary tokens in Watcher.
+* `checks_submerged` - Submerged Superstructure is not accessible.
+* `difficulty_glow` - Watcher always starts with the glow.
+* `difficulty_echo_low_karma` - Spinning Top does not behave as normal echoes do, so this setting is ignored.
+
+`extra_karma_cap_increases` *will* apply - extra Ripple is added to the pool instead of Karma. 
+
 ### Rot spread checks
 `checks_spread_rot` controls whether spreading the Rot to a new region is a check.
 Its default setting, `alternate_only`, only generates the checks if `which_victory_condition` is `prince`.
