@@ -65,6 +65,7 @@ class PoolNormalDynamic(DynamicWarpConnection):
         multiworld.worlds[player].warp_pool.add(self.dest_region if self.unlockable else self.dest)
         super().make(player, multiworld, options)
 
+cond_can_dynamic_warp = AnyOf(Simple("Ripple", 2), Simple("Dial Warp Ability"))
 
 def generate(options: RainWorldOptions, rng: Random):
     if options.starting_scug != "Watcher":
@@ -75,7 +76,7 @@ def generate(options: RainWorldOptions, rng: Random):
 
         # Dial warp ability also grants the ability to dynamic warp
         ConnectionData("Menu", "From any normal region", "Create a dynamic warp",
-                       AnyOf(Simple("Ripple", 2), Simple("Dial Warp Ability"))),
+                       cond_can_dynamic_warp),
         ConnectionData("From any normal region", "Crumbling Fringes", "Bad dynamic warp to Crumbling Fringes"),
         ConnectionData("From any normal region", "Corrupted Factories", "Bad dynamic warp to Corrupted Factories"),
         ConnectionData("From any normal region", "Decaying Tunnels", "Bad dynamic warp to Decaying Tunnels"),
@@ -83,7 +84,8 @@ def generate(options: RainWorldOptions, rng: Random):
     ]
 
     if options.logic_rotted_generation == 1:
-        ret.append(ConnectionData("From any normal region", "Outer Rim", "Bad dynamic warp to Outer Rim"))
+        ret.append(ConnectionData("From any normal region", "Outer Rim", "Bad dynamic warp to Outer Rim",
+                                  Simple("Ripple", 2)))
 
     # Everything below this appears to be for the extra dynamic warp options.
     # Looks like the case for the "visited" option isn't covered, just return early for now
