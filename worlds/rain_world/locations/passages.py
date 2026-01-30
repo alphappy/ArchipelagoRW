@@ -208,7 +208,7 @@ locations: dict[str, LocationData] = {
 
 
 def generate(options: RainWorldOptions) -> list[LocationData]:
-    keys = ["Survivor", "Friend", "Traveller", "Monk", "Saint"]
+    keys = ["Survivor", "Friend", "Monk", "Saint"]
 
     if options.starting_scug == "Watcher":
         return [locations["Survivor"]] # TODO Passages
@@ -226,7 +226,11 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
         if options.starting_scug in ["White", "Red", "Gourmand"]:
             keys.append("Mother")
 
-    if options.starting_scug != "Watcher":
-        keys += [f"Wanderer-{i+1}" for i in range(len(wanderer_regions(options.starting_scug, options.msc_enabled)))]
+    # Riv can't get last pip if Submerged inaccessible
+    if options.starting_scug != "Rivulet" or options.submerged_should_populate:
+        keys += [f"Wanderer-{i + 1}" for i in range(len(wanderer_regions(options.starting_scug, options.msc_enabled)))]
+        keys.append("Traveller")
+    else:
+        keys += [f"Wanderer-{i + 1}" for i in range(len(wanderer_regions(options.starting_scug, options.msc_enabled)) - 1)]
 
     return [locations[key] for key in keys]

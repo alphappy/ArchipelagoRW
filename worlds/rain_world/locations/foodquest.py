@@ -45,8 +45,8 @@ class FoodQuestPip(AbstractLocation):
             return False
         if self.expanded and not options.checks_foodquest_expanded:
             return False
-        # HARDCODE: Sofanthiel's only glow weed is in MS.  The interactive map is wrong.
-        if options.starting_scug == "Inv" and options.checks_submerged < 2 and self.items[0] == "GlowWeed":
+        # HARDCODE: Sofanthiel and Rivulet's only glow weed are in MS.  The interactive map is wrong.
+        if options.starting_scug in ["Inv", "Rivulet"] and not options.submerged_should_populate and self.items[0] == "GlowWeed":
             return False
         return True
 

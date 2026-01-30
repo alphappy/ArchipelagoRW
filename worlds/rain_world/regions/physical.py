@@ -144,18 +144,30 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     "SL_MOONTOP", "SL_ROOF04", "SL_ACCSHAFT", "SL_ROOF03", "GATE_SL_MS[SL]", "SL_TEMPLE", "SL_STOP",
                     "SL_ROOF01", "SL_WALL06"
                 }
-                remainder = rooms.difference(broken_precipice).difference(above_moon)
+                near_submerged_gate = {"SL_C15", "SL_WALL02", "SL_WALL05", "SL_S15", "GATE_MS_SL[SL]"}
+                remainder = rooms.difference(broken_precipice).difference(above_moon).difference(near_submerged_gate)
 
                 ret += [
                     PhysicalRegion("Shoreline", "SL", remainder),
                     PhysicalRegion("Broken Precipice", "SL^", broken_precipice),
                     PhysicalRegion("Shoreline above puppet", "SL^2", above_moon),
+                    PhysicalRegion("Shoreline near gate to Submerged", "SL^3", near_submerged_gate),
 
-                    ConnectionData("Shoreline above puppet", "Shoreline", "Enter puppet room")
+                    ConnectionData("Shoreline above puppet", "Shoreline", "Enter puppet room"),
+                    ConnectionData("Shoreline near gate to Submerged", "Shoreline", "Leaving Submerged")
                 ]
 
                 if options.starting_scug == "Saint":
                     ret += [ConnectionData("Shoreline", "Shoreline above puppet", "Exit top of puppet room")]
+
+                # If Submerged has no checks, swimming down towards the gate is not in logic.
+                if options.submerged_should_populate:
+                    if options.difficulty_submerged >= 1 and options.starting_scug != "Rivulet" and "Aquatic" in options.expedition_perks.value:
+                        ret += [ConnectionData("Shoreline", "Shoreline near gate to Submerged",
+                                               "Entering towards Submerged", Simple("Aquatic Perk"))]
+                    else:
+                        ret += [ConnectionData("Shoreline", "Shoreline near gate to Submerged",
+                                               "Entering towards Submerged")]
 
             case "WARA":
                 western = {f"WARA_{r}" for r in {"E08", "P04", "P03", "P08", "P05", "P02", "S23", "P19"}}

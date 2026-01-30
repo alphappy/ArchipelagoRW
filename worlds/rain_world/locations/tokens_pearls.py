@@ -84,7 +84,7 @@ def initialize() -> dict[str, TokenOrPearl]:
                             offset += 1
 
                         can_see = (
-                            room_data.get("whitelist", set(scuglist))
+                            room_data.get("whitelist", set() if "alt_whitelist" in shiny_data else set(scuglist))
                             .difference(room_data.get("blacklist", set()))
                             .difference(shiny_data.get("filter", set()))
                             .difference(room_data.get("alted", set()))

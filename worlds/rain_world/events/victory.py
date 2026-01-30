@@ -78,22 +78,15 @@ def generate(options: RainWorldOptions) -> list[EventData]:
             VictoryEvent("Old Friend", "Shoreline", Simple("Install rarefaction cell"))
         ]
 
-    ret = [EventData("MeetFP", "MeetFP", "Five Pebbles above puppet")]
-
     if options.starting_scug == "Gourmand":
-        ret.append(VictoryEvent("Migration", "Outer Expanse", Simple(["The Mark", "MeetFP"])))
+        return [VictoryEvent("Migration", "Outer Expanse")]
 
     if options.starting_scug == "Artificer":
-        ret.append(VictoryEvent("Closure", "Metropolis", Simple(["The Mark", "MeetFP"])))
+        return [VictoryEvent("Closure", "Metropolis")]
 
     if options.starting_scug == "Spear":
-        ret += [
-            EventData("MeetLttM", "MeetLttM", "Looks to the Moon"),
-            VictoryEvent("Messenger", "Sky Islands", Simple(
-                ["The Mark", "MeetFP", "MeetLttM", "Moon's Final Message", "Spearmaster's Pearl"]
-            ))
-        ]
+        return [VictoryEvent("Messenger", "Sky Islands", Simple(["Moon's Final Message", "Spearmaster's Pearl"]))]
 
-    return ret
+    return []
 
 
