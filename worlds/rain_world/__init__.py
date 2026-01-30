@@ -14,7 +14,7 @@ from .events import get_events
 from .regions.classes import room_to_region
 from .regions.gates import gates
 from .utils import normalize, flounder2
-from .items import RainWorldItem, portal_keys
+from .items import RainWorldItem, portal_keys, PortalKeyItemData
 from . import regions, locations, options, items
 from .game_data.general import prioritizable_passages, passages_all, passages_vanilla, accessible_gates
 
@@ -156,7 +156,8 @@ class RainWorldWorld(World):
         else:
             pool = {
                 "Ripple": 12 + self.options.extra_karma_cap_increases.value,
-                **{k: 1 for k in portal_keys.keys()},
+                **{k: 1 for k, v in portal_keys.items() if not v.spinning_top or self.options.spinning_top_keys},
+                "Dial Warp Ability": 1,
             }
             if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:
                 pool.update({f"Dynamic: {k}": 1 for k in (normal_regions if ndwb.predetermined else self.warp_pool)})
@@ -235,11 +236,13 @@ class RainWorldWorld(World):
             "rotted_region_target",  # ...how many regions must be rotted for Watcher's alt ending.
             "spinning_top_keys",  # ...whether Spinning Top should appear without a key.
             "normal_dynamic_warp_behavior", "throne_dynamic_warp_behavior",
-            "checks_spread_rot", "checks_spread_rot_progressive",
+            "checks_spread_rot",
 
             # External tracker needs to know...
             "difficulty_glow", "difficulty_monk", "difficulty_hunter", "difficulty_outlaw", "difficulty_chieftain",
-            "difficulty_nomad", "difficulty_extreme_threats", "checks_submerged", "checks_foodquest_expanded"
+            "difficulty_nomad", "difficulty_extreme_threats", "checks_submerged", "checks_foodquest_expanded",
+            "logic_rotted_generation", "logic_ripplespace_min_req", "dynamic_warp_pool_size",
+            "predetermined_dynamic_warp_network_minimum_necklace_length"
         )
         # backwards compatibility
         d["which_gamestate"] = self.options.which_gamestate_integer

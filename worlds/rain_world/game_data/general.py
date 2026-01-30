@@ -122,6 +122,11 @@ story_regions_rivulet = story_regions_msc.union({"RM", "MS"}).difference({"SS"})
 story_regions_spearmaster = story_regions_msc.union({"DM", "LM"}).difference({"SL"})
 story_regions_saint = story_regions_msc.union({"UG", "CL", "HR"}).difference({"DS", "SH", "UW", "SS"})
 
+story_regions_watcher = {
+    'WARB', 'WARC', 'WARD', 'WARE', 'WARF', 'WARG', 'WBLA', 'WMPA', 'WPGA', 'WPTA', 'WRFA', 'WRFB',
+    'WRRA', 'WSKA', 'WSKB', 'WSKC', 'WSKD', 'WTDA', 'WTDB', 'WVWA', 'WVWB'
+}
+
 alternate_regions = {
     "DS": {"Saint": "UG"},
     "SH": {"Saint": "CL"},
@@ -297,4 +302,35 @@ wiki_names = {
     "DeadHazer": ["Hazer"],
     "DeadVultureGrub": ["VultureGrub"],
     "SeedCob": ["Popcorn Plant"],
+    # Watcher
+    "Barnacle": ["Barnacle"],
+    "SandGrub": ["Sand Grub"],
+    "BigSandGrub": ["Sand Worm"],
+    "BigMoth": ["Big Moth"],
+    "SmallMoth": ["Small Moth"],
+    "BoxWorm": ["Box Worm"],
+    "FireSprite": ["Fire Sprite"],
+    "Rattler": ["Rattler", "Bone Shaker"],
+    "SkyWhale": ["Sky Whale"],
+    "ScavengerTemplar": ["Scavenger Templar"],
+    "ScavengerDisciple": ["Scavenger Disciple"],
+    "Loach": ["Loach"],
+    "RotLoach": ["Rot Loach"],
+    "BlizzardLizard": ["Blizzard Lizard"],
+    "BasiliskLizard": ["Basilisk Lizard"],
+    "IndigoLizard": ["Indigo Lizard"],
+    "PeachLizard": ["Peach Lizard"],
+    "Rat": ["Rat"],
+    "Frog": ["Frog"],
+    "Tardigrade": ["Tardigrade"],
+    "Angler": ["Angler"],
+    "RippleSpider": ["Ripple Spider"],
+    "MothGrub": ["Moth Grub"],
+    "FireSpriteLarva": ["Fire Sprite Larva"],
+    "SandGrubNetwork": ["Sand Grub"],
+    "PlacedRats": ["Rat"],
+    "Pomegranate": ["Pomegranate"],
+    # The presence of a box worm is used to indicate Fire Sprite Larva access for food quest.
+    # So while not technically accurate, this translates what we check for into the readable name
+    "PlacedBoxWorm": ["Fire Sprite Larva"],
 }

@@ -22,7 +22,7 @@ class PortalData:
         # See `OverWorld.InitiateSpecialWarp_WarpPoint`.
         if self.target_room == "NULL":
             if self.source_room[3] == "R":  # rotted FP region
-                self.target_room = "WORA_START"  # TODO this needs to be a room in lower WORA
+                self.target_room = "WORA_START"
             elif self.source_room.startswith("WARA"):
                 self.target_room = "WAUA_E01"  # first WAUA spawn
             elif self.source_room.startswith("WAUA"):
@@ -99,6 +99,21 @@ portals, keys, targets = initialize()
 normal_regions = [
     'WVWA', 'WRFB', 'WRFA', 'WSKA', 'WPTA', 'WRRA', 'WSKB', 'WARF', 'WTDB',
     'WARE', 'WTDA', 'WSKC', 'WARD', 'WARB', 'WARC', 'WBLA', 'WARG', 'WSKD',
+    'WVWB', 'WMPA', 'WPGA',
 ]
 
 abnormal_regions = {"WSUR", "WHIR", "WGWR", "WDSR", "WSSR", "WORA", "WRSA", "WARA", "WAUA"}
+
+# Defines karma flowers that should not generate for whatever reason
+watcher_blacklisted_flowers = {
+    "WORA_CITY2X", "WORA_CITY10X", "WORA_DESERT4X", "WORA_DESERT8", "WORA_EGG02X", # Post rot ending
+    "WTDA_B12", # Inaccessible ogscule room
+    "WARB_F01", "WSKD_B01", "WPTA_B10", "WBLA_C01", # Flowers that vanish when a static warp is created
+}
+
+# Defines tokens and pearls that require float or some other vertical mobility to reach
+watcher_high_up_shinies = {
+    "Token-ScavengerTemplar-WARA", "Token-Angler-WARB", "Token-ProtoLizard-WARD", "Token-Frog-WPGA",
+    "Token-L-WVWB", "Pearl-AUDIO_GROOVE-WARG", "Pearl-ABSTRACT-WSKC", "Pearl-AUDIO_JAM3-WTDB",
+    "Pearl-TEXT_NOTIONOFSELF-WMPA",
+}

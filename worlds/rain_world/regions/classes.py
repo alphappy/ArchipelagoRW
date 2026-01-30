@@ -87,7 +87,7 @@ class PhysicalRegion(RegionData):
 
         if scug == "Watcher":
             if len(rcode) == 4 and rcode[0] == "W":
-                if options.logic_rotted_generation != 3 and rcode in ["WSUR", "WHIR", "WDSR", "WGWR"]:
+                if options.logic_rotted_generation != 2 and rcode in ["WSUR", "WHIR", "WDSR", "WGWR"]:
                     return False
                 return True
             return False

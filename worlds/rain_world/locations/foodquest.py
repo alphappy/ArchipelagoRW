@@ -69,7 +69,7 @@ pips: list[FoodQuestPip] = [
     FoodQuestPip(0b0_101_011_100, "YellowLizard"),
     FoodQuestPip(0b0_101_011_100, "TubeWorm"),
     FoodQuestPip(0b0_111_111_111, "SSOracleSwarmer"),
-    FoodQuestPip(0b0_101_111_111, "Centiwing"),
+    FoodQuestPip(0b1_101_111_111, "Centiwing"),
     FoodQuestPip(0b1_110_111_111, "DandelionPeach"),
     FoodQuestPip(0b0_101_011_100, "CyanLizard"),
     FoodQuestPip(0b1_110_111_111, "GooieDuck"),
@@ -105,6 +105,14 @@ pips: list[FoodQuestPip] = [
     FoodQuestPip(0b0_001_000_000, "TentaclePlant"),
     FoodQuestPip(0b0_001_000_000, "BigEel"),
     FoodQuestPip(0b0_001_000_000, "Inspector"),
+    # -- Watcher Exclusive
+    FoodQuestPip(0b1_000_000_000, "Frog"),
+    FoodQuestPip(0b1_000_000_000, "Tardigrade"),
+    FoodQuestPip(0b1_000_000_000, "SandGrubNetwork"),
+    FoodQuestPip(0b1_000_000_000, "PlacedRats"),
+    FoodQuestPip(0b1_000_000_000, "PlacedBoxWorm"), # Fire Sprite Larva
+    FoodQuestPip(0b1_000_000_000, "Pomegranate"),
+    FoodQuestPip(0b1_000_000_000, "Barnacle"),
 ]
 
 for i in range(22, len(pips)):

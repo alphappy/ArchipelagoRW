@@ -169,17 +169,6 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                         ret += [ConnectionData("Shoreline", "Shoreline near gate to Submerged",
                                                "Entering towards Submerged")]
 
-            case "WRFA":
-                western = {"WRFA_S08", "WRFA_C11", "WRFA_A21"}
-                remainder = rooms.difference(western)
-
-                ret += [
-                    PhysicalRegion("Coral Caves", "WRFA", remainder),
-                    PhysicalRegion("Coral Caves far west", "WRFA^1", western),
-                    ConnectionData("Coral Caves", "Coral Caves far west", "WRFA_E04 to WRFA_C11", Simple("Ripple", 8)),
-                    ConnectionData("Coral Caves far west", "Coral Caves", "WRFA_C11 to WRFA_E04", Simple("Ripple", 8)),
-                ]
-
             case "WARA":
                 western = {f"WARA_{r}" for r in {"E08", "P04", "P03", "P08", "P05", "P02", "S23", "P19"}}
                 remainder = rooms.difference(western)
@@ -187,18 +176,74 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                 ret += [
                     PhysicalRegion("Shattered Terrace", "WARA", remainder),
                     PhysicalRegion("Western Shattered Terrace", "WARA^1", western),
-                    ConnectionData("Shattered Terrace", "Western Shattered Terrace", "WARA_P20 to WARA_P19", Simple("Ripple", 8)),
-                    ConnectionData("Western Shattered Terrace", "Shattered Terrace", "WARA_P20 to WARA_P01", Simple("Ripple", 8)),
+                    # Rightwards through WARA_P20 just needs the minimum amount of float
+                    ConnectionData("Western Shattered Terrace", "Shattered Terrace", "WARA_P20 to WARA_P01",
+                                   Simple("Ripple", 4)),
+                    # Leftwards can be jumped easily
+                    ConnectionData("Shattered Terrace", "Western Shattered Terrace", "WARA_P20 to WARA_P19"),
                 ]
 
-            case "WBLA":
-                silo = {"WBLA_E02"}
-                remainder = rooms.difference(silo)
+            case "WMPA":
+                western = {f"WMPA_{r}" for r in {"A09", "A06", "A04", "A02", "A05", "S01", "A03", "A01", "A07", "A08"}}
+                eastern = rooms.difference(western)
 
                 ret += [
-                    PhysicalRegion("Badlands", "WBLA", remainder),
-                    PhysicalRegion("Badlands inside silo", "WBLA^1", silo),
-                    ConnectionData("Badlands", "Badlands inside silo", "WBLA_F03 to WBLA_E02", Simple("Ripple", 8)),
+                    PhysicalRegion("Migration Path", "WMPA", eastern),
+                    PhysicalRegion("Western Migration Path", "WMPA^1", western),
+                    # Leftwards through the top of WMPA_B01 needs maximum float ability to cross
+                    ConnectionData("Migration Path", "Western Migration Path", "WMPA_B01 to WMPA_A08",
+                                   Simple("Ripple", 8)),
+                    # Rightwards is just a drop-down
+                    ConnectionData("Western Migration Path", "Migration Path", "WMPA_A08 to WMPA_B01"),
+                ]
+
+            # Yes I know it's kinda cursed
+            case "WORA":
+                # Path from WORA_START up through the throne
+                western = {f"WORA_{r}" for r in {
+                    "AI", "THRONE02", "THRONES01", "THRONE06", "THRONE08", "THRONE04", "THRONE12", "THRONE11",
+                    "THRONE03", "THRONE1", "S03", "DESERT10", "DESERT9", "DESERT8", "DESERT7", "DESERT6", "DESERT3X",
+                    "DESERT11", "START"
+                }}
+                # Egg
+                egg = {f"WORA_{r}" for r in {"STARCATCHER08, STARCATCHER06, STARCATCHER07, EGG03, EGG04, EGG02x, EGG"}}
+                # Throne rooms locked by ripple requirements
+                ripple_locked_3 = {"WORA_THRONE10"}
+                ripple_locked_5 = {"WORA_THRONE05"}
+                ripple_locked_7 = {"WORA_THRONE07"}
+                ripple_locked_9 = {"WORA_THRONE09", "WORA_THRONES01"}
+                remainder = rooms.difference({*western, *egg, *ripple_locked_3, *ripple_locked_5, *ripple_locked_7, *ripple_locked_9})
+
+                ret += [
+                    PhysicalRegion("Outer Rim", "WORA", remainder),
+                    PhysicalRegion("Western Outer Rim", "WORA^1", western),
+                    PhysicalRegion("Eastern Outer Rim", "WORA^2", egg),
+                    PhysicalRegion("The Throne 1", "WORA^3", ripple_locked_3),
+                    PhysicalRegion("The Throne 2", "WORA^4", ripple_locked_5),
+                    PhysicalRegion("The Throne 3", "WORA^5", ripple_locked_7),
+                    PhysicalRegion("The Throne 4", "WORA^6", ripple_locked_9),
+                    # Can't climb up into the rest of WORA from the initial spawn point (at WORA_DESERT8)
+                    ConnectionData("Outer Rim", "Western Outer Rim", "WORA_DESERT5 TO WORA_DESERT8"),
+                    # Kinda jank, but this handles the logic of warp target into WORA changing as you open more throne rooms
+                    # Second encounter requires Ripple 5, at which point warps will go to central WORA
+                    # TODO: If warps are changed to be able to send player to WORA more often, this will only need first encounter
+                    ConnectionData("Western Outer Rim", "Outer Rim", "Prince encounter opens middle WORA",
+                                   Simple("Ripple", 4)),
+                    # Crossing the bridge doesn't technically require float, but reaching WORA_EGG does
+                    # Simpler and more convenient to just gate all the nearby checks
+                    ConnectionData("Outer Rim", "Eastern Outer Rim", "WORA_COLBRIDGE to WORA_STARCATCHER08",
+                                   Simple("Ripple", 4)),
+                    ConnectionData("Eastern Outer Rim", "Outer Rim", "WORA_COLBRIDGE to WORA_STARCATCHER09",
+                                   Simple("Ripple", 4)),
+                    # Ripple requirements to enter throne rooms
+                    ConnectionData("Western Outer Rim", "The Throne 1", "Throne to WORA_THRONE10",
+                                   Simple("Ripple", 2)),
+                    ConnectionData("Western Outer Rim", "The Throne 2", "Throne to WORA_THRONE05",
+                                   Simple("Ripple", 4)),
+                    ConnectionData("Western Outer Rim", "The Throne 3", "Throne to WORA_THRONE07",
+                                   Simple("Ripple", 6)),
+                    ConnectionData("Western Outer Rim", "The Throne 4", "Throne to WORA_THRONE09",
+                                   Simple("Ripple", 8)),
                 ]
 
             case _:

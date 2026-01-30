@@ -6,9 +6,16 @@ from ..locations.passages import generate_cond_pilgrim
 from ..locations.foodquest import pips as fq_items
 
 def generate(options: RainWorldOptions) -> list[EventData]:
+    ascension = options.which_victory_condition == 0
     story = options.which_victory_condition == 1
+    echoes = options.which_victory_condition == 2
+    food_quest = options.which_victory_condition == 3
+    weaver = options.which_victory_condition == 4
+    true_ending = options.which_victory_condition == 5
 
     if options.starting_scug == "Watcher":
+        if ascension:
+            return [VictoryEvent("Spinning Top", "Ancient Urban")]
         if story:
             cond = AllOf(
                 Simple("Ripple", 8),
@@ -18,9 +25,26 @@ def generate(options: RainWorldOptions) -> list[EventData]:
                 # but I'm leaving this note here as a thing to investigate later just in case.
                 Simple([f"Access-{r}" for r in normal_regions], options.rotted_region_target.value)
             )
-            return [VictoryEvent("Purpose", "Outer Rim", cond)]
-        else:
-            return [VictoryEvent("Peace", "Ancient Urban")]
+            return [VictoryEvent("The Prince", "Outer Rim", cond)]
+        if weaver:
+            cond = AllOf(
+                # With these conditions you should be able to get the Weaver ability
+                # and close all the warps. This will have to change when Weaver ability gets randomized.
+                # Ripple not technically required, but is needed to find Weaver spots "naturally" rather than looking at a map
+                Simple("Ripple", 8),
+                Simple([f"Access-{r}" for r in [*normal_regions, "WARA"]])
+            )
+            return [VictoryEvent("An Understanding", "Events", cond)]
+        if true_ending:
+            cond = AllOf(
+                # Must be able to reach Ancient Urban for Spinning Top ending,
+                # Outer Rim and enough Ripple to wake the Prince,
+                # And every normal region for warp sealing.
+                # Ripple requirement handled by Daemon access
+                Simple([f"Access-{r}" for r in [*normal_regions, "WARA", "WAUA", "WORA"]])
+            )
+            return [VictoryEvent("The Choice", "Daemon", cond)]
+
 
     # Watcher victory conditions should end with this one
     if options.which_victory_condition == 3:

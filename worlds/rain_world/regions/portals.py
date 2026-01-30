@@ -16,11 +16,15 @@ class PortalConnection(ConnectionData):
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
         self.source, self.dest = room_to_region[self.data.source_room], room_to_region[self.data.target_room]
 
-        if not options.logic_rotted_generation >= 2 and self.data.source_room[:4] in ["WHIR", "WDSR", "WGWR", "WSUR"]:
-            return
-
         conds = []
-        if self.data.should_have_key and (not self.data.spinning_top or options.spinning_top_keys == 2):
+
+        if self.data.source_room[:4] in ["WHIR", "WDSR", "WGWR", "WSUR"]:
+            if options.logic_rotted_generation != 2:
+                return
+            # Warps to WORA need specifically Ripple 3 (In case dynamic warp ability was acquired another way)
+            conds.append(Simple("Ripple", 2))
+
+        if self.data.should_have_key and (not self.data.spinning_top or options.spinning_top_keys):
             conds.append(Simple(self.data.key_name))
         if self.data.ripple:
             conds.append(Simple("Ripple", 3 + options.logic_ripplespace_min_req))

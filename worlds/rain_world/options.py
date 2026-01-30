@@ -79,7 +79,7 @@ class WhichCampaign(Choice):
     option_spearmaster = 6
     option_saint = 7
     option_sofanthiel = 8
-    # option_watcher = 9
+    option_watcher = 9
 
     alias_yellow = 0
     alias_white = 1
@@ -139,12 +139,23 @@ class WhichVictoryCondition(Choice):
     then meet Looks to the Moon.
 
     **Spearmaster**: Receive the SM pearl and Moon's message, then deliver it to Communications Array in Sky Islands.
+
+    When playing as the Watcher, these options are different:
+    **Ascension** / **Spinning Top**: Complete the Spinning Top ending.
+    **Story** / **Prince**: Complete the Prince ending.
+    **Weaver**: Complete the Weaver ending.
+    **True Ending**: Complete the True ending.
     """
     display_name = "Victory condition"
     option_ascension = 0
     option_story = 1
     option_echoes = 2
     option_food_quest = 3
+
+    alias_spinning_top = 0
+    alias_prince = 1
+    option_weaver = 4
+    option_true_ending = 5
 
 
 class WhichGateBehavior(Choice):
@@ -184,7 +195,7 @@ class RippleWarpBehavior(Choice):
     alias_true = 1
     alias_false = 0
     default = 0
-    visibility = Visibility.none
+    # visibility = Visibility.none
 
 
 class NormalDynamicWarpBehavior(Choice):
@@ -212,7 +223,7 @@ class PredeterminedDynamicWarpNetworkMinimumNecklaceLength(Range):
     range_start = 2
     range_end = 18
     default = 3
-    visibility = Visibility.spoiler
+    visibility = Visibility.none
 
 
 class ThroneDynamicWarpBehavior(Choice):
@@ -235,15 +246,22 @@ class DynamicWarpPoolSize(Range):
 
 
 class LogicRottedGeneration(Choice):
-    """Controls the generation of Crumbling Fringes, Corrupted Factories, Decaying Tunnels, and Infested Wastes."""
+    """Controls the generation of Crumbling Fringes, Corrupted Factories, Decaying Tunnels, and Infested Wastes.
+
+    **None**: There will be no checks in rotted vanilla regions, and bad warping will not be required to reach Outer Rim.
+
+    **Passthrough**: There will be no checks in rotted vanilla regions, but you may still have to bad warp to reach Outer Rim.
+
+    **Full**: Checks will be present in rotted vanilla regions
+    """
     display_name = "Permarotted accessibility"
     option_none = 0
-    option_passthrough = 2
-    option_full = 3
-    alias_true = 3
+    option_passthrough = 1
+    option_full = 2
+    alias_true = 2
     alias_false = 0
-    default = 0
-    visibility = Visibility.none
+    default = 1
+    # visibility = Visibility.none
 
 
 class LogicMinRippleTarget(Range):
@@ -253,62 +271,47 @@ class LogicMinRippleTarget(Range):
     range_start = 5
     range_end = 9
     default = 5
-    visibility = Visibility.none
+    # visibility = Visibility.none
 
 
 class RottedRegionTarget(Range):
     """The number of regions that must be rotted for the Rot ending.
-    The default, 18, matches the unaltered game behavior."""
+    The default, 21, matches the unaltered game behavior."""
     display_name = "Rotted region target"
     range_start = 2
-    range_end = 18
-    default = 18
-    visibility = Visibility.none
+    range_end = 21
+    default = 21
+    # visibility = Visibility.none
 
 
 class ChecksSpreadRot(Choice):
-    """Whether spreading the Rot to a new region is a check."""
+    """Whether spreading the Rot to a new region is a check.
+    When Weaver or True ending is chosen, rot checks will not generate regardless of chosen value"""
     display_name = "Rot spread checks"
     option_off = 0
-    option_alternate_only = 1
+    option_prince_ending_only = 1
     option_on = 2
     alias_true = 2
     alias_false = 0
     default = 1
-    visibility = Visibility.none
+    # visibility = Visibility.none
 
 
-class ChecksSpreadRotProgressive(Toggle):
-    """Whether rot spread checks are progressive instead of per-region."""
-    display_name = "Progressive rot spread"
-    default = True
-    visibility = Visibility.none
-
-
-class SpinningTopKeys(Choice):
-    """Whether Spinning Top warps require keys."""
+class SpinningTopKeys(Toggle):
+    """Whether keys are required to travel through Spinning Top warps."""
     display_name = "Spinning Top keys"
-    option_off = 0
-    option_on = 2
-    alias_true = 2
-    alias_false = 0
-    default = 2
-    visibility = Visibility.none
+    default = True
+    # visibility = Visibility.none
 
 
 class PriorityThrone(Choice):
-    """Whether Throne warp and Prince checks are priority locations."""
+    """Whether Prince checks should be normal, priority, or excluded locations."""
     display_name = "Priority Throne"
     option_normal = 1
     option_priority = 2
     option_excluded = 3
-    default = 2
-    visibility = Visibility.none
-
-
-class SoPeeping(FreeText):
-    """Temporary setting for allowing Watcher generation."""
-    visibility = Visibility.none
+    default = 1
+    # visibility = Visibility.none
 
 
 #################################################################
@@ -336,7 +339,27 @@ class RandomStartingRegion(Choice):
     option_metropolis = 23
     option_looks_to_the_moon = 24
 
-    # option_sunlit_port = 30
+    option_sunbaked_alley = 30
+    option_coral_caves = 31
+    option_torrential_railways = 32
+    option_aether_ridge = 33
+    option_badlands = 34
+    option_cold_storage = 35
+    option_desolate_tract = 36
+    option_fetid_glen = 37
+    option_fractured_gateways = 38
+    option_heat_ducts = 39
+    option_migration_path = 40
+    option_pillar_grove = 41
+    option_rusted_wrecks = 42
+    option_salination = 43
+    option_shrouded_stacks = 44
+    option_signal_spires = 45
+    option_stormy_coast = 46
+    option_the_surface = 47
+    option_torrid_desert = 48
+    option_turbulent_pump = 49
+    option_verdant_waterways = 50
 
     alias_undergrowth = 3
     alias_waterfront_facility = 5
@@ -364,7 +387,27 @@ class RandomStartingRegion(Choice):
         23: ("Metropolis", "LC"),
         24: ("Looks to the Moon", "DM"),
 
-        30: ("Sunlit Port", "WSKB"),
+        30: ("Sunbaked Alley", "WSKB"),
+        31: ("Coral Caves", "WRFA"),
+        32: ("Torrential Railways", "WSKA"),
+        33: ("Aether Ridge", "WARF"),
+        34: ("Badlands", "WBLA"),
+        35: ("Cold Storage", "WARD"),
+        36: ("Desolate Tract", "WTDB"),
+        37: ("Fetid Glen", "WARC"),
+        38: ("Fractured Gateways", "WVWB"),
+        39: ("Heat Ducts", "WARE"),
+        40: ("Migration Path", "WMPA"),
+        41: ("Pillar Grove", "WPGA"),
+        42: ("Rusted Wrecks", "WRRA"),
+        43: ("Salination", "WARB"),
+        44: ("Shrouded Stacks", "WSKD"),
+        45: ("Signal Spires", "WPTA"),
+        46: ("Stormy Coast", "WSKC"),
+        47: ("The Surface", "WARG"),
+        48: ("Torrid Desert", "WTDA"),
+        49: ("Turbulent Pump", "WRFB"),
+        50: ("Verdant Waterways", "WVWA"),
     }
 
     @classmethod
@@ -392,7 +435,8 @@ class PassagePriority(Range):
 
 
 class ExtraKarmaCapIncreases(Range):
-    """Number of extra karma cap increases in the pool beyond the minimum required for ascension."""
+    """Number of extra karma cap increases in the pool beyond the minimum required for ascension.
+    For Watcher, this option will also apply to Ripple."""
     display_name = "Extra karma cap increases"
     range_start = 0
     range_end = 30
@@ -790,6 +834,35 @@ class WtJokeRifle(WtGeneric):
     item_name = "Joke Rifle"
     default = 1
 
+class WtBoomerang(WtGeneric):
+    """The relative weight of boomerangs in the non-trap filler item pool."""
+    display_name = "Boomerang (Watcher)"
+    item_name = "Boomerang"
+    default = 20
+
+class WtPoisonSpear(WtGeneric):
+    """The relative weight of poison spears in the non-trap filler item pool."""
+    display_name = "Poison Spear (Watcher)"
+    item_name = "Poison Spear"
+    default = 15
+
+class WtGraffitiBomb(WtGeneric):
+    """The relative weight of graffiti bombs in the non-trap filler item pool."""
+    display_name = "Graffiti Bomb (Watcher)"
+    item_name = "Graffiti Bomb"
+    default = 20
+
+class WtRotFruit(WtGeneric):
+    """The relative weight of rot fruits in the non-trap filler item pool."""
+    display_name = "Rot Fruit (Watcher)"
+    item_name = "Rot Fruit"
+    default = 0
+
+class WtFireSpriteLarva(WtGeneric):
+    """The relative weight of fire sprite larvae in the non-trap filler item pool."""
+    display_name = "Fire Sprite Larva (Watcher)"
+    item_name = "Fire Sprite Larva"
+    default = 30
 
 #################################################################
 # TRAP SETTINGS
@@ -961,14 +1034,12 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     dynamic_warp_pool_size: DynamicWarpPoolSize
     rotted_region_target: RottedRegionTarget
     checks_spread_rot: ChecksSpreadRot
-    checks_spread_rot_progressive: ChecksSpreadRotProgressive
     spinning_top_keys: SpinningTopKeys
     priority_throne: PriorityThrone
-    so_peeping: SoPeeping
 
     group_watcher = [
-        SoPeeping, LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
-        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, ChecksSpreadRotProgressive,
+        LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
+        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot,
         SpinningTopKeys, PriorityThrone, PredeterminedDynamicWarpNetworkMinimumNecklaceLength,
     ]
 
@@ -989,6 +1060,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_electric_spears: WtElectricSpear
     wt_singularity_bombs: WtSingularityBomb
     wt_joke_rifles: WtJokeRifle
+    wt_boomerangs: WtBoomerang
+    wt_poison_spears: WtPoisonSpear
+    wt_graffiti_bombs: WtGraffitiBomb
 
     wt_fruit: WtFruit
     wt_bubblefruit: WtBubbleFruit
@@ -999,13 +1073,17 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_karma_flowers: WtKarmaFlower
     wt_fireeggs: WtFireEgg
     wt_glowweed: WtGlowWeed
+    wt_rot_fruit: WtRotFruit
+    wt_fire_sprite_larva: WtFireSpriteLarva
 
     group_filler = [
         WtRock, WtSpear, WtExplosiveSpear, WtGrenade, WtFlashbang, WtSporePuff, WtCherrybomb, WtBubbleWeed, WtLantern,
         WtVultureMask, WtFruit, WtBubbleFruit, WtEggbugEgg, WtJellyfish, WtMushroom, WtSlimeMold, WtKarmaFlower,
 
         WtLillyPuck, WtDandelionPeach, WtElectricSpear, WtSingularityBomb, WtJokeRifle,
-        WtFireEgg, WtGlowWeed
+        WtFireEgg, WtGlowWeed,
+
+        WtBoomerang, WtPoisonSpear, WtGraffitiBomb, WtRotFruit, WtFireSpriteLarva
     ]
 
     #################################################################
@@ -1038,6 +1116,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def msc_enabled(self) -> bool: return self.is_msc_enabled == 1
 
     @property
+    def any_dlc_enabled(self) -> bool: return self.is_msc_enabled == 1 or self.is_watcher_enabled == 1
+
+    @property
     def dlcstate(self) -> str:
         if self.is_msc_enabled:
             if self.is_watcher_enabled:
@@ -1050,7 +1131,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             return "Vanilla"
 
     @property
-    def starting_scug(self) -> str: return "Watcher" if self.so_peeping == "OAOAOA!" else self.which_campaign.scug_id
+    def starting_scug(self) -> str: return self.which_campaign.scug_id
 
     @property
     def worldstate(self) -> tuple[str, str]: return self.which_game_version.string, self.dlcstate
@@ -1119,6 +1200,12 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             if (self.starting_scug == "Gourmand") + self.checks_foodquest.value < 2:
                 return "Food quest checks must be enabled to use food quest victory condition."
 
+        if self.starting_scug != "Watcher" and (self.which_victory_condition == 4 or self.which_victory_condition == 5):
+            return "Victory conditions 'Weaver' and 'True Ending' are not valid for any slugcat other than Watcher."
+
+        if self.which_victory_condition == 2 and self.starting_scug == "Watcher":
+            return f"Watcher cannot currently use Echoes victory condition."
+
         return None
 
     @property
@@ -1136,9 +1223,17 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             self.wt_eggbugeggs, self.wt_jellyfish, self.wt_mushrooms, self.wt_slimemold,
             self.wt_fireeggs, self.wt_glowweed, self.wt_electric_spears, self.wt_singularity_bombs,
             self.wt_lanterns, self.wt_karma_flowers, self.wt_vulture_masks, self.wt_joke_rifles,
+            self.wt_boomerangs, self.wt_poison_spears, self.wt_graffiti_bombs, self.wt_rot_fruit,
+            self.wt_fire_sprite_larva,
         ]}
         if not self.msc_enabled:
-            for key in ("Lilypuck", "Dandelion Peach", "Fire Egg", "Glow Weed", "Electric Spear", "Singularity Bomb", "Joke Rifle"):
+            for key in ("Fire Egg", "Electric Spear", "Joke Rifle"):
+                ret[f"{key}"] = 0
+        if not self.is_watcher_enabled:
+            for key in ("Boomerang", "Poison Spear", "Graffiti Bomb", "Rot Fruit", "Fire Sprite Larva"):
+                ret[f"{key}"] = 0
+        if not self.any_dlc_enabled:
+            for key in ("Lilypuck", "Dandelion Peach", "Glow Weed", "Singularity Bomb"):
                 ret[f"{key}"] = 0
 
         return ret
@@ -1159,8 +1254,13 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     @property
     def should_have_rot_spread_checks(self):
-        return (self.starting_scug == "Watcher" and
+        return (self.starting_scug == "Watcher" and not self.will_be_weaving and
                 (self.checks_spread_rot + (self.which_victory_condition == "story")) > 1)
+
+    @property
+    def will_be_weaving(self):
+        """Whether the player will need to seal portals during this run (Watcher with Weaver or True Ending goal)"""
+        return self.starting_scug == "Watcher" and (self.which_victory_condition == 4 or self.which_victory_condition == 5)
 
 
 option_groups = [

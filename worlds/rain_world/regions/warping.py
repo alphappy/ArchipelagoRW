@@ -4,7 +4,7 @@ from random import Random
 from BaseClasses import MultiWorld
 from .classes import RegionData, ConnectionData, room_to_region
 from ..options import RainWorldOptions
-from ..conditions.classes import Simple, ConditionBlank, AllOf
+from ..conditions.classes import Simple, ConditionBlank, AllOf, AnyOf
 from ..game_data.watcher import targets, normal_regions, abnormal_regions
 from ..game_data.general import region_code_to_name
 from ..utils import necklace_derangement
@@ -65,6 +65,7 @@ class PoolNormalDynamic(DynamicWarpConnection):
         multiworld.worlds[player].warp_pool.add(self.dest_region if self.unlockable else self.dest)
         super().make(player, multiworld, options)
 
+cond_can_dynamic_warp = AnyOf(Simple("Ripple", 2), Simple("Dial Warp Ability"))
 
 def generate(options: RainWorldOptions, rng: Random):
     if options.starting_scug != "Watcher":
@@ -73,12 +74,22 @@ def generate(options: RainWorldOptions, rng: Random):
     ret = [
         RegionData("From any normal region"),
 
-        ConnectionData("Menu", "From any normal region", "Create a dynamic warp", Simple("Ripple", 2)),
+        # Dial warp ability also grants the ability to dynamic warp
+        ConnectionData("Menu", "From any normal region", "Create a dynamic warp",
+                       cond_can_dynamic_warp),
         ConnectionData("From any normal region", "Crumbling Fringes", "Bad dynamic warp to Crumbling Fringes"),
         ConnectionData("From any normal region", "Corrupted Factories", "Bad dynamic warp to Corrupted Factories"),
         ConnectionData("From any normal region", "Decaying Tunnels", "Bad dynamic warp to Decaying Tunnels"),
         ConnectionData("From any normal region", "Infested Wastes", "Bad dynamic warp to Infested Wastes"),
     ]
+
+    if options.logic_rotted_generation == 1:
+        ret.append(ConnectionData("From any normal region", "Outer Rim", "Bad dynamic warp to Outer Rim",
+                                  Simple("Ripple", 2)))
+
+    # Everything below this appears to be for the extra dynamic warp options.
+    # Looks like the case for the "visited" option isn't covered, just return early for now
+    return ret
 
     ####################################################################################################################
     pool_size = int(options.dynamic_warp_pool_size)

@@ -3,7 +3,7 @@ from typing import Optional, Dict
 from . import constants, game_data
 from .regions.gates import gates
 from .game_data.general import region_code_to_name, alternate_regions
-from .game_data.watcher import keys as pkeys, normal_regions
+from .game_data.watcher import keys as pkeys, normal_regions, PortalKeyData
 
 item_client_names: dict[str, str] = {}
 
@@ -31,6 +31,14 @@ class GateKeyItemData(RainWorldItemData):
         super().__init__(names[0], names[-1], code, ItemClassification.progression)
         _, left_code, right_code = names[-1].split("_")
         self.hints = names[1:] + [region_code_to_name[left_code], region_code_to_name[right_code]]
+
+
+class PortalKeyItemData(RainWorldItemData):
+    def __init__(self, data: PortalKeyData, code: Optional[int]):
+        super().__init__(data.name, data.client_name, code, ItemClassification.progression)
+        _, left_code, right_code = data.client_name.split("-")
+        self.spinning_top = data.spinning_top
+        self.hints = [data.client_name, region_code_to_name[left_code], region_code_to_name[right_code]]
 
 
 class PassageTokenItemData(RainWorldItemData):
@@ -78,6 +86,7 @@ all_items: Dict[str, RainWorldItemData] = {
     # UNIQUE
     "The Glow": RainWorldItemData("The Glow", "The Glow", offset + 50, ItemClassification.progression),
     "Longer cycles": RainWorldItemData("Longer cycles", "Disconnect_FP", offset + 51, ItemClassification.progression),
+    "Dial Warp Ability": RainWorldItemData("Dial Warp Ability", "Dial_Warp", offset + 52, ItemClassification.progression),
 
     #################################################################
     # GAMESTATE
@@ -105,6 +114,8 @@ all_items: Dict[str, RainWorldItemData] = {
     "Cherrybomb": FillerItemData("Cherrybomb", "Object-FirecrackerPlant", 207 + offset),
     "Singularity Bomb": FillerItemData("Singularity Bomb", "Object-SingularityBomb", 208 + offset, ["MSC"]),
     "Lilypuck": FillerItemData("Lilypuck", "Object-LillyPuck", 209 + offset, ["MSC"]),
+    "Poison Spear": FillerItemData("Poison Spear", "Object-PoisonSpear", 210 + offset, ["Watcher"]),
+    "Boomerang": FillerItemData("Boomerang", "Object-Boomerang", 211 + offset, ["Watcher"]),
 
     #################################################################
     # FILLER - FOOD
@@ -119,6 +130,8 @@ all_items: Dict[str, RainWorldItemData] = {
     "Seed": FillerItemData("Seed", "Object-Seed", 248 + offset, ["MSC"]),
     "Gooieduck": FillerItemData("Gooieduck", "Object-GooieDuck", 249 + offset, ["MSC"]),
     "Dandelion Peach": FillerItemData("Dandelion Peach", "Object-DandelionPeach", 250 + offset, ["MSC"]),
+    "Rot Fruit": FillerItemData("Rot Fruit", "Object-RotFruit", 251 + offset, ["Watcher"]),
+    "Fire Sprite Larva": FillerItemData("Fire Sprite Larva", "Object-FireSpriteLarva", 252 + offset, ["Watcher"]),
 
     #################################################################
     # FILLER - OTHER
@@ -128,6 +141,7 @@ all_items: Dict[str, RainWorldItemData] = {
     "Karma Flower": FillerItemData("Karma Flower", "Object-KarmaFlower", 273 + offset),
     "Vulture Mask": FillerItemData("Vulture Mask", "Object-VultureMask", 274 + offset),
     "Joke Rifle": FillerItemData("Joke Rifle", "Object-JokeRifle", 275 + offset, ["MSC"]),
+    "Graffiti Bomb": FillerItemData("Graffiti Bomb", "Object-GraffitiBomb", 276 + offset, ["Watcher"]),
 
     #################################################################
     # FILLER - NON-CREATURE TRAPS
@@ -156,7 +170,7 @@ all_items: Dict[str, RainWorldItemData] = {
     "Dual Wielding Perk": RainWorldItemData("Dual Wielding Perk", "Exp-DualWielding", 381 + offset, ItemClassification.useful),
     "Blast Resistance Perk": RainWorldItemData("Blast Resistance Perk", "Exp-ExplosionResistance", 382 + offset, ItemClassification.useful),
     "Explosive Parry Perk": RainWorldItemData("Explosive Parry Perk", "Exp-ExplosiveParry", 383 + offset, ItemClassification.useful),
-    "Explosive Jump Perk": RainWorldItemData("Explosive Jump Perk", "Exp-ExplosiveJump", 384 + offset, ItemClassification.useful),
+    "Explosive Jump Perk": RainWorldItemData("Explosive Jump Perk", "Exp-ExplosiveJump", 384 + offset, ItemClassification.useful | ItemClassification.progression),
     "Crafting Perk": RainWorldItemData("Crafting Perk", "Exp-ItemCrafting", 385 + offset, ItemClassification.useful),
     "Aquatic Perk": RainWorldItemData("Aquatic Perk", "Exp-Aquatic", 386 + offset, ItemClassification.useful | ItemClassification.progression),
     "Agility Perk": RainWorldItemData("Agility Perk", "Exp-Agility", 387 + offset, ItemClassification.useful),
@@ -173,10 +187,7 @@ all_items.update(gate_keys)
 #################################################################
 # PORTAL KEYS
 portal_keys: dict[str, RainWorldItemData] = {
-    data.name: RainWorldItemData(
-        data.name, data.client_name,
-        offset + 600 + i, ItemClassification.progression
-    )
+    data.name: PortalKeyItemData(data, offset + 600 + i)
     for i, data in enumerate(pkeys.values())
 }
 all_items.update(portal_keys)
