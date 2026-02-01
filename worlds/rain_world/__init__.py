@@ -156,7 +156,8 @@ class RainWorldWorld(World):
         else:
             pool = {
                 "Ripple": 12 + self.options.extra_karma_cap_increases.value,
-                **{k: 1 for k, v in portal_keys.items() if not v.spinning_top or self.options.spinning_top_keys},
+                **{k: 1 for k, v in portal_keys.items() if (not v.spinning_top or self.options.spinning_top_keys)
+                   and ("Daemon" not in v.name or self.options.daemon_keys)},
                 "Dial Warp Ability": 1,
             }
             if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:

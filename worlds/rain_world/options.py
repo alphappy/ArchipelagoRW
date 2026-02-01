@@ -304,6 +304,12 @@ class SpinningTopKeys(Toggle):
     # visibility = Visibility.none
 
 
+class DaemonKeys(Toggle):
+    """Whether keys are required to travel through Daemon warps."""
+    display_name = "Daemon keys"
+    default = False
+
+
 class PriorityThrone(Choice):
     """Whether Prince checks should be normal, priority, or excluded locations."""
     display_name = "Priority Throne"
@@ -1035,12 +1041,13 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     rotted_region_target: RottedRegionTarget
     checks_spread_rot: ChecksSpreadRot
     spinning_top_keys: SpinningTopKeys
+    daemon_keys: DaemonKeys
     priority_throne: PriorityThrone
 
     group_watcher = [
         LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
-        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot,
-        SpinningTopKeys, PriorityThrone, PredeterminedDynamicWarpNetworkMinimumNecklaceLength,
+        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, SpinningTopKeys, DaemonKeys,
+        PriorityThrone, PredeterminedDynamicWarpNetworkMinimumNecklaceLength,
     ]
 
     #################################################################
