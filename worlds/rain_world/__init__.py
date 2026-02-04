@@ -159,6 +159,7 @@ class RainWorldWorld(World):
                 **{k: 1 for k, v in portal_keys.items() if (not v.spinning_top or self.options.spinning_top_keys)
                    and ("Daemon" not in v.name or self.options.daemon_keys)},
                 "Dial Warp Ability": 1,
+                "The Mark": 1,
             }
             if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:
                 pool.update({f"Dynamic: {k}": 1 for k in (normal_regions if ndwb.predetermined else self.warp_pool)})
