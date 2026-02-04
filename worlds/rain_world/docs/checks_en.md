@@ -74,12 +74,12 @@ and also depends on the `Passage progress without Survivor` setting in the playe
 
 There are four passages that may always be earned before The Survivor is earned, regardless of settings:
 
-| Passage           | Eligibility                                 | Requirements                                    |
-|-------------------|---------------------------------------------|-------------------------------------------------|
-| The Martyr        | Any; MSC enabled                            | None                                            |
-| The Mother        | Survivor, Hunter, or Gourmand; MSC enabled  | Access to HI, DS, GW, SH, CC, SI, LF, SB, or VS |
-| The Pilgrim       | Any; MSC enabled                            | Access to all eligible echoes                   |
-| The Survivor      | Any                                         | Max karma at least 5                            |
+| Passage           | Eligibility                                | Requirements                                    |
+|-------------------|--------------------------------------------|-------------------------------------------------|
+| The Martyr        | Any; MSC enabled                           | None                                            |
+| The Mother        | Survivor, Hunter, or Gourmand; MSC enabled | Access to HI, DS, GW, SH, CC, SI, LF, SB, or VS |
+| The Pilgrim       | Not Watcher; MSC enabled                   | Access to all eligible echoes                   |
+| The Survivor      | Any                                        | Max karma at least 5                            |
 
 There are three passages that may be earned before The Survivor,
 but only if the `Passage progress without Survivor` setting is either `enabled` or `bypassed`:
@@ -88,7 +88,7 @@ but only if the `Passage progress without Survivor` setting is either `enabled` 
 |-------------------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------|
 | The Dragon Slayer | Not Saint   | - Vanilla: Access to Blue, Pink, Green, Yellow, Black, and White Lizards<br/>- MSC: Red, Cyan, Strawberry, and Caramel Lizards also count |
 | The Friend        | Any         | Access to one lizard                                                                                                                      |
-| The Wanderer      | Any         | Access to every story region for the given slugcat; each individual pip is also a check                                                   |
+| The Wanderer      | Not Watcher | Access to every story region for the given slugcat; each individual pip is also a check                                                   |
 
 The remaining seven passages require The Survivor unless
 `Passage progress without Survivor` is `bypassed`:
@@ -98,7 +98,7 @@ The remaining seven passages require The Survivor unless
 | The Chieftain | Not Artificer                                           | Access to a Scavenger (or Scavenger Toll if `The Chieftain requires toll` is set)                                                                                                           |
 | The Hunter    | Not Saint                                               | Access to several types of meat (number depends on `The Hunter difficulty` setting)                                                                                                         |
 | The Monk      | Any                                                     | - For Hunter, Artificer, and Spearmaster: Access to SI, LF, SS, or DM<br/>- For other slugcats: Access to several types of non-meat foods (number depends on `The Monk difficulty` setting) |
-| The Nomad     | Any; MSC enabled                                        | Access to several regions (number depends on `The Nomad difficulty` setting)                                                                                                                |  
+| The Nomad     | Not Watcher; MSC enabled                                | Access to several regions (number depends on `The Nomad difficulty` setting)                                                                                                                |  
 | The Outlaw    | Not Saint                                               | Access to several eligible creatures (number depends on `The Outlaw difficulty` setting)                                                                                                    |
 | The Saint     | Any                                                     | - For Hunter, Artificer, and Spearmaster: Access to SI, LF, SS, or DM<br/>- For other slugcats: No requirements                                                                             |
 | The Scholar   | Not Monk unless MSC is enabled; Not Saint or Sofanthiel | - The Mark of Communication<br/>- Access to three colored pearls<br/>- For Monk, Survivor, and Gourmand: access to Looks to the Moon                                                        |
