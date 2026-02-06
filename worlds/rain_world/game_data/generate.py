@@ -15,16 +15,21 @@ args = parser.parse_args()
 
 ########################################################################################################################
 # Before the generator may run, a directory must be created to house each dlcstate's files.
-# There should be a <ROOT_FP>/VERSION/DLCSTATE/world folder for each DLCSTATE (right now, just "Vanilla" and "MSC").
-# To construct this (OUTDATED):
-#   Run Rain World with MSC enabled and no other content mods that affect `world` files.
-#   Locate your StreamingAssets folder (e.g., Steam\steamapps\common\Rain World\RainWorld_Data\StreamingAssets).
-#   Copy StreamingAssets/world to <ROOT_FP>/Vanilla.
-#   Delete <ROOT_FP>/Vanilla/world/gw-rooms/world-gw.txt.
-#   Delete <ROOT_FP>/Vanilla/world/su/world-su - copy.txt.
-#   Copy <ROOT_FP>/Vanilla to <ROOT_FP>/MSC.
-#   Copy StreamingAssets/mergedmods/world to <ROOT_FP>/MSC, replacing any collisions.
-#   Copy StreamingAssets/mods/moreslugcats/world to <ROOT_FP>/MSC, replacing any collisions.
+# There should be a <ROOT_FP>/VERSION/DLCSTATE/world folder for each DLCSTATE ("Vanilla", "MSC", "Watcher", "MSC_Watcher").
+# To construct this:
+#   1. Run Rain World with MSC enabled and no other content mods that affect `world` files.
+#   2. Locate your StreamingAssets folder (e.g., Steam\steamapps\common\Rain World\RainWorld_Data\StreamingAssets).
+#   3. Copy StreamingAssets/world to <ROOT_FP>/Vanilla.
+#   4. Delete <ROOT_FP>/Vanilla/world/gw-rooms/world-gw.txt.
+#   5. Delete <ROOT_FP>/Vanilla/world/su/world-su - copy.txt.
+#   6. Copy <ROOT_FP>/Vanilla to <ROOT_FP>/MSC, <ROOT_FP>/Watcher, <ROOT_FP>/MSC_Watcher.
+#   7. Copy StreamingAssets/mergedmods/world to <ROOT_FP>/MSC, replacing any collisions.
+#   8. Repeat steps 1 and 7 with only Watcher enabled, then again with both MSC and Watcher enabled.
+#   9. Copy StreamingAssets/mods/moreslugcats/world to <ROOT_FP>/MSC, replacing any collisions.
+#   10. Copy StreamingAssets/mods/watcher/world to <ROOT_FP>/Watcher, replacing any collisions.
+#   11. Copy StreamingAssets/mods/moreslugcats/world and StreamingAssets/mods/watcher/world to <ROOT_FP>/MSC_Watcher,
+#       replacing any collisions.
+
 ROOT_FP = args.path
 
 ########################################################################################################################
@@ -81,8 +86,8 @@ scugs_watcher = {"Yellow", "White", "Red", "Watcher"}
 scugs_msc_watcher = {"Yellow", "White", "Red", "Gourmand", "Artificer", "Rivulet", "Spear", "Saint", "Inv", "Watcher"}
 
 scugs_by_gameversion = {
-    "1.9.15.3": {"Vanilla": scugs_vanilla, "MSC": scugs_msc},
-    "1.11.1": {"Vanilla": scugs_vanilla, "MSC": scugs_msc, "Watcher": scugs_watcher, "MSC_Watcher": scugs_msc_watcher}
+    # "1.9.15.3": {"Vanilla": scugs_vanilla, "MSC": scugs_msc},
+    "1.11.6": {"Vanilla": scugs_vanilla, "MSC": scugs_msc, "Watcher": scugs_watcher, "MSC_Watcher": scugs_msc_watcher}
 }
 
 ########################################################################################################################
