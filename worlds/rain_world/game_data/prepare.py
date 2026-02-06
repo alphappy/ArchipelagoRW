@@ -1,14 +1,21 @@
+from argparse import ArgumentParser
 from os.path import join, exists
 from os import remove
 from shutil import copytree
 
 
-# Path to `Rain World` folder containing `RainWorld_Data`.
-RW_FOLDER = r'C:\Program Files (x86)\Steam\steamapps\common\Rain World'
-# Path to folder which will contain RW files.
-OUTPUT_FOLDER = 'D:/RW files'
+parser = ArgumentParser(prog="rw_gen_data")
+parser.add_argument("rwpath")
+parser.add_argument("outpath")
+parser.add_argument("--regrab-vanilla", action="store_false")
+args = parser.parse_args()
 
-REGRAB_VANILLA = True
+# Path to `Rain World` folder containing `RainWorld_Data`.
+RW_FOLDER = args.rwpath
+# Path to folder which will contain RW files.
+OUTPUT_FOLDER = args.outpath
+
+REGRAB_VANILLA = args.regrab_vanilla
 
 
 def ignore(path: str, items: list[str]) -> list[str]:
