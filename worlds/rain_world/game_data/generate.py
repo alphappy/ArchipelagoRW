@@ -1,10 +1,17 @@
+import pprint
 import re
+from argparse import ArgumentParser
 from os import path
 from glob import glob
 
 from bitflag import ScugFlag
 from generate_classes import Spawner
 from generate_methods import parse_placed_objects, splitstrip, setdefaultchain as sdc, recursive_flag_reduction
+
+parser = ArgumentParser(prog="rw_gen_data")
+parser.add_argument("path")
+parser.add_argument("--create-debug-file", default=False, action="store_true")
+args = parser.parse_args()
 
 ########################################################################################################################
 # Before the generator may run, a directory must be created to house each dlcstate's files.
@@ -18,7 +25,7 @@ from generate_methods import parse_placed_objects, splitstrip, setdefaultchain a
 #   Copy <ROOT_FP>/Vanilla to <ROOT_FP>/MSC.
 #   Copy StreamingAssets/mergedmods/world to <ROOT_FP>/MSC, replacing any collisions.
 #   Copy StreamingAssets/mods/moreslugcats/world to <ROOT_FP>/MSC, replacing any collisions.
-ROOT_FP = "D:/RW files"
+ROOT_FP = args.path
 
 ########################################################################################################################
 re_room_settings_filename = re_rsf = re.compile(r'(((?:[^_]\S)+)_\S+)_settings(?:-(\S+))?\.txt')
@@ -329,5 +336,10 @@ data["SPECIAL"] = special_data
 print("Writing to file...")
 with open("data.py", "w") as f:
     f.write(f'data = {data}\n')
+
+## Human-readable output for manually checking / diffing results
+if args.create_debug_file:
+    with open("debug_data.txt", "w") as f1:
+        pprint.pp(data, f1)
 
 print('Script ending normally')
