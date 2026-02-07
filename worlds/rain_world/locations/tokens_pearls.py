@@ -72,7 +72,7 @@ def initialize() -> dict[str, TokenOrPearl]:
     offset = 0
     ret = {}
 
-    for scuglist, (dlcstate, dlcstate_data) in zip((scugs_vanilla, scugs_msc, scugs_watcher, scugs_msc_watcher), static_data["1.11.1"].items()):
+    for scuglist, (dlcstate, dlcstate_data) in zip((scugs_vanilla, scugs_msc, scugs_watcher, scugs_msc_watcher), static_data["1.11.6"].items()):
         for region, region_data in dlcstate_data.items():
             for room, room_data in region_data.items():
                 if "shinies" in room_data.keys():
