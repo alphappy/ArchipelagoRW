@@ -5,6 +5,7 @@ from ..game_data.general import scugs_all
 from ..conditions.classes import Condition, ConditionBlank
 from ..regions.classes import room_to_region, RainWorldRegion
 from ..utils_ap import try_get_region
+from ...AutoWorld import World
 
 
 class EventData:
@@ -17,7 +18,7 @@ class EventData:
         self.classification = classification
         self.condition = condition
 
-    def make(self, player: int, multiworld: MultiWorld, _: RainWorldOptions):
+    def make(self, player: int, world: World, multiworld: MultiWorld, _: RainWorldOptions):
         if (region := try_get_region(multiworld, self.region, player)) and region.populate:
             item = Item(self.item_name, self.classification, None, player)
             location = Location(player, self.location_item, None, region)
@@ -25,7 +26,8 @@ class EventData:
             region.locations.append(location)
             location.place_locked_item(item)
             if self.condition is not None:
-                add_rule(location, self.condition.check(player))
+                world.set_rule(location, self.condition.get_rule())
+                # add_rule(location, self.condition.check(player))
 
 
 class VictoryEvent(EventData):
@@ -44,7 +46,7 @@ class StaticWorldEvent:
         self.condition = condition
         self.scugs = scugs
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
+    def make(self, player: int, world: World, multiworld: MultiWorld, options: RainWorldOptions):
         if options.starting_scug not in self.scugs:
             return
         try:
@@ -58,7 +60,8 @@ class StaticWorldEvent:
             location.show_in_spoiler = False
             region.locations.append(location)
             location.place_locked_item(item)
-            add_rule(location, self.condition.check(player))
+            world.set_rule(location, self.condition.get_rule())
+            # add_rule(location, self.condition.check(player))
 
 
 class StaticWorldEventDetached:

@@ -4,6 +4,7 @@ from ..options import RainWorldOptions
 from ..conditions.classes import Condition, ConditionBlank, Simple, AllOf, AnyOf
 from ..game_data.general import scugs_all, accessible_gates, region_code_to_name, direct_alternate_regions
 from ..utils_ap import try_get_region
+from ...AutoWorld import World
 
 
 class GateData:
@@ -13,7 +14,7 @@ class GateData:
         self.right = right
         self.was_swapped = was_swapped
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
+    def make(self, player: int, world: World, multiworld: MultiWorld, options: RainWorldOptions):
         dlcstate = "MSC" if options.msc_enabled else "Vanilla"
         if self.name[5:] not in accessible_gates[dlcstate][options.starting_scug]:
             return
@@ -54,14 +55,18 @@ class GateData:
             right_condition = AllOf(_r, Simple([f"Scug-{s}" for s in scugs], 1), right_cost)
 
             if left.populate and right.populate:
-                left.connect(
-                    right, f"{'west' if self.was_swapped else 'east'} through {self.name}",
-                    rule=left_condition.check(player)
-                )
-                right.connect(
-                    left, f"{'east' if self.was_swapped else 'west'} through {self.name}",
-                    rule=right_condition.check(player)
-                )
+                world.create_entrance(left, right, left_condition.get_rule(),
+                                      f"{'west' if self.was_swapped else 'east'} through {self.name}")
+                world.create_entrance(right, left, right_condition.get_rule(),
+                                      f"{'east' if self.was_swapped else 'west'} through {self.name}")
+                # left.connect(
+                #     right, f"{'west' if self.was_swapped else 'east'} through {self.name}",
+                #     rule=left_condition.check(player)
+                # )
+                # right.connect(
+                #     left, f"{'east' if self.was_swapped else 'west'} through {self.name}",
+                #     rule=right_condition.check(player)
+                # )
 
     @property
     def item_name(self) -> str:

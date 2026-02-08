@@ -1,7 +1,6 @@
-import time
 from typing import Optional, Callable
 
-from BaseClasses import MultiWorld, Location, LocationProgressType, Region
+from BaseClasses import MultiWorld, Location, LocationProgressType
 from ..game_data.bitflag import ScugFlagMap
 from ..options import RainWorldOptions
 from ..conditions.classes import ConditionBlank, Condition
@@ -10,6 +9,7 @@ from worlds.generic.Rules import add_rule
 from ..regions.classes import room_to_region
 from ..game_data.general import region_code_to_name
 from ..utils_ap import try_get_region
+from ...AutoWorld import World
 
 location_map: dict[str, int] = {}
 location_hints: dict[str, set[str]] = {}
@@ -36,14 +36,15 @@ class LocationData:
                     location_hints.setdefault(alt_name, set()).update({full_name})
             location_client_map[client_name] = self.full_name
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+    def make(self, player: int, world: World, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         if self.pre_generate(player, multiworld, options):
             if (region := try_get_region(multiworld, self.region, player)) and region.populate:
                 loc = Location(player, self.full_name, self.id, region)
                 loc.progress_type = self.progress_type
                 region.locations.append(loc)
                 if self.access_condition is not ConditionBlank:
-                    add_rule(loc, self.access_condition.check(player))
+                    world.set_rule(loc, self.access_condition.get_rule())
+                    # add_rule(loc, self.access_condition.check(player))
                 return self.id is not None
         return False
 

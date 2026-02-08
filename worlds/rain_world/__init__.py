@@ -93,12 +93,12 @@ class RainWorldWorld(World):
 
     def create_regions(self):
         for data in regions.generate(self.options, self.random):
-            data.make(self.player, self.multiworld, self.options)
+            data.make(self.player, self, self.multiworld, self.options)
 
         # return for each datum is a bool for whether that location was actually generated
-        locs = [data.make(self.player, self.multiworld, self.options) for data in locations.generate(self.options)]
+        locs = [data.make(self.player, self, self.multiworld, self.options) for data in locations.generate(self.options)]
         foodquest_locs = [
-            data.make(self.player, self.multiworld, self.options) for data in locations.generate_foodquest(self.options)
+            data.make(self.player, self, self.multiworld, self.options) for data in locations.generate_foodquest(self.options)
         ]
         self.location_count = sum(locs + foodquest_locs)
         self.foodquest_accessibility_flag = sum(e << i for i, e in enumerate(foodquest_locs))
@@ -215,7 +215,8 @@ class RainWorldWorld(World):
     def set_rules(self) -> None:
         # ascension_item = Item("Ascension", ItemClassification.progression, None, self.player)
         # self.multiworld.get_location("Ascension", self.player).place_locked_item(ascension_item)
-        self.multiworld.completion_condition[self.player] = Simple("Victory").check(self.player)
+        self.set_completion_rule(Simple("Victory").get_rule())
+        # self.multiworld.completion_condition[self.player] = Simple("Victory").check(self.player)
 
     def fill_slot_data(self) -> Mapping[str, Any]:
         d = self.options.as_dict(

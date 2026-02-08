@@ -2,6 +2,7 @@ from BaseClasses import Region, MultiWorld
 from ..options import RainWorldOptions
 from ..conditions.classes import Condition, ConditionBlank, Simple, AnyOf, AllOf
 from ..utils_ap import try_get_region
+from ...AutoWorld import World
 
 
 class RainWorldRegion(Region):
@@ -17,7 +18,7 @@ class RegionData:
     def __init__(self, name: str, populate: bool = True):
         self.name, self.populate = name, populate
 
-    def make(self, player: int, multiworld: MultiWorld, _: RainWorldOptions):
+    def make(self, player: int, world: World, multiworld: MultiWorld, _: RainWorldOptions):
         multiworld.regions.append(RainWorldRegion(self.name, player, multiworld, self.populate))
 
 
@@ -28,11 +29,12 @@ class ConnectionData:
     def __init__(self, source: str, dest: str, name: str, condition: Condition = ConditionBlank):
         self.source, self.dest, self.name, self.condition = source, dest, name, condition
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
+    def make(self, player: int, world: World, multiworld: MultiWorld, options: RainWorldOptions):
         source = try_get_region(multiworld, self.source, player)
         dest = try_get_region(multiworld, self.dest, player)
         if source and dest:
-            source.connect(dest, self.name, rule=self.condition.check(player))
+            world.create_entrance(source, dest, self.condition.get_rule(), self.name)
+            # source.connect(dest, self.name, rule=self.condition.check(player))
 
 
 class Gate(ConnectionData):
@@ -45,7 +47,7 @@ class Gate(ConnectionData):
         self.gate_name = gate_name
         self.condition = condition
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
+    def make(self, player: int, world: World, multiworld: MultiWorld, options: RainWorldOptions):
         source = multiworld.get_region(self.source, player)
         dest = multiworld.get_region(self.dest, player)
 
@@ -64,7 +66,8 @@ class Gate(ConnectionData):
                 raise ValueError(f"{options.which_gate_behavior} is not a valid value for `which_gate_behavior`")
 
         rule = AllOf(rule, self.condition)
-        source.connect(dest, name=f'GATE_{self.gate_name} ({self.source} to {dest.name})', rule=rule.check(player))
+        world.create_entrance(source, dest, rule.get_rule(), f'GATE_{self.gate_name} ({self.source} to {dest.name})')
+        # source.connect(dest, name=f'GATE_{self.gate_name} ({self.source} to {dest.name})', rule=rule.check(player))
 
 
 room_to_region: dict[str, str] = dict()
@@ -75,7 +78,7 @@ class PhysicalRegion(RegionData):
         super().__init__(name, True)
         self.prefix, self.rooms = prefix, rooms
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
+    def make(self, player: int, world: World, multiworld: MultiWorld, options: RainWorldOptions):
         self.populate = self._gen(options)
         room_to_region.update({room: self.name for room in self.rooms})
         if self.populate:
