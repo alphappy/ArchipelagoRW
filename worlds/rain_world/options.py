@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from random import Random
 
 from Options import PerGameCommonOptions, Toggle, Range, OptionGroup, Choice, ProgressionBalancing, Accessibility, \
-    Visibility, DeathLinkMixin, DeathLink, FreeText, OptionList, OptionCounter
+    Visibility, DeathLinkMixin, DeathLink, FreeText, OptionList, OptionCounter, OptionError
 from .conditions import GameStateFlag
 from .game_data import static_data
 from .game_data.bitflag import ScugFlagMap
@@ -1132,6 +1132,8 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
         def choose_weighted():
             weighted_choices = [reg for reg in choice_counter.elements() if self.possible_starting_regions.names[reg] in valid_codes]
+            if not weighted_choices:
+                raise OptionError(f"None of the selected regions in \"Possible Starting Regions\" are valid with these options.")
             self.starting_region_name = random.choice(weighted_choices)
             self.starting_region_code = self.possible_starting_regions.names[self.starting_region_name]
 
