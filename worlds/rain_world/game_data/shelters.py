@@ -116,32 +116,6 @@ def get_starts(options: RainWorldOptions) -> list[str]:
     if code is None:
         raise OptionError(f"{scug_name} cannot start in {name}")
 
-    if code == "SH" and options.difficulty_glow:
-        raise OptionError("Cannot start in Shaded Citadel with 'Glow required for dark places' enabled")
-
-    if code not in story_regions_vanilla:
-        if code in story_regions_watcher:
-            if scug != "Watcher":
-                raise OptionError(f"Only Watcher may start in Watcher campaign regions")
-        elif not options.msc_enabled:
-            raise OptionError(f"Cannot start in {name} with MSC disabled")
-
-    if scug == "Watcher" and code not in story_regions_watcher:
-        raise OptionError(f"Watcher must start in a Watcher campaign region")
-
-    if code == "LC":
-        if scug != "Artificer":
-            raise OptionError(f"{scug_name} cannot start in Metropolis")
-        elif options.which_victory_condition == "story":
-            raise OptionError(f"Artificer starting in Metropolis with alternate victory condition is moot")
-    elif code == "OE":
-        if scug not in ["White", "Yellow", "Gourmand"]:
-            raise OptionError(f"{scug_name} cannot start in Outer Expanse")
-        elif options.which_victory_condition == "story":
-            raise OptionError(f"{scug_name} starting in {name} with alternate victory condition is moot")
-    elif code == "DM" and scug != "Spear":
-        raise OptionError(f"{scug_name} cannot start in Looks to the Moon")
-
     ret = list(start_shelters[code])
 
     # shelter does not exist in vanilla
