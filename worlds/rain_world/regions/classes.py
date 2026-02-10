@@ -97,7 +97,7 @@ class PhysicalRegion(RegionData):
                 # HARDCODE
                 if self.name in ("Spearmaster spawn area", "Outskirts filtration"):
                     if scug == "Spear":
-                        return options.random_starting_region == 0 and options.msc_enabled
+                        return options.randomize_starting_region == 0 and options.msc_enabled
                     return scug in ("Yellow", "White", "Gourmand") and options.msc_enabled
                 if self.name not in ("Outskirts", "Survivor tutorial area"):
                     return options.msc_enabled and scug in ("Yellow", "White", "Gourmand")

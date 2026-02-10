@@ -1,10 +1,13 @@
+from collections import Counter
 from dataclasses import dataclass
+from random import Random
 
 from Options import PerGameCommonOptions, Toggle, Range, OptionGroup, Choice, ProgressionBalancing, Accessibility, \
-    Visibility, DeathLinkMixin, DeathLink, FreeText, OptionList
+    Visibility, DeathLinkMixin, DeathLink, FreeText, OptionList, OptionCounter
 from .conditions import GameStateFlag
 from .game_data import static_data
 from .game_data.bitflag import ScugFlagMap
+from .game_data.general import story_regions_watcher, story_regions_vanilla, all_regions
 
 
 #################################################################
@@ -323,110 +326,77 @@ class PriorityThrone(Choice):
 #################################################################
 # GENERAL SETTINGS
 class RandomStartingRegion(Choice):
-    """Where Slugcat will initially spawn.
-    If not set to default, a random shelter in the region is selected."""
-    display_name = "Random starting shelter"
-    option_default_starting_point = 0
+    """Whether the starting region should be randomized.
 
-    option_outskirts = 1
-    option_industrial_complex = 2
-    option_drainage_system = 3
-    option_garbage_wastes = 4
-    option_shoreline = 5
-    option_shaded_citadel = 6
-    option_the_exterior = 7
-    option_five_pebbles = 8
-    option_chimney_canopy = 9
-    option_sky_islands = 10
-    option_farm_arrays = 11
-    option_subterranean = 12
-    option_pipeyard = 20
-    option_outer_expanse = 22
-    option_metropolis = 23
-    option_looks_to_the_moon = 24
+    **Default Start**: Do not randomize the starting region.
 
-    option_sunbaked_alley = 30
-    option_coral_caves = 31
-    option_torrential_railways = 32
-    option_aether_ridge = 33
-    option_badlands = 34
-    option_cold_storage = 35
-    option_desolate_tract = 36
-    option_fetid_glen = 37
-    option_fractured_gateways = 38
-    option_heat_ducts = 39
-    option_migration_path = 40
-    option_pillar_grove = 41
-    option_rusted_wrecks = 42
-    option_salination = 43
-    option_shrouded_stacks = 44
-    option_signal_spires = 45
-    option_stormy_coast = 46
-    option_the_surface = 47
-    option_torrid_desert = 48
-    option_turbulent_pump = 49
-    option_verdant_waterways = 50
+    **Weighted Choice**: Refer to "Possible Starting Regions" option to decide what starting regions can be chosen.
 
-    alias_undergrowth = 3
-    alias_waterfront_facility = 5
-    alias_silent_construct = 6
-    alias_the_rot = 8
+    **Any Valid**: The starting region is chosen among every accessible region in the selected game state.
+    """
+    display_name = "Randomize Starting Region"
+
+    option_default_start = 0
+    option_weighted_choice = 1
+    option_any_valid = 2
 
     default = 0
 
-    names = {
-        0: ("Default starting point", "!!!"),
-        1: ("Outskirts", "SU"),
-        2: ("Industrial Complex", "HI"),
-        3: ("Drainage System / Undergrowth", "DS"),
-        4: ("Garbage Wastes", "GW"),
-        5: ("Shoreline / Waterfront Facility", "SL"),
-        6: ("Shaded Citadel / Silent Construct", "SH"),
-        7: ("The Exterior", "UW"),
-        8: ("Five Pebbles / The Rot", "SS"),
-        9: ("Chimney Canopy", "CC"),
-        10: ("Sky Islands", "SI"),
-        11: ("Farm Arrays", "LF"),
-        12: ("Subterranean", "SB"),
-        20: ("Pipeyard", "VS"),
-        22: ("Outer Expanse", "OE"),
-        23: ("Metropolis", "LC"),
-        24: ("Looks to the Moon", "DM"),
 
-        30: ("Sunbaked Alley", "WSKB"),
-        31: ("Coral Caves", "WRFA"),
-        32: ("Torrential Railways", "WSKA"),
-        33: ("Aether Ridge", "WARF"),
-        34: ("Badlands", "WBLA"),
-        35: ("Cold Storage", "WARD"),
-        36: ("Desolate Tract", "WTDB"),
-        37: ("Fetid Glen", "WARC"),
-        38: ("Fractured Gateways", "WVWB"),
-        39: ("Heat Ducts", "WARE"),
-        40: ("Migration Path", "WMPA"),
-        41: ("Pillar Grove", "WPGA"),
-        42: ("Rusted Wrecks", "WRRA"),
-        43: ("Salination", "WARB"),
-        44: ("Shrouded Stacks", "WSKD"),
-        45: ("Signal Spires", "WPTA"),
-        46: ("Stormy Coast", "WSKC"),
-        47: ("The Surface", "WARG"),
-        48: ("Torrid Desert", "WTDA"),
-        49: ("Turbulent Pump", "WRFB"),
-        50: ("Verdant Waterways", "WVWA"),
+class PossibleStartingRegions(OptionCounter):
+    """Select which regions will be allowed as possible starting locations.
+    Only used when "Randomize Starting Region" option is set to "Weighted Choice".
+    The value on each region influences how likely it is to be selected.
+    Regions not in the list or with a value less than 1 are not selected.
+    """
+    display_name = "Possible Starting Regions"
+
+    resolved_name: str
+    resolved_code: str
+
+    names = {
+        "Outskirts": "SU",
+        "Industrial Complex": "HI",
+        "Drainage System / Undergrowth": "DS",
+        "Garbage Wastes": "GW",
+        "Shoreline / Waterfront Facility": "SL",
+        "Shaded Citadel / Silent Construct": "SH",
+        "The Exterior": "UW",
+        "Five Pebbles / The Rot": "SS",
+        "Chimney Canopy": "CC",
+        "Sky Islands": "SI",
+        "Farm Arrays": "LF",
+        "Subterranean": "SB",
+
+        "Pipeyard": "VS",
+        "Outer Expanse": "OE",
+        "Metropolis": "LC",
+        "Looks to the Moon": "DM",
+
+        "Sunbaked Alley": "WSKB",
+        "Coral Caves": "WRFA",
+        "Torrential Railways": "WSKA",
+        "Aether Ridge": "WARF",
+        "Badlands": "WBLA",
+        "Cold Storage": "WARD",
+        "Desolate Tract": "WTDB",
+        "Fetid Glen": "WARC",
+        "Fractured Gateways": "WVWB",
+        "Heat Ducts": "WARE",
+        "Migration Path": "WMPA",
+        "Pillar Grove": "WPGA",
+        "Rusted Wrecks": "WRRA",
+        "Salination": "WARB",
+        "Shrouded Stacks": "WSKD",
+        "Signal Spires": "WPTA",
+        "Stormy Coast": "WSKC",
+        "The Surface": "WARG",
+        "Torrid Desert": "WTDA",
+        "Turbulent Pump": "WRFB",
+        "Verdant Waterways": "WVWA",
     }
 
-    @classmethod
-    def get_option_name(cls, value: int) -> str:
-        return cls.names[value][0]
-
-    @property
-    def code(self) -> str:
-        return self.__class__.names[self.value][1]
-
-    @property
-    def name(self) -> str:
-        return self.__class__.names[self.value][0]
+    default = {name: 1 for name in names.keys()}
 
 
 class PassagePriority(Range):
@@ -967,6 +937,9 @@ class WtTrapAlarm(WtGeneric):
 
 @dataclass
 class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
+    starting_region_name = ""
+    starting_region_code = ""
+
     #################################################################
     # IMPORTANT SETTINGS
     which_game_version: WhichGameVersion
@@ -976,12 +949,13 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     passage_progress_without_survivor: PassageProgressWithoutSurvivor
     which_victory_condition: WhichVictoryCondition
     which_gate_behavior: WhichGateBehavior
-    random_starting_region: RandomStartingRegion
+    randomize_starting_region: RandomStartingRegion
+    possible_starting_regions: PossibleStartingRegions
     debug_output: DebugOutput
 
     group_important = [
         WhichGameVersion, IsMSCEnabled, IsWatcherEnabled, WhichCampaign, PassageProgressWithoutSurvivor,
-        WhichVictoryCondition, WhichGateBehavior, DeathLink, RandomStartingRegion, DebugOutput
+        WhichVictoryCondition, WhichGateBehavior, DeathLink, RandomStartingRegion, PossibleStartingRegions, DebugOutput
     ]
 
     #################################################################
@@ -1147,6 +1121,48 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def which_gamestate_integer(self) -> int:
         return int(self.which_campaign) + (10 if self.is_msc_enabled else 0)
 
+    def find_starting_region(self, random: Random):
+        if self.randomize_starting_region == 0:
+            return
+        elif self.randomize_starting_region == 1:
+            choice_counter = self.possible_starting_regions.value
+        else:
+            choice_counter = Counter(self.possible_starting_regions.default)
+        valid_codes = {self.possible_starting_regions.names[reg] for reg in choice_counter.keys()}
+
+        def choose_weighted():
+            weighted_choices = [reg for reg in choice_counter.elements() if self.possible_starting_regions.names[reg] in valid_codes]
+            self.starting_region_name = random.choice(weighted_choices)
+            self.starting_region_code = self.possible_starting_regions.names[self.starting_region_name]
+
+        # Filter Watcher regions
+        if self.starting_scug == "Watcher":
+            valid_codes.intersection_update(story_regions_watcher)
+            choose_weighted()
+            return
+        else:
+            valid_codes.difference_update(story_regions_watcher)
+
+        # No Shaded if difficulty_glow
+        if self.difficulty_glow:
+            valid_codes.difference_update({"SH"})
+
+        # Return vanilla regions if no MSC
+        if not self.msc_enabled:
+            valid_codes.intersection_update(story_regions_vanilla)
+            choose_weighted()
+            return
+
+        # Don't spawn in the final region for story endings
+        if self.which_victory_condition == "story":
+            if self.starting_scug == "Artificer":
+                valid_codes.difference_update({"LC"})
+            valid_codes.difference_update({"OE"})
+
+        # Filter to slugcat's regions
+        valid_codes.intersection_update(all_regions["MSC"][self.starting_scug])
+        choose_weighted()
+
     def general_validity_check(self) -> str | None:
         if self.is_watcher_enabled and self.which_game_version < 1100000:
             return "The Watcher cannot be enabled with a game version before 1.10.0."
@@ -1175,7 +1191,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         )
 
         if optional_check_score < 2:
-            start = self.random_starting_region.code
+            start = self.starting_region_code
             sphere_1_too_small = False
             solutions = [
                 "Pick a different starting region.",
