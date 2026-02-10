@@ -1,6 +1,6 @@
 __all__ = ["RainWorldWorld", "RainWorldWebWorld"]
 
-from typing import Mapping, Any
+from typing import Mapping, Any, TextIO
 
 from Options import OptionError
 from worlds.AutoWorld import World, WebWorld
@@ -9,7 +9,7 @@ from .game_data.shelters import get_starts, ingame_capitalization, get_default_s
 from .game_data.watcher import normal_regions
 from .options import RainWorldOptions
 from .conditions.classes import Simple
-from .game_data.general import region_code_to_name, story_regions, passage_proper_names
+from .game_data.general import region_code_to_name, all_regions, passage_proper_names
 from .events import get_events
 from .regions.classes import room_to_region
 from .regions.gates import gates
@@ -68,8 +68,9 @@ class RainWorldWorld(World):
 
         #################################################################
         # STARTING REGION
+        self.options.find_starting_region(self.random)
         self.starting_room = self.random.choice(get_starts(self.options))
-        self.start_is_default = (self.options.random_starting_region == 0) and self.options.starting_scug != "Watcher"
+        self.start_is_default = (self.options.randomize_starting_region == 0) and self.options.starting_scug != "Watcher"
 
         #################################################################
         # Universal Tracker support - use options from slot data if this is a fake generation
@@ -278,6 +279,10 @@ class RainWorldWorld(World):
                 json.dump(fp=f, indent=2, obj={
                     "slot_data": self.fill_slot_data()
                 })
+
+    def write_spoiler_header(self, spoiler_handle: TextIO) -> None:
+        if not self.start_is_default:
+            spoiler_handle.write(f"Starting Region: {self.options.starting_region_name}\n")
 
     @staticmethod
     def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:

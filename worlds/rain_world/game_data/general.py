@@ -68,13 +68,13 @@ regions_all = list(region_code_to_name.keys())
 
 story_regions_vanilla = {"SU", "HI", "DS", "GW", "SL", "SH", "UW", "SS", "CC", "SI", "LF", "SB"}
 
-story_regions = {
+all_regions = {
     "Vanilla": {scug: story_regions_vanilla for scug in ["Yellow", "White", "Red"]},
     "MSC": {
-        "Yellow": story_regions_vanilla.union({"VS"}),
-        "White": story_regions_vanilla.union({"VS"}),
+        "Yellow": story_regions_vanilla.union({"VS", "OE"}),
+        "White": story_regions_vanilla.union({"VS", "OE"}),
         "Red": story_regions_vanilla.union({"VS"}),
-        "Gourmand": story_regions_vanilla.union({"OE"}),
+        "Gourmand": story_regions_vanilla.union({"VS", "OE"}),
         "Artificer": story_regions_vanilla.union({"LC", "LM"}).difference({"SL"}),
         "Rivulet": story_regions_vanilla.union({"RM", "MS"}).difference({"SS"}),
         "Spear": story_regions_vanilla.union({"DM", "LM"}).difference({"SL"}),
@@ -82,8 +82,8 @@ story_regions = {
         "Inv": story_regions_vanilla.union({"VS"}),
     }
 }
-story_regions["Watcher"] = story_regions["Vanilla"]
-story_regions["MSC_Watcher"] = story_regions["MSC"]
+all_regions["Watcher"] = all_regions["Vanilla"]
+all_regions["MSC_Watcher"] = all_regions["MSC"]
 
 gates_vanilla = {
     "SU_HI", "SU_DS", "LF_SU", "HI_GW", "HI_CC", "HI_SH", "DS_GW", "GW_SL", "DS_SB",

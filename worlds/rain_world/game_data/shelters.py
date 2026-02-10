@@ -105,10 +105,10 @@ def get_default_start(scug: str) -> str:
 
 
 def get_starts(options: RainWorldOptions) -> list[str]:
-    code, name = options.random_starting_region.code, options.random_starting_region.name
+    code, name = options.starting_region_code, options.starting_region_name
     scug, scug_name = options.starting_scug, options.which_campaign.scug_name
 
-    if code == "!!!":
+    if code == "":
         return [get_default_start(scug)]
 
     code = alternate_regions.get(code, {}).get(scug, code)
