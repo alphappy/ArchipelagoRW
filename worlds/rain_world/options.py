@@ -1125,7 +1125,8 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         if self.randomize_starting_region == 0:
             return
         elif self.randomize_starting_region == 1:
-            choice_counter = self.possible_starting_regions.value
+            choice_counter = Counter({reg: self.possible_starting_regions[reg] for reg in self.possible_starting_regions.keys()
+                 if reg in self.possible_starting_regions.names})
         else:
             choice_counter = Counter(self.possible_starting_regions.default)
         valid_codes = {self.possible_starting_regions.names[reg] for reg in choice_counter.keys()}
