@@ -46,6 +46,7 @@ Randomization adds the following filler items to the pool:
 - A few other types of items (karma flowers, vulture masks, lanterns)
 - Several MSC weapons, if enabled (electric spears, lilypucks, singularity bombs, joke rifles)
 - Several MSC foods, if enabled (firebug eggs, glow weed, gooieducks)
+- Several Watcher weapons / foods, if enabled (poison spears, graffiti bombs, boomerangs)
 
 ### Traps
 Randomization adds the following trap items to the pool.
@@ -59,3 +60,4 @@ The creature is immediately aware of Slugcat's position.
 - **Zoomies**: Slugcat suddenly starts moving much faster.  The effect wears off after a short while.
 - **Alarm**: every creature in the region is made aware of Slugcat's position.
 - **Rain**: a heavy (but not crushing) rain suddenly starts and lasts a short while.
+- **Gravity**: gravity is disabled for a short while. Has no effect in rooms that already have an active gravity effect.
