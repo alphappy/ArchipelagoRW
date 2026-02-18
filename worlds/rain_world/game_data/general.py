@@ -75,10 +75,10 @@ all_regions = {
         "White": story_regions_vanilla.union({"VS", "OE"}),
         "Red": story_regions_vanilla.union({"VS"}),
         "Gourmand": story_regions_vanilla.union({"VS", "OE"}),
-        "Artificer": story_regions_vanilla.union({"LC", "LM"}).difference({"SL"}),
-        "Rivulet": story_regions_vanilla.union({"RM", "MS"}).difference({"SS"}),
-        "Spear": story_regions_vanilla.union({"DM", "LM"}).difference({"SL"}),
-        "Saint": story_regions_vanilla.union({"UG", "CL", "HR"}).difference({"DS", "SH", "UW", "SS"}),
+        "Artificer": story_regions_vanilla.union({"VS", "LC"}),
+        "Rivulet": story_regions_vanilla.union({"VS", "MS"}),
+        "Spear": story_regions_vanilla.union({"VS", "DM"}),
+        "Saint": story_regions_vanilla.union({"VS", "HR"}).difference({"UW", "SS"}),
         "Inv": story_regions_vanilla.union({"VS"}),
     }
 }
