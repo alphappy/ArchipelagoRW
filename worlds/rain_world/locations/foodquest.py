@@ -48,6 +48,10 @@ class FoodQuestPip(AbstractLocation):
         # HARDCODE: Sofanthiel and Rivulet's only glow weed are in MS.  The interactive map is wrong.
         if options.starting_scug in ["Inv", "Rivulet"] and not options.submerged_should_populate and self.items[0] == "GlowWeed":
             return False
+        if options.starting_scug in ["White", "Yellow"] and not options.submerged_should_populate and self.items[0] == "RedCentipede":
+            return False
+        if options.starting_scug == "Watcher" and not options.logic_rotted_generation == 2 and self.items[0] == "RedCentipede":
+            return False
         return True
 
 pips: list[FoodQuestPip] = [
