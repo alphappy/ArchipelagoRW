@@ -49,7 +49,7 @@ class PrinceEncounter(RoomLocation):
 
 
 def initialize() -> tuple[list[FixedWarpPoint], list[SpinningTop], list[Rottening], list[PrinceEncounter], list[LocationData]]:
-    return ([FixedWarpPoint(data, INITIAL_OFFSET + i) for i, data in enumerate(portals)],
+    return ([FixedWarpPoint(data, INITIAL_OFFSET + i) for i, data in enumerate(portals) if data.check_warp],
             [SpinningTop(data, INITIAL_OFFSET + 100 + i) for i, data in enumerate(portals) if data.check_spinning_top],
             [Rottening(i + 1, INITIAL_OFFSET + 150 + i) for i in range(len(normal_regions))],
             [PrinceEncounter(INITIAL_OFFSET + 120 + i, i + 1) for i in range(4)],

@@ -5,7 +5,7 @@ from ..game_data.general import region_code_to_name
 class PortalData:
     def __init__(self, source_room: str, data: dict, kind: str):
         self.source_room = source_room
-        self.oneway, self.spinning_top, self.check_spinning_top = False, False, False
+        self.oneway, self.spinning_top, self.check_spinning_top, self.check_warp = False, False, False, True
 
         if kind == "WarpPoint":
             oneway, entrance, self.ripple = [(data['flags'] >> i) & 1 != 0 for i in range(3)]
@@ -17,7 +17,8 @@ class PortalData:
             self.oneway = True  # TODO
             self.target_room = data['to'].upper()
             self.spinning_top = True
-            self.check_spinning_top = not self.source_room.startswith("WAUA")
+            self.check_spinning_top = not self.source_room == "WAUA_BATH"
+            self.check_warp = not self.source_room.startswith("WAUA")
 
         # See `OverWorld.InitiateSpecialWarp_WarpPoint`.
         if self.target_room == "NULL":
