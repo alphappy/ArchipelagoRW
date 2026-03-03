@@ -177,6 +177,9 @@ outlaw_whitelist = lizards_any.union({
 
 scavenger_tolls = ["SU", "GW", "LF", "LC", "CL", "OE", "UG"]
 
+# Certain hard to reach pearls omitted to not overcomplicate scholar with location access rules (WTDB, WMPA, WARG)
+watcher_pearls = ["WBLA", "WARD", "WARC", "WARE", "WARB", "WSKD", "WPTA", "WTDA", "WRFB", "WVWA"]
+
 #################################################################
 # FOOD QUEST DATA
 

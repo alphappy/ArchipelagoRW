@@ -1,6 +1,6 @@
 from .classes import Passage, LocationData
 from .. import game_data
-from ..game_data.general import regions_all
+from ..game_data.general import regions_all, watcher_pearls
 from ..options import RainWorldOptions
 from ..conditions.classes import Condition, Simple, AnyOf, AllOf, ConditionBlank
 
@@ -101,7 +101,9 @@ def generate_cond_pilgrim(options: RainWorldOptions) -> Condition:
 def generate_cond_scholar(options: RainWorldOptions) -> Condition:
     if options.starting_scug in ["Yellow", "White", "Gourmand"]:
         return Simple(["Access-SL", "The Mark"])
-    return Simple("The Mark")
+    if options.starting_scug == "Watcher":
+        return AllOf(Simple("The Mark"), Simple([f"Access-{r}" for r in watcher_pearls], 3))
+    return AllOf(Simple("The Mark"), wanderer_pip_factory(3))
 
 
 #################################################################
