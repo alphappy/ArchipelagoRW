@@ -166,6 +166,7 @@ echoes_vanilla = ['CC', 'SI', 'LF', 'SB', 'SH', 'UW']
 
 monk_foods_vanilla = ['DangleFruit', 'BubbleFruit', 'SeedCob', 'SlimeMold', 'SSOracleSwarmer']
 monk_foods_msc = ['LillyPuck', 'GlowWeed', 'DandelionPeach', 'GooieDuck', 'Seed', 'FireEgg']
+monk_foods_watcher = ['Pomegranate']
 
 slugpup_normal_regions = ['HI', 'DS', 'GW', 'SH', 'CC', 'SI', 'LF', 'SB', 'VS']
 
