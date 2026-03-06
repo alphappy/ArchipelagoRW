@@ -108,8 +108,13 @@ class RainWorldWorld(World):
             data.make(self.player, self.multiworld, self.options)
 
         #################################################################
+        # STARTING REGION
+        self.connect_starting_region(self.starting_room)
+
+    def generate_basic(self) -> None:
+        #################################################################
         # PRIORITY PASSAGES
-        if num := self.options.passage_priority.value > 0:
+        if (num := self.options.passage_priority.value) > 0:
             unprioritized_passage_locations = [
                 l for l in self.multiworld.get_locations(self.player)
                 if l.name.startswith("Passage - ") and l.progress_type == LocationProgressType.DEFAULT
@@ -117,10 +122,6 @@ class RainWorldWorld(World):
             for loc in self.random.sample(unprioritized_passage_locations,
                                           min([num, len(unprioritized_passage_locations)])):
                 loc.progress_type = LocationProgressType.PRIORITY
-
-        #################################################################
-        # STARTING REGION
-        self.connect_starting_region(self.starting_room)
 
     def connect_starting_region(self, room: str):
         if not self.start_is_connected:
