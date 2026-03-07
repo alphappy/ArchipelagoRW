@@ -106,7 +106,7 @@ accessible_gates = {
         "Rivulet": gates_vanilla.union(gates_msc_red),
         "Spear": gates_vanilla.union(gates_msc_red).union({"SL_DM", "DM_SL"}).difference({"SL_MS", "MS_SL"}),
         "Saint": gates_vanilla.union(gates_msc_red).union({"SL_CL"}).difference(
-            {"SH_SL", "UW_SS", "SS_UW", "CC_UW", "SH_UW"}
+            {"SH_SL", "UW_SS", "SS_UW", "CC_UW", "SH_UW", "UW_SL"}
         ),
         "Inv": gates_vanilla.union(gates_msc_red),
         "Watcher": set()

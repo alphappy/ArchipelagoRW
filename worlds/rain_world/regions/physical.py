@@ -45,13 +45,19 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                 # Not in logic to access Bitter Aerie except as Rivulet.
                 bitter = {name for name in rooms if "BITTER" in name or "SEWER" in name or "AERIE" in name
                           or name in ("MS_WILLSNAGGING01", "MS_S07", "MS_PUMPS", "MS_SCAVTRADER", "MS_JTRAP",
-                                      "MS_COMMS", "GATE_SL_MS[MS]")}
+                                      "MS_COMMS", "GATE_SL_MS[MS]", "MS_X02", "MS_S10")}
                 ret += [
                     PhysicalRegion("Submerged Superstructure", "MS", rooms.difference(bitter)),
                     PhysicalRegion("Bitter Aerie", "MS^", bitter),
-                    ConnectionData("Submerged Superstructure", "Bitter Aerie", "Rarefaction cell deposit cutscene",
-                                   Simple(["Scug-Rivulet", "Rarefaction Cell"])),
                 ]
+
+                if options.starting_scug == "Rivulet":
+                    ret.append(ConnectionData("Submerged Superstructure", "Bitter Aerie",
+                                              "Rarefaction cell deposit cutscene", Simple(["Rarefaction Cell"])))
+                elif options.starting_scug == "Saint":
+                    ret += [ConnectionData("Submerged Superstructure", "Bitter Aerie", "Enter Bitter Aerie"),
+                            ConnectionData("Bitter Aerie", "Submerged Superstructure", "Leave Bitter Aerie")]
+
 
             case "SB":
                 # Not in logic (except for Saint) to go back up the SB ravine.

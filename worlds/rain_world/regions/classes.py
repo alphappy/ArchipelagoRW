@@ -142,5 +142,5 @@ class PhysicalRegion(RegionData):
             case "MS":
                 # HARDCODE
                 if self.name == "Bitter Aerie":
-                    return scug == "Rivulet"
+                    return options.submerged_should_populate and scug in ("Rivulet", "Saint")
                 return options.submerged_should_populate and scug not in ("Artificer", "Spear")

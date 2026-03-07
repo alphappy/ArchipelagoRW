@@ -274,12 +274,14 @@ class RainWorldWorld(World):
     def generate_output(self, output_directory: str) -> None:
         if self.options.debug_output:
             import json
+            from Utils import visualize_regions
             with open(f'{output_directory}/client_map.json', 'w') as f:
                 json.dump({"locations": locations.classes.location_client_map, "items": items.item_client_names}, f)
             with open(f'{output_directory}/player_{self.player}_debug.json', 'w') as f:
                 json.dump(fp=f, indent=2, obj={
                     "slot_data": self.fill_slot_data()
                 })
+            visualize_regions(self.multiworld.get_region("Menu", self.player), "rain_world.puml", show_locations=False)
 
     def write_spoiler_header(self, spoiler_handle: TextIO) -> None:
         if not self.start_is_default:
