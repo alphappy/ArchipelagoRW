@@ -57,6 +57,11 @@ class TestArtificer(RainWorldTestBase):
         locs = [loc.name for loc in self.multiworld.get_locations(self.player)]
         self.assertNotIn("Garbage Wastes - Arena Token - BrotherLongLegs", locs)
 
+    def test_connections(self):
+        connections = [con.name for con in self.multiworld.get_entrances(self.player)]
+        self.assertIn("Westward from SU_A22 to SU_A43", connections)
+        self.assertIn("Westward from SU_C04 to SU_CAVE01", connections)
+
 
 class TestRivulet(RainWorldTestBase):
     options = {"which_campaign": "rivulet", "is_msc_enabled": True}
@@ -81,6 +86,11 @@ class TestSpear(RainWorldTestBase):
 
 class TestSaint(RainWorldTestBase):
     options = {"which_campaign": "saint", "is_msc_enabled": True}
+
+    def test_connections(self):
+        connections = [con.name for con in self.multiworld.get_entrances(self.player)]
+        self.assertIn("Westward from SU_A22 to SU_A43", connections)
+        self.assertIn("Westward from SU_C04 to SU_CAVE01", connections)
 
 
 class TestSofanthiel(RainWorldTestBase):

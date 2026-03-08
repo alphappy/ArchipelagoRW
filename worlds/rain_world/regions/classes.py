@@ -95,12 +95,16 @@ class PhysicalRegion(RegionData):
         match rcode:
             case "SU":
                 # HARDCODE
+                from_oe = options.msc_enabled and scug in ("Yellow", "White", "Gourmand")
                 if self.name in ("Spearmaster spawn area", "Outskirts filtration"):
                     if scug == "Spear":
                         return options.randomize_starting_region == 0 and options.msc_enabled
-                    return scug in ("Yellow", "White", "Gourmand") and options.msc_enabled
+                    if self.name == "Outskirts filtration":
+                        return (from_oe or scug in ("Saint", "Artificer")
+                                or "Explosive Jump Perk" in options.expedition_perks.value)
+                    return from_oe
                 if self.name not in ("Outskirts", "Survivor tutorial area"):
-                    return options.msc_enabled and scug in ("Yellow", "White", "Gourmand")
+                    return from_oe
                 return True
             case "HI" | "GW" | "CC" | "SI" | "LF" | "SB":
                 return True

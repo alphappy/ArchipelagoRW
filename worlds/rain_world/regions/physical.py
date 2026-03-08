@@ -25,11 +25,18 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     PhysicalRegion("Spearmaster spawn area", "SU^3", spearspawn),
 
                     ConnectionData("Survivor tutorial area", "Outskirts", "Eastward from SU_A43 to SU_A22"),
-                    ConnectionData("Outskirts", "Survivor tutorial area", "Westward from SU_A22 to SU_A43", Simple("Scug-Saint")),
+
                     ConnectionData("Outskirts filtration", "Survivor tutorial area", "Eastward from SU_CAVE01 to SU_C04"),
-                    ConnectionData("Survivor tutorial area", "Outskirts filtration", "Westward from SU_C04 to SU_CAVE01", Simple("Scug-Saint")),
+
                     ConnectionData("Spearmaster spawn area", "Outskirts filtration", "Upward from SU_INTRO01 to SU_PMPSTATION01"),
                 ]
+
+                if options.starting_scug in ("Saint", "Artificer") or "Explosive Jump Perk" in options.expedition_perks.value:
+                    cond = Simple("Explosive Jump Perk") if "Explosive Jump Perk" in options.expedition_perks.value else ConditionBlank
+                    ret += [
+                        ConnectionData("Outskirts", "Survivor tutorial area", "Westward from SU_A22 to SU_A43", cond),
+                        ConnectionData("Survivor tutorial area", "Outskirts filtration", "Westward from SU_C04 to SU_CAVE01", cond),
+                    ]
 
             case "OE":
                 filt = {r for r in rooms if "PUMP" in r or r in ("OE_S03", "GATE_OE_SU[OE]")}
@@ -71,8 +78,6 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     PhysicalRegion("Subterranean", "SB", rooms.difference(ravine.union(filt).union(depths))),
                     PhysicalRegion("Subterranean ravine", "SB^", ravine),
                     ConnectionData("Subterranean ravine", "Subterranean", "Down the ravine"),
-                    ConnectionData("Subterranean", "Subterranean ravine", "Up the ravine",
-                                   Simple("Scug-Saint")),
 
                     PhysicalRegion("Filtration System", "SB^2", filt),
                     ConnectionData("Subterranean", "Filtration System", "Enter Filtration System",
@@ -82,6 +87,10 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     PhysicalRegion("Subterranean Depths", "SB^3", depths),
                     ConnectionData("Filtration System", "Subterranean Depths", "Enter Depths")
                 ]
+
+                if options.starting_scug == "Saint":
+                    ret.append(ConnectionData("Subterranean", "Subterranean ravine", "Up the ravine"))
+
 
             case "SS":
                 # Not in logic to go backwards through Five Pebbles puppet room.
@@ -168,7 +177,7 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
 
                 # If Submerged has no checks, swimming down towards the gate is not in logic.
                 if options.submerged_should_populate:
-                    if options.difficulty_submerged >= 1 and options.starting_scug != "Rivulet" and "Aquatic" in options.expedition_perks.value:
+                    if options.difficulty_submerged >= 1 and options.starting_scug != "Rivulet" and "Aquatic Perk" in options.expedition_perks.value:
                         ret += [ConnectionData("Shoreline", "Shoreline near gate to Submerged",
                                                "Entering towards Submerged", Simple("Aquatic Perk"))]
                     else:
