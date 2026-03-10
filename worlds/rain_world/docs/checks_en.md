@@ -109,15 +109,15 @@ each item of the food quest is a check when completed.
 Like the passages, food quest checks are awarded upon successful hibernation.
 Each slugcat has the ability to fulfill at least some part of the food quest.
 
-| Food                                                                                                                           | Monk<br/>Survivor<br/>Rivulet | Hunter<br/>Gourmand | Artificer    | Spearmaster | Saint |
-|--------------------------------------------------------------------------------------------------------------------------------|-------------------------------|---------------------|--------------|-------------|-------|
-| Neuron Fly<br/>Mushroom                                                                                                        | ✔                             | ✔                   | ✔            | ✔           | ✔     |
-| Glow Weed                                                                                                                      | ✔                             | ✔                   | <sup>a</sup> |             | ✔     |
-| Blue Fruit<br/>Bubble Fruit<br/>Dandelion Peach<br/>Gooieduck<br/>Lilypuck<br/>Slime Mold                                      | ✔                             | ✔                   | ✔            |             | ✔     |
-| Batfly<br/>Hazer                                                                                                               | ✔                             | ✔                   | ✔            | ✔           |       |
-| Black Lizard<br/>Salamander / Eel Lizard<br/>Yellow Lizard<br/>Cyan Lizard<br/>Jetfish<br/>Snail<br/>Eggbug<br/>Grappling Worm |                               | ✔                   | ✔            | ✔           |       |
-| Aquapede / Red Centipede<sup>b</sup><br/>Centiwing                                                                             | ✔<sup>c</sup>                 | ✔                   | ✔            | ✔           |       |
-| Jellyfish                                                                                                                      | ✔                             | ✔                   | ✔            |             |       |
+| Food                                                                                                                           | Monk<br/>Survivor<br/>Rivulet | Hunter<br/>Gourmand | Artificer    | Spearmaster | Saint | Sofanthiel |
+|--------------------------------------------------------------------------------------------------------------------------------|-------------------------------|---------------------|--------------|-------------|-------|------------|
+| Neuron Fly<br/>Mushroom                                                                                                        | ✔                             | ✔                   | ✔            | ✔           | ✔     | ✔          |
+| Glow Weed                                                                                                                      | ✔                             | ✔                   | <sup>a</sup> |             | ✔     | ✔          |
+| Blue Fruit<br/>Bubble Fruit<br/>Dandelion Peach<br/>Gooieduck<br/>Lilypuck<br/>Slime Mold                                      | ✔                             | ✔                   | ✔            |             | ✔     | ✔          |
+| Batfly<br/>Hazer                                                                                                               | ✔                             | ✔                   | ✔            | ✔           |       | ✔          |
+| Black Lizard<br/>Salamander / Eel Lizard<br/>Yellow Lizard<br/>Cyan Lizard<br/>Jetfish<br/>Snail<br/>Eggbug<br/>Grappling Worm |                               | ✔                   | ✔            | ✔           |       | ✔          |
+| Aquapede / Red Centipede<sup>b</sup><br/>Centiwing                                                                             | ✔<sup>c</sup>                 | ✔                   | ✔            | ✔           |       | ✔          |
+| Jellyfish                                                                                                                      | ✔                             | ✔                   | ✔            |             |       | ✔          |
 
 - <sup>a</sup> Artificer can eat Glow Weed, but does not find any in their worldstate.
 - <sup>b</sup> This check is not generated unless the `Extreme threats` setting is enabled.
