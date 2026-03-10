@@ -3,8 +3,9 @@ from typing import Optional, Callable
 
 from BaseClasses import MultiWorld, Location, LocationProgressType, Region
 from ..game_data.bitflag import ScugFlagMap
+from ..game_data.watcher import watcher_high_up_shinies
 from ..options import RainWorldOptions
-from ..conditions.classes import ConditionBlank, Condition
+from ..conditions.classes import ConditionBlank, Condition, AnyOf, Simple
 from ..constants import FIRST_ID
 from worlds.generic.Rules import add_rule
 from ..regions.classes import room_to_region
@@ -76,6 +77,8 @@ class RoomLocation(LocationData):
             if self.region in ("Submerged Superstructure", "Bitter Aerie", "Shoreline above puppet room",
                                "Shoreline near gate to Submerged"):
                 return False
+        if options.starting_scug == "Watcher" and self.client_name in watcher_high_up_shinies:
+            self.access_condition = AnyOf(Simple("Ripple", 4), Simple("Explosive Jump Perk"))
 
         return super().pre_generate(player, multiworld, options)
 

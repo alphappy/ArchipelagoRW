@@ -1,11 +1,10 @@
 from BaseClasses import MultiWorld
 from .classes import RoomLocation
 from ..conditions import GameStateFlag
-from ..conditions.classes import Simple, AnyOf
+from ..conditions.classes import Simple
 from ..game_data.general import scugs_vanilla, scugs_msc, scugs_watcher, scugs_msc_watcher
 from ..options import RainWorldOptions
 from ..game_data import static_data
-from ..game_data.watcher import watcher_high_up_shinies
 from ..regions.classes import room_to_region
 
 name_format = {
@@ -38,8 +37,6 @@ class TokenOrPearl(RoomLocation):
             return False
         if "Pearl" in self.kind and not options.msc_enabled and options.starting_scug == "Yellow":
             return False
-        if options.starting_scug == "Watcher" and self.client_name in watcher_high_up_shinies:
-            self.access_condition = AnyOf(Simple("Ripple", 4), Simple("Explosive Jump Perk"))
 
         # HARDCODE: This specific token doesn't appear for Hunter - not sure why.
         if options.starting_scug == "Red" and self.client_name == "Token-Scavenger-GW":

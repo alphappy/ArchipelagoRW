@@ -116,5 +116,5 @@ watcher_blacklisted_flowers = {
 watcher_high_up_shinies = {
     "Token-ScavengerTemplar-WARA", "Token-Angler-WARB", "Token-ProtoLizard-WARD", "Token-Frog-WPGA",
     "Token-L-WVWB", "Pearl-AUDIO_GROOVE-WARG", "Pearl-ABSTRACT-WSKC", "Pearl-AUDIO_JAM3-WTDB",
-    "Pearl-TEXT_NOTIONOFSELF-WMPA",
+    "Pearl-TEXT_NOTIONOFSELF-WMPA", "Flower-WSKD_B40",
 }
