@@ -713,6 +713,13 @@ class WtDandelionPeach(WtGeneric):
     default = 20
 
 
+class WtGooieduck(WtGeneric):
+    """The relative weight of gooieducks in the non-trap filler item pool."""
+    display_name = "Gooieduck (MSC)"
+    item_name = "Gooieduck"
+    default = 20
+
+
 class WtFruit(WtGeneric):
     """The relative weight of blue fruit in the non-trap filler item pool."""
     display_name = "Blue Fruit"
@@ -804,11 +811,26 @@ class WtVultureMask(WtGeneric):
     default = 9
 
 
+class WtPearl(WtGeneric):
+    """The relative weight of pearls in the non-trap filler item pool."""
+    display_name = "Pearl"
+    item_name = "Pearl"
+    default = 9
+
+
+class WtBeehive(WtGeneric):
+    """The relative weight of beehives in the non-trap filler item pool."""
+    display_name = "Beehive"
+    item_name = "Beehive"
+    default = 15
+
+
 class WtJokeRifle(WtGeneric):
     """The relative weight of joke rifles in the non-trap filler item pool."""
     display_name = "Joke Rifle (MSC)"
     item_name = "Joke Rifle"
     default = 1
+
 
 class WtBoomerang(WtGeneric):
     """The relative weight of boomerangs in the non-trap filler item pool."""
@@ -816,11 +838,13 @@ class WtBoomerang(WtGeneric):
     item_name = "Boomerang"
     default = 20
 
+
 class WtPoisonSpear(WtGeneric):
     """The relative weight of poison spears in the non-trap filler item pool."""
     display_name = "Poison Spear (Watcher)"
     item_name = "Poison Spear"
     default = 15
+
 
 class WtGraffitiBomb(WtGeneric):
     """The relative weight of graffiti bombs in the non-trap filler item pool."""
@@ -828,17 +852,20 @@ class WtGraffitiBomb(WtGeneric):
     item_name = "Graffiti Bomb"
     default = 20
 
+
 class WtRotFruit(WtGeneric):
     """The relative weight of rot fruits in the non-trap filler item pool."""
     display_name = "Rot Fruit (Watcher)"
     item_name = "Rot Fruit"
     default = 0
 
+
 class WtFireSpriteLarva(WtGeneric):
     """The relative weight of fire sprite larvae in the non-trap filler item pool."""
     display_name = "Fire Sprite Larva (Watcher)"
     item_name = "Fire Sprite Larva"
     default = 30
+
 
 #################################################################
 # TRAP SETTINGS
@@ -1036,8 +1063,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_bubble_weed: WtBubbleWeed
     wt_lanterns: WtLantern
     wt_vulture_masks: WtVultureMask
+    wt_pearls: WtPearl
+    wt_beehives: WtBeehive
     wt_lilypucks: WtLillyPuck
     wt_dandelion_peaches: WtDandelionPeach
+    wt_gooieducks: WtGooieduck
     wt_electric_spears: WtElectricSpear
     wt_singularity_bombs: WtSingularityBomb
     wt_joke_rifles: WtJokeRifle
@@ -1059,9 +1089,10 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     group_filler = [
         WtRock, WtSpear, WtExplosiveSpear, WtGrenade, WtFlashbang, WtSporePuff, WtCherrybomb, WtBubbleWeed, WtLantern,
-        WtVultureMask, WtFruit, WtBubbleFruit, WtEggbugEgg, WtJellyfish, WtMushroom, WtSlimeMold, WtKarmaFlower,
+        WtVultureMask, WtPearl, WtBeehive, WtFruit, WtBubbleFruit, WtEggbugEgg, WtJellyfish, WtMushroom, WtSlimeMold,
+        WtKarmaFlower,
 
-        WtLillyPuck, WtDandelionPeach, WtElectricSpear, WtSingularityBomb, WtJokeRifle,
+        WtLillyPuck, WtDandelionPeach, WtGooieduck, WtElectricSpear, WtSingularityBomb, WtJokeRifle,
         WtFireEgg, WtGlowWeed,
 
         WtBoomerang, WtPoisonSpear, WtGraffitiBomb, WtRotFruit, WtFireSpriteLarva
@@ -1245,11 +1276,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         ret = {a.item_name: a.value for a in [
             self.wt_rocks, self.wt_spears, self.wt_explosive_spears, self.wt_grenades,
             self.wt_flashbangs, self.wt_sporepuffs, self.wt_cherrybombs, self.wt_bubble_weed,
-            self.wt_lilypucks, self.wt_dandelion_peaches, self.wt_fruit, self.wt_bubblefruit,
+            self.wt_lilypucks, self.wt_dandelion_peaches, self.wt_gooieducks, self.wt_fruit, self.wt_bubblefruit,
             self.wt_eggbugeggs, self.wt_jellyfish, self.wt_mushrooms, self.wt_slimemold,
             self.wt_fireeggs, self.wt_glowweed, self.wt_electric_spears, self.wt_singularity_bombs,
-            self.wt_lanterns, self.wt_karma_flowers, self.wt_vulture_masks, self.wt_joke_rifles,
-            self.wt_boomerangs, self.wt_poison_spears, self.wt_graffiti_bombs, self.wt_rot_fruit,
+            self.wt_lanterns, self.wt_karma_flowers, self.wt_vulture_masks, self.wt_pearls, self.wt_beehives,
+            self.wt_joke_rifles, self.wt_boomerangs, self.wt_poison_spears, self.wt_graffiti_bombs, self.wt_rot_fruit,
             self.wt_fire_sprite_larva,
         ]}
         if not self.msc_enabled:
@@ -1259,7 +1290,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             for key in ("Boomerang", "Poison Spear", "Graffiti Bomb", "Rot Fruit", "Fire Sprite Larva"):
                 ret[f"{key}"] = 0
         if not self.any_dlc_enabled:
-            for key in ("Lilypuck", "Dandelion Peach", "Glow Weed", "Singularity Bomb"):
+            for key in ("Lilypuck", "Dandelion Peach", "Glow Weed", "Singularity Bomb", "Gooieduck"):
                 ret[f"{key}"] = 0
 
         return ret

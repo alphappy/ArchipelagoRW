@@ -142,6 +142,8 @@ all_items: Dict[str, RainWorldItemData] = {
     "Vulture Mask": FillerItemData("Vulture Mask", "Object-VultureMask", 274 + offset),
     "Joke Rifle": FillerItemData("Joke Rifle", "Object-JokeRifle", 275 + offset, ["MSC"]),
     "Graffiti Bomb": FillerItemData("Graffiti Bomb", "Object-GraffitiBomb", 276 + offset, ["Watcher"]),
+    "Pearl": FillerItemData("Pearl", "Object-DataPearl", 277 + offset),
+    "Beehive": FillerItemData("Beehive", "Object-SporePlant", 278 + offset),
 
     #################################################################
     # FILLER - NON-CREATURE TRAPS
