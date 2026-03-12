@@ -183,7 +183,7 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
         keys.append("Martyr")
         if options.starting_scug != "Watcher":
             keys += ["Pilgrim", "Nomad"]
-        if options.starting_scug in ["White", "Red", "Gourmand"]:
+        if options.starting_scug in ["White", "Red", "Gourmand", "Inv"]:
             keys.append("Mother")
 
     if options.starting_scug != "Watcher":

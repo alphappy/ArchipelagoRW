@@ -74,12 +74,12 @@ and also depends on the `Passage progress without Survivor` setting in the playe
 
 There are four passages that may always be earned before The Survivor is earned, regardless of settings:
 
-| Passage           | Eligibility                                | Requirements                                    |
-|-------------------|--------------------------------------------|-------------------------------------------------|
-| The Martyr        | Any; MSC enabled                           | None                                            |
-| The Mother        | Survivor, Hunter, or Gourmand; MSC enabled | Access to HI, DS, GW, SH, CC, SI, LF, SB, or VS |
-| The Pilgrim       | Not Watcher; MSC enabled                   | Access to all eligible echoes                   |
-| The Survivor      | Any                                        | Max karma at least 5                            |
+| Passage      | Eligibility                                            | Requirements                                    |
+|--------------|--------------------------------------------------------|-------------------------------------------------|
+| The Martyr   | Any; MSC enabled                                       | None                                            |
+| The Mother   | Survivor, Hunter, Gourmand, or Sofanthiel; MSC enabled | Access to HI, DS, GW, SH, CC, SI, LF, SB, or VS |
+| The Pilgrim  | Not Watcher; MSC enabled                               | Access to all eligible echoes                   |
+| The Survivor | Any                                                    | Max karma at least 5                            |
 
 There are three passages that may be earned before The Survivor,
 but only if the `Passage progress without Survivor` setting is either `enabled` or `bypassed`:
