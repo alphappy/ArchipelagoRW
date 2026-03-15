@@ -994,7 +994,7 @@ class WtTrapRippleSpawn(WtGeneric):
     Before the Glow is obtained these will be invisible, making them much more dangerous."""
     display_name = "Ripple Spawn trap"
     item_name = "Ripple Spawn trap"
-    default = 10
+    default = 0
 
 class WtTrapBlizzardLizard(WtGeneric):
     """The relative weight of blizzard lizard traps in the trap filler item pool.
