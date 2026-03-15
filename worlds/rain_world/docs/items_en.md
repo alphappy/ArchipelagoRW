@@ -55,9 +55,16 @@ The only thing that all traps have in common is that they affect the game world 
 - **Stun**: Slugcat is briefly stunned.
 - **Creature**: a dangerous creature spawns in an adjacent room.
 This may be a Red Lizard, Red Centipede, Spitter Spider, Brother Long Legs, or Daddy Long Legs.
-The creature is immediately aware of Slugcat's position.
+When Watcher is enabled, Blizzard Lizard is also added.
+The creature is aware of Slugcat's position for a short while.
 - **Timer**: the current cycle timer is shortened.
 - **Zoomies**: Slugcat suddenly starts moving much faster.  The effect wears off after a short while.
-- **Alarm**: every creature in the region is made aware of Slugcat's position.
+- **Alarm**: every creature in the region is made aware of Slugcat's position for a short while.
 - **Rain**: a heavy (but not crushing) rain suddenly starts and lasts a short while.
-- **Gravity**: gravity is disabled for a short while. Has no effect in rooms that already have an active gravity effect.
+- **Gravity**: gravity is disabled for a short while. 
+Has no effect in rooms that already have an active gravity effect.
+- **Responsibility**: (MSC only) A slugpup spawns in an adjacent room. 
+It is aware of Slugcat's position for a short while.
+- **Ripple Spawn**: (Watcher only) Many Ripple amoeba appear in the current room and target slugcat.
+Before the Glow is obtained these are invisible.
+Because of this, this trap's default weight is 0 and must be purposefully enabled.
