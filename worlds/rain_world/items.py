@@ -163,6 +163,9 @@ all_items: Dict[str, RainWorldItemData] = {
     "Spitter Spider trap": TrapItemData("Spitter Spider trap", "Trap-SpitterSpider", 332 + offset),
     "Brother Long Legs trap": TrapItemData("Brother Long Legs trap", "Trap-BrotherLongLegs", 333 + offset),
     "Daddy Long Legs trap": TrapItemData("Daddy Long Legs trap", "Trap-DaddyLongLegs", 334 + offset),
+    "Responsibility trap": TrapItemData("Responsibility trap", "Trap-Responsibility", 335 + offset),
+    "Ripple Spawn trap": TrapItemData("Ripple Spawn trap", "Trap-RippleSpawn", 336 + offset),
+    "Blizzard Lizard trap": TrapItemData("Blizzard Lizard trap", "Trap-BlizzardLizard", 337 + offset),
 
     #################################################################
     # FILLER - UPGRADES
