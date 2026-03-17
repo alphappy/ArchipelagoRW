@@ -244,9 +244,9 @@ class RainWorldWorld(World):
 
             # External tracker needs to know...
             "difficulty_glow", "difficulty_monk", "difficulty_hunter", "difficulty_outlaw", "difficulty_chieftain",
-            "difficulty_nomad", "difficulty_extreme_threats", "checks_submerged", "checks_foodquest_expanded",
-            "logic_rotted_generation", "logic_ripplespace_min_req", "dynamic_warp_pool_size",
-            "predetermined_dynamic_warp_network_minimum_necklace_length"
+            "difficulty_nomad", "difficulty_extreme_threats", "checks_submerged", "difficulty_submerged",
+            "checks_foodquest_expanded", "logic_rotted_generation", "logic_ripplespace_min_req", "dynamic_warp_pool_size",
+            "predetermined_dynamic_warp_network_minimum_necklace_length", "expedition_perks", "daemon_keys"
         )
         # backwards compatibility
         d["which_gamestate"] = self.options.which_gamestate_integer
