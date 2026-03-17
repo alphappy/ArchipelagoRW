@@ -85,6 +85,15 @@ if they contain any remaining checks.
 TLDR: Dynamic warps can only reach regions in logic, and will attempt to send you to regions where you have a lot of checks to do or otherwise
 are important to reach for a goal condition.
 
+### Passage Tokens
+Passage tokens are normally excluded from Watcher's item pool, as passages are non-functional in the base Watcher campaign.
+However, thanks to Shrub and many talented artists, there exists a mod that adds passages for Watcher. 
+When the option `watcher_passages` is enabled, passage tokens will be shuffled into the item pool and will be able to be used 
+if and only if the Watcher Region Art mod is enabled in-game.
+
+You can find Watcher Region Art on the Steam workshop:
+https://steamcommunity.com/sharedfiles/filedetails/?id=3660768308
+
 ## Checks
 
 Most of Watcher's checks fall into one of a few categories.

@@ -163,6 +163,9 @@ class RainWorldWorld(World):
                 "Dial Warp Ability": 1,
                 "The Mark": 1,
             }
+            if self.options.watcher_passages:
+                pool.update({f"Passage Token - {passage_proper_names[p]}": 1
+                             for p in (passages_all if self.options.msc_enabled else passages_vanilla)})
             if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:
                 pool.update({f"Dynamic: {k}": 1 for k in (normal_regions if ndwb.predetermined else self.warp_pool)})
 

@@ -323,6 +323,15 @@ class PriorityThrone(Choice):
     # visibility = Visibility.none
 
 
+class UseWatcherPassages(Toggle):
+    """Whether passage tokens will be added to the item pool when playing as Watcher.
+    You will need the mod "Watcher Region Art" enabled in order to use passage tokens in-game.
+    The mod can be found on the Steam workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3660768308
+    """
+    display_name = "Use Watcher Passages"
+    default = False
+
+
 #################################################################
 # GENERAL SETTINGS
 class RandomStartingRegion(Choice):
@@ -1087,11 +1096,12 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     spinning_top_keys: SpinningTopKeys
     daemon_keys: DaemonKeys
     priority_throne: PriorityThrone
+    watcher_passages: UseWatcherPassages
 
     group_watcher = [
         LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
         DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, SpinningTopKeys, DaemonKeys,
-        PriorityThrone, PredeterminedDynamicWarpNetworkMinimumNecklaceLength,
+        PriorityThrone, UseWatcherPassages, PredeterminedDynamicWarpNetworkMinimumNecklaceLength,
     ]
 
     #################################################################
