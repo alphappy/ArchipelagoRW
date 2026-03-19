@@ -50,10 +50,10 @@ class GateData:
                 right_cost = ConditionBlank
 
             _l, _r = self.additional_conditions(options)
-            left_condition = AllOf(_l, Simple([f"Scug-{s}" for s in scugs], 1), left_cost)
-            right_condition = AllOf(_r, Simple([f"Scug-{s}" for s in scugs], 1), right_cost)
+            left_condition = AllOf(_l, left_cost)
+            right_condition = AllOf(_r, right_cost)
 
-            if left.populate and right.populate:
+            if left.populate and right.populate and options.starting_scug in scugs:
                 left.connect(
                     right, f"{'west' if self.was_swapped else 'east'} through {self.name}",
                     rule=left_condition.check(player)

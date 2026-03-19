@@ -107,19 +107,14 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                         "VS_B18", "VS_D05", "VS_C08", "VS_E01", "VS_B05", "VS_D02", "VS_S02", "GATE_SL_VS[VS]"}
                 filt = {"VS_C10", "VS_C12", "VS_C11", "VS_E02", "VS_B06", "BS_S03", "VS_H01", "GATE_SB_VS[VS]",
                         "VS_S03"}
+
+                sump_cond = Simple("Aquatic Perk") if options.starting_scug == "Artificer" else ConditionBlank
+
                 ret += [
                     PhysicalRegion("Pipeyard", "VS", rooms.difference(sump.union(filt))),
                     PhysicalRegion("Sump Tunnel", "VS^", sump),
-                    ConnectionData("Pipeyard", "Sump Tunnel", "Enter Sump Tunnel",
-                                   AnyOf(
-                                       Simple(list(set(scugs_all).difference({"Artificer"})), 1),
-                                       Simple("Aquatic Perk")
-                                   )),
-                    ConnectionData("Sump Tunnel", "Pipeyard", "Exit Sump Tunnel",
-                                   AnyOf(
-                                       Simple(list(set(scugs_all).difference({"Artificer"})), 1),
-                                       Simple("Aquatic Perk")
-                                   )),
+                    ConnectionData("Pipeyard", "Sump Tunnel", "Enter Sump Tunnel", sump_cond),
+                    ConnectionData("Sump Tunnel", "Pipeyard", "Exit Sump Tunnel", sump_cond),
                     PhysicalRegion("Pipeyard filtration", "VS^2", filt),
                     ConnectionData("Pipeyard", "Pipeyard filtration", "Enter dark filtration area",
                                    Simple("The Glow") if options.difficulty_glow else ConditionBlank),
@@ -264,8 +259,8 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
             case _:
                 ret.append(PhysicalRegion(region_code_to_name[region], region, rooms))
 
-    ret.append(ConnectionData("Subterranean", "Rubicon", "Enter Rubicon",
-                              AllOf(Simple("Karma", 8), Simple("Scug-Saint"))))
+    if options.starting_scug == "Saint":
+        ret.append(ConnectionData("Subterranean", "Rubicon", "Enter Rubicon", Simple("Karma", 8)))
 
     return ret
 
