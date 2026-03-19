@@ -85,8 +85,15 @@ class RoomLocation(LocationData):
 
 class AbstractLocation(LocationData):
     def __init__(self, name: str, client_name: str, alt_names: list[str], offset: int, region: str,
-                 access_condition: Condition = ConditionBlank):
+                 access_condition: Condition = ConditionBlank,
+                 access_condition_generator:  Optional[Callable[[RainWorldOptions], Condition]] = None):
         super().__init__(name, client_name, alt_names, offset, region, access_condition)
+        self.acc_gen = access_condition_generator
+
+    def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+        if self.acc_gen is not None:
+            self.access_condition = self.acc_gen(options)
+        return super().pre_generate(player, multiworld, options)
 
 
 class Passage(AbstractLocation):
@@ -94,8 +101,7 @@ class Passage(AbstractLocation):
                  access_condition: Condition = ConditionBlank,
                  access_condition_generator:  Optional[Callable[[RainWorldOptions], Condition]] = None):
         super().__init__(f"Passage - {self.proper_name(name)}", f"Passage-{name}", ["Passage"],
-                         offset, region, access_condition)
-        self.acc_gen = access_condition_generator
+                         offset, region, access_condition, access_condition_generator)
 
     @staticmethod
     def proper_name(name: str):
@@ -104,8 +110,3 @@ class Passage(AbstractLocation):
         elif name == "DragonSlayer":
             return "The Dragon Slayer"
         return f'The {name}'
-
-    def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-        if self.acc_gen is not None:
-            self.access_condition = self.acc_gen(options)
-        return super().pre_generate(player, multiworld, options)
