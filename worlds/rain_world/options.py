@@ -378,6 +378,7 @@ class PossibleStartingRegions(OptionCounter):
         "Subterranean": "SB",
 
         "Pipeyard": "VS",
+        "Submerged Superstructure": "MS",
         "Outer Expanse": "OE",
         "Metropolis": "LC",
         "Looks to the Moon": "DM",
@@ -1249,6 +1250,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             if self.starting_scug == "Artificer":
                 valid_codes.difference_update({"LC"})
             valid_codes.difference_update({"OE"})
+
+        if not self.submerged_should_populate:
+            valid_codes.difference_update({"MS"})
+        elif self.difficulty_submerged > (1 if self.starting_scug == "Rivulet" else 0):
+            valid_codes.difference_update({"MS"})
 
         # Filter to slugcat's regions
         valid_codes.intersection_update(all_regions["MSC"][self.starting_scug])

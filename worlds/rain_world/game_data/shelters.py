@@ -37,6 +37,7 @@ start_shelters = {
     'LC': ['LC_SHELTER_ABOVE', 'LC_A05', 'LC_S03', 'LC_S01', 'LC_SHELTERTRAIN1', 'LC_S04'],
     'LF': ['LF_S02', 'LF_S01', 'LF_S07', 'LF_S05', 'LF_S03'],
     'LM': ['LM_S05', 'LM_S11', 'LM_S13', 'LM_S06'],
+    'MS': ['MS_S01', 'MS_S06', 'MS_S05', 'MS_S03', 'MS_S09'],
     'OE': ['OE_S01', 'OE_S04', 'OE_EXSHELTER', 'OE_S06'],
     'RM': ['RM_S01', 'RM_LCS2', 'RM_LCS1'],
     'SB': ['SB_S06', 'SB_S07', 'SB_S04', 'SB_S05', 'SB_S02'],

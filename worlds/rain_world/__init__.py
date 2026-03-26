@@ -174,16 +174,19 @@ class RainWorldWorld(World):
         if self.options.msc_enabled:
             pool.update(**{perk : 1 for perk in self.options.expedition_perks})
 
-        # precollect = { }
+        precollect = { }
+
+        if self.options.starting_region_code == "MS":
+            precollect.update({"Bubble Weed": 1})
 
         for name, count in pool.items():
             for i in range(count):
                 self.multiworld.itempool.append(self.create_item(name))
             added_items += count
 
-        # for name, count in precollect.items():
-        #     for i in range(count):
-        #         self.multiworld.push_precollected(self.create_item(name))
+        for name, count in precollect.items():
+            for i in range(count):
+                self.multiworld.push_precollected(self.create_item(name))
 
         #################################################################
         # FILLER POPULATION

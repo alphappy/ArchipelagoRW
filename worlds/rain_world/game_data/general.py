@@ -71,15 +71,15 @@ story_regions_vanilla = {"SU", "HI", "DS", "GW", "SL", "SH", "UW", "SS", "CC", "
 all_regions = {
     "Vanilla": {scug: story_regions_vanilla for scug in ["Yellow", "White", "Red"]},
     "MSC": {
-        "Yellow": story_regions_vanilla.union({"VS", "OE"}),
-        "White": story_regions_vanilla.union({"VS", "OE"}),
-        "Red": story_regions_vanilla.union({"VS"}),
-        "Gourmand": story_regions_vanilla.union({"VS", "OE"}),
+        "Yellow": story_regions_vanilla.union({"VS", "OE", "MS"}),
+        "White": story_regions_vanilla.union({"VS", "OE", "MS"}),
+        "Red": story_regions_vanilla.union({"VS", "MS"}),
+        "Gourmand": story_regions_vanilla.union({"VS", "OE", "MS"}),
         "Artificer": story_regions_vanilla.union({"VS", "LC"}),
         "Rivulet": story_regions_vanilla.union({"VS", "MS"}),
         "Spear": story_regions_vanilla.union({"VS", "DM"}),
-        "Saint": story_regions_vanilla.union({"VS", "HR"}).difference({"UW", "SS"}),
-        "Inv": story_regions_vanilla.union({"VS"}),
+        "Saint": story_regions_vanilla.union({"VS", "HR", "MS"}).difference({"UW", "SS"}),
+        "Inv": story_regions_vanilla.union({"VS", "MS"}),
     }
 }
 all_regions["Watcher"] = all_regions["Vanilla"]
