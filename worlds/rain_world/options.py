@@ -42,34 +42,6 @@ class IsWatcherEnabled(Toggle):
     default = 0
 
 
-class WhichGameVersion(Choice):
-    """Which Rain World version you are using."""
-    display_name = "Game version"
-    option_1_9_15b = 1091503
-    alias_1_9_15_3 = 1091503
-    alias_1_9_15 = 1091503
-    alias_1_9 = 1091503
-    option_1_10_4 = 1100400
-    alias_1_10 = 1100400
-    alias_1_10_1 = 1100400
-    alias_1_10_2 = 1100400
-    alias_1_10_3 = 1100400
-    default = 1100400
-
-    displaying = {
-        1091503: ("v1.9.15b / v1.9.15.3", "1.9.15.3"),
-        1100400: ("v1.10.0 - v1.11.1", "1.11.6"),
-    }
-
-    @property
-    def string(self) -> str: return self.displaying[self.value][1]
-
-    @classmethod
-    def get_option_name(cls, value: int) -> str: return cls.displaying[value][0]
-
-    visibility = Visibility.none
-
-
 class WhichCampaign(Choice):
     """Which slugcat's campaign you will play."""
     display_name = "Campaign"
@@ -1022,7 +994,6 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     #################################################################
     # IMPORTANT SETTINGS
-    which_game_version: WhichGameVersion
     is_msc_enabled: IsMSCEnabled
     is_watcher_enabled: IsWatcherEnabled
     which_campaign: WhichCampaign
@@ -1034,7 +1005,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     debug_output: DebugOutput
 
     group_important = [
-        WhichGameVersion, IsMSCEnabled, IsWatcherEnabled, WhichCampaign, PassageProgressWithoutSurvivor,
+        IsMSCEnabled, IsWatcherEnabled, WhichCampaign, PassageProgressWithoutSurvivor,
         WhichVictoryCondition, WhichGateBehavior, DeathLink, RandomStartingRegion, PossibleStartingRegions, DebugOutput
     ]
 
@@ -1204,9 +1175,6 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def starting_scug(self) -> str: return self.which_campaign.scug_id
 
     @property
-    def worldstate(self) -> tuple[str, str]: return self.which_game_version.string, self.dlcstate
-
-    @property
     def which_gamestate_integer(self) -> int:
         return int(self.which_campaign) + (10 if self.is_msc_enabled else 0)
 
@@ -1261,11 +1229,6 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         choose_weighted()
 
     def general_validity_check(self) -> str | None:
-        if self.is_watcher_enabled and self.which_game_version < 1100000:
-            return "The Watcher cannot be enabled with a game version before 1.10.0."
-        if self.is_msc_enabled and self.which_game_version < 1090000:
-            return "More Slugcats Expansion cannot be enabled with a game version before 1.9.0."
-
         if not self.is_watcher_enabled and self.starting_scug == "Watcher":
             return "Watcher's campaign cannot be selected without The Watcher enabled."
         if not self.is_msc_enabled and self.starting_scug in [
@@ -1329,7 +1292,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         return None
 
     @property
-    def data_block(self) -> dict: return static_data[self.which_game_version.string][self.dlcstate]
+    def data_block(self) -> dict: return static_data[self.dlcstate]
 
     @property
     def submerged_should_populate(self) -> bool:
@@ -1378,7 +1341,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def satisfies(self, flag: GameStateFlag): return flag[self.dlcstate, self.starting_scug]
 
     def satisfies_flagmap(self, d: ScugFlagMap) -> bool:
-        return self.starting_scug in d.get(self.which_game_version.string, self.dlcstate)
+        return self.starting_scug in d.get(self.dlcstate)
 
     @property
     def should_have_rot_spread_checks(self):

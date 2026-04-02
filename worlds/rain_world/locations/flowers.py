@@ -23,17 +23,16 @@ def initialize() -> list[FlowerLocation]:
     ret = {}
     offset = INITIAL_OFFSET
 
-    for gameversion, gameversion_data in static_data.items():
-        for dlcstate, dlcstate_data in gameversion_data.items():
-            for region, region_data in dlcstate_data.items():
-                for room, room_data in region_data.items():
-                    if "KarmaFlower" in room_data.get("objects", {}).keys():
-                        if ret.get(room, None) is None:
-                            ret[room] = FlowerLocation(offset, room)
-                            offset += 1
+    for dlcstate, dlcstate_data in static_data.items():
+        for region, region_data in dlcstate_data.items():
+            for room, room_data in region_data.items():
+                if "KarmaFlower" in room_data.get("objects", {}).keys():
+                    if ret.get(room, None) is None:
+                        ret[room] = FlowerLocation(offset, room)
+                        offset += 1
 
-                        whitelist = POEW(room_data, room_data['objects']['KarmaFlower'], set(scugs_msc_watcher))
-                        ret[room].whitelist.update(gameversion, dlcstate, whitelist)
+                    whitelist = POEW(room_data, room_data['objects']['KarmaFlower'], set(scugs_msc_watcher))
+                    ret[room].whitelist.update(dlcstate, whitelist)
 
     return list(ret.values())
 

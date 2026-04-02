@@ -15,19 +15,18 @@ def initialize() -> dict[str, Shelter]:
     offset = 5350
     ret: dict[str, Shelter] = {}
 
-    for gameversion, gameversion_data in static_data.items():
-        for dlcstate, dlcstate_data in gameversion_data.items():
-            for region, region_data in dlcstate_data.items():
-                for room, room_data in region_data.items():
-                    if "SHELTER" in room_data.get("tags", set()):
-                        if (shelter_data := ret.get(room, None)) is None:
-                            shelter_data = Shelter(room, offset)
-                            ret[room] = shelter_data
-                            offset += 1
+    for dlcstate, dlcstate_data in static_data.items():
+        for region, region_data in dlcstate_data.items():
+            for room, room_data in region_data.items():
+                if "SHELTER" in room_data.get("tags", set()):
+                    if (shelter_data := ret.get(room, None)) is None:
+                        shelter_data = Shelter(room, offset)
+                        ret[room] = shelter_data
+                        offset += 1
 
-                        whitelist = REW(room_data, scugs_msc_watcher)
-                        whitelist = whitelist.difference(room_data.get("broken", set()))
-                        shelter_data.whitelist.update(gameversion, dlcstate, whitelist)
+                    whitelist = REW(room_data, scugs_msc_watcher)
+                    whitelist = whitelist.difference(room_data.get("broken", set()))
+                    shelter_data.whitelist.update(dlcstate, whitelist)
 
     return ret
 
