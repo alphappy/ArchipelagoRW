@@ -229,7 +229,7 @@ for gameversion, dlcstate_and_scugs in scugs_by_gameversion.items():
         settings_file_i = 0
 
         # We need to process the normal settings files first, then update with alt settings files.
-        for fp in list(normal_settings_files) + list(all_settings_files - normal_settings_files):
+        for fp in (sorted(list(normal_settings_files)) + sorted(list(all_settings_files - normal_settings_files))):
             if settings_file_i % 100 == 0:
                 print(f"  Room settings {settings_file_i / settings_file_count:.0%}...")
             settings_file_i += 1
