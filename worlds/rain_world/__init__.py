@@ -225,7 +225,6 @@ class RainWorldWorld(World):
     def fill_slot_data(self) -> Mapping[str, Any]:
         d = self.options.as_dict(
             # Plugin needs to know...
-            "which_game_version",  # ...which game version should be used.
             "is_msc_enabled",  # ...whether MSC should be enabled.
             "is_watcher_enabled",  # ...whether The Watcher should be enabled.
             "which_campaign",  # ...which campaign should be selected.
@@ -253,6 +252,7 @@ class RainWorldWorld(World):
         )
         # backwards compatibility
         d["which_gamestate"] = self.options.which_gamestate_integer
+        d["which_game_version"] = 1100400
         # ...which room to spawn in.  Empty string for default.
         d["starting_room"] = ("" if self.start_is_default
                               else ingame_capitalization.get(self.starting_room, self.starting_room))

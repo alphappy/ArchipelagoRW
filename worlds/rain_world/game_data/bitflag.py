@@ -69,18 +69,18 @@ ScugFlag = named_bit_flag(
 
 
 class ScugFlagMap:
-    _flags: dict[tuple[str, str], ScugFlag]
+    _flags: dict[str, ScugFlag]
 
     def __init__(self):
         self._flags = {}
 
     def __getitem__(self, item): return self._flags[item]
 
-    def update(self, gameversion: str, dlcstate: str, scugs: set[str], on: bool = True):
-        self._flags.setdefault((gameversion, dlcstate), ScugFlag())._set_flags(scugs, on)
+    def update(self, dlcstate: str, scugs: set[str], on: bool = True):
+        self._flags.setdefault(dlcstate, ScugFlag())._set_flags(scugs, on)
 
-    def get(self, gameversion: str, dlcstate: str) -> ScugFlag:
-        return self._flags.get((gameversion, dlcstate), ScugFlag())
+    def get(self, dlcstate: str) -> ScugFlag:
+        return self._flags.get(dlcstate, ScugFlag())
 
     @property
     def dump_list(self): return {' '.join(k): v.get_all_primary_flags_ordered() for k, v in self._flags.items()}
