@@ -270,7 +270,7 @@ wiki_names = {
     "Slugcat": ["Slugcat"],
     "Snail": ["Snail"],
     "CicadaA": ["White Squidcada"],
-    "FireBug": ["Firebug", "Hellbug"],
+    "FireBug": ["Fire Egg", "Firebug", "Hellbug"],
     "StowawayBug": ["Stowaway"],
     "Yeek": ["Yeek"],
     "BigJelly": ["Giant Jellyfish", "Big Jellyfish"],

@@ -109,6 +109,7 @@ pips: list[FoodQuestPip] = [
     FoodQuestPip(0b0_001_000_000, "TentaclePlant"),
     FoodQuestPip(0b0_001_000_000, "BigEel"),
     FoodQuestPip(0b0_001_000_000, "Inspector"),
+    FoodQuestPip(0b0_010_000_000, "FireBug"),
     # -- Watcher Exclusive
     FoodQuestPip(0b1_000_000_000, "Frog"),
     FoodQuestPip(0b1_000_000_000, "Tardigrade"),
