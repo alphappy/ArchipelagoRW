@@ -216,7 +216,7 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     "DESERT11", "START"
                 }}
                 # Egg
-                egg = {f"WORA_{r}" for r in {"STARCATCHER08, STARCATCHER06, STARCATCHER07, EGG03, EGG04, EGG02x, EGG"}}
+                egg = {f"WORA_{r}" for r in {"STARCATCHER08", "STARCATCHER06", "STARCATCHER07", "EGG03", "EGG04", "EGG02x", "EGG"}}
                 # Throne rooms locked by ripple requirements
                 ripple_locked_3 = {"WORA_THRONE10"}
                 ripple_locked_5 = {"WORA_THRONE05"}

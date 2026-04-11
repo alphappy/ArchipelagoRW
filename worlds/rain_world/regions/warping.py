@@ -84,7 +84,7 @@ def generate(options: RainWorldOptions, rng: Random):
     ]
 
     if options.logic_rotted_generation == 1:
-        ret.append(ConnectionData("From any normal region", "Outer Rim", "Bad dynamic warp to Outer Rim",
+        ret.append(ConnectionData("From any normal region", "Western Outer Rim", "Bad dynamic warp to Outer Rim",
                                   Simple("Ripple", 2)))
 
     # Everything below this appears to be for the extra dynamic warp options.
