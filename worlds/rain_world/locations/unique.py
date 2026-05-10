@@ -14,8 +14,9 @@ locations = {
     "Eat_Neuron": AbstractLocation("Eat a Neuron Fly", "Eat_Neuron", [], 4900, "Events", Simple("SSOracleSwarmer")),
     "Gift_Neuron": RoomLocationSimpleAccess(
         "Give a Neuron Fly to Looks to the Moon", ["Gift_Neuron"], 4901, "SL_AI", Simple(["Access-SL", "Access-SS"])),
-    "Meet_FP": RoomLocationSimpleAccess("Meet Five Pebbles", ["Meet_FP"], 4902, "SS_AI", Simple("The Mark")),
+    "Meet_FP": RoomLocationSimpleAccess("Meet Five Pebbles", ["Meet_FP"], 4902, "SS_AI"),
     "Meet_LttM": RoomLocationSimpleAccess("Meet Looks to the Moon", ["Meet_LttM"], 4903, "SL_AI", Simple("The Mark")),
+    "Meet_LttM_Red": RoomLocationSimpleAccess("Meet Looks to the Moon", ["Meet_LttM"], 4903, "SL_AI", Simple(["The Mark", "Slag Key"])),
     "Meet_LttM_Spear": RoomLocationSimpleAccess("Meet Looks to the Moon", ["Meet_LttM_Spear"], 4904, "DM_AI"),
     "Kill_FP": RoomLocationSimpleAccess("Remove Rarefaction Cell", ["Kill_FP"], 4905, "RM_CORE"),
     "Save_LttM": RoomLocationSimpleAccess(
@@ -38,11 +39,12 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
     if options.starting_scug in ["Yellow", "White", "Red", "Gourmand", "Artificer", "Spear", "Inv"]:
         keys.append("Meet_FP")
 
-    if options.starting_scug in ["Yellow", "White", "Red", "Gourmand", "Rivulet", "Saint"]:
+    if options.starting_scug in ["Yellow", "White", "Gourmand", "Rivulet", "Saint"]:
         keys.append("Meet_LttM")
 
     if options.starting_scug == "Red":
         keys.append("Save_LttM")
+        keys.append("Meet_LttM_Red") # Red not actually a separate location, just a rule change
 
     if options.starting_scug == "Spear":
         keys.append("Meet_LttM_Spear")

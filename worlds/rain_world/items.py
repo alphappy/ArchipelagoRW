@@ -89,20 +89,6 @@ all_items: Dict[str, RainWorldItemData] = {
     "Dial Warp Ability": RainWorldItemData("Dial Warp Ability", "Dial_Warp", offset + 52, ItemClassification.progression),
 
     #################################################################
-    # GAMESTATE
-    "MSC": RainWorldItemData("MSC", "MSC", offset + 100, ItemClassification.progression),
-    "Scug-Yellow": RainWorldItemData("Scug-Yellow", "Scug-Yellow", offset + 110, ItemClassification.progression),
-    "Scug-White": RainWorldItemData("Scug-White", "Scug-White", offset + 111, ItemClassification.progression),
-    "Scug-Red": RainWorldItemData("Scug-Red", "Scug-Red", offset + 112, ItemClassification.progression),
-    "Scug-Gourmand": RainWorldItemData("Scug-Gourmand", "Scug-Gourmand", offset + 113, ItemClassification.progression),
-    "Scug-Artificer": RainWorldItemData("Scug-Artificer", "Scug-Artificer", offset + 114, ItemClassification.progression),
-    "Scug-Rivulet": RainWorldItemData("Scug-Rivulet", "Scug-Rivulet", offset + 115, ItemClassification.progression),
-    "Scug-Spear": RainWorldItemData("Scug-Spear", "Scug-Spear", offset + 116, ItemClassification.progression),
-    "Scug-Saint": RainWorldItemData("Scug-Saint", "Scug-Saint", offset + 117, ItemClassification.progression),
-    "Scug-Inv": RainWorldItemData("Scug-Inv", "Scug-Inv", offset + 118, ItemClassification.progression),
-    "Scug-Watcher": RainWorldItemData("Scug-Watcher", "Scug-Watcher", offset + 119, ItemClassification.progression),
-
-    #################################################################
     # FILLER - WEAPONS
     "Rock": FillerItemData("Rock", "Object-Rock", 200 + offset),
     "Spear": FillerItemData("Spear", "Object-Spear", 201 + offset),
@@ -142,6 +128,8 @@ all_items: Dict[str, RainWorldItemData] = {
     "Vulture Mask": FillerItemData("Vulture Mask", "Object-VultureMask", 274 + offset),
     "Joke Rifle": FillerItemData("Joke Rifle", "Object-JokeRifle", 275 + offset, ["MSC"]),
     "Graffiti Bomb": FillerItemData("Graffiti Bomb", "Object-GraffitiBomb", 276 + offset, ["Watcher"]),
+    "Pearl": FillerItemData("Pearl", "Object-DataPearl", 277 + offset),
+    "Beehive": FillerItemData("Beehive", "Object-SporePlant", 278 + offset),
 
     #################################################################
     # FILLER - NON-CREATURE TRAPS
@@ -161,6 +149,9 @@ all_items: Dict[str, RainWorldItemData] = {
     "Spitter Spider trap": TrapItemData("Spitter Spider trap", "Trap-SpitterSpider", 332 + offset),
     "Brother Long Legs trap": TrapItemData("Brother Long Legs trap", "Trap-BrotherLongLegs", 333 + offset),
     "Daddy Long Legs trap": TrapItemData("Daddy Long Legs trap", "Trap-DaddyLongLegs", 334 + offset),
+    "Responsibility trap": TrapItemData("Responsibility trap", "Trap-Responsibility", 335 + offset),
+    "Ripple Spawn trap": TrapItemData("Ripple Spawn trap", "Trap-RippleSpawn", 336 + offset),
+    "Blizzard Lizard trap": TrapItemData("Blizzard Lizard trap", "Trap-BlizzardLizard", 337 + offset),
 
     #################################################################
     # FILLER - UPGRADES

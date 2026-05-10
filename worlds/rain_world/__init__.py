@@ -1,6 +1,6 @@
 __all__ = ["RainWorldWorld", "RainWorldWebWorld"]
 
-from typing import Mapping, Any
+from typing import Mapping, Any, TextIO
 
 from Options import OptionError
 from worlds.AutoWorld import World, WebWorld
@@ -9,7 +9,7 @@ from .game_data.shelters import get_starts, ingame_capitalization, get_default_s
 from .game_data.watcher import normal_regions
 from .options import RainWorldOptions
 from .conditions.classes import Simple
-from .game_data.general import region_code_to_name, story_regions, passage_proper_names
+from .game_data.general import region_code_to_name, all_regions, passage_proper_names
 from .events import get_events
 from .regions.classes import room_to_region
 from .regions.gates import gates
@@ -68,8 +68,9 @@ class RainWorldWorld(World):
 
         #################################################################
         # STARTING REGION
+        self.options.find_starting_region(self.random)
         self.starting_room = self.random.choice(get_starts(self.options))
-        self.start_is_default = (self.options.random_starting_region == 0) and self.options.starting_scug != "Watcher"
+        self.start_is_default = (self.options.randomize_starting_region == 0) and self.options.starting_scug != "Watcher"
 
         #################################################################
         # Universal Tracker support - use options from slot data if this is a fake generation
@@ -107,8 +108,13 @@ class RainWorldWorld(World):
             data.make(self.player, self.multiworld, self.options)
 
         #################################################################
+        # STARTING REGION
+        self.connect_starting_region(self.starting_room)
+
+    def generate_basic(self) -> None:
+        #################################################################
         # PRIORITY PASSAGES
-        if num := self.options.passage_priority.value > 0:
+        if (num := self.options.passage_priority.value) > 0:
             unprioritized_passage_locations = [
                 l for l in self.multiworld.get_locations(self.player)
                 if l.name.startswith("Passage - ") and l.progress_type == LocationProgressType.DEFAULT
@@ -116,10 +122,6 @@ class RainWorldWorld(World):
             for loc in self.random.sample(unprioritized_passage_locations,
                                           min([num, len(unprioritized_passage_locations)])):
                 loc.progress_type = LocationProgressType.PRIORITY
-
-        #################################################################
-        # STARTING REGION
-        self.connect_starting_region(self.starting_room)
 
     def connect_starting_region(self, room: str):
         if not self.start_is_connected:
@@ -161,6 +163,9 @@ class RainWorldWorld(World):
                 "Dial Warp Ability": 1,
                 "The Mark": 1,
             }
+            if self.options.watcher_passages:
+                pool.update({f"Passage Token - {passage_proper_names[p]}": 1
+                             for p in (passages_all if self.options.msc_enabled else passages_vanilla)})
             if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:
                 pool.update({f"Dynamic: {k}": 1 for k in (normal_regions if ndwb.predetermined else self.warp_pool)})
 
@@ -169,10 +174,10 @@ class RainWorldWorld(World):
         if self.options.msc_enabled:
             pool.update(**{perk : 1 for perk in self.options.expedition_perks})
 
-        precollect = {
-            "MSC": 1 if self.options.msc_enabled else 0,
-            f"Scug-{self.options.starting_scug}": 1,
-        }
+        precollect = { }
+
+        if self.options.starting_region_code == "MS":
+            precollect.update({"Bubble Weed": 1})
 
         for name, count in pool.items():
             for i in range(count):
@@ -221,7 +226,6 @@ class RainWorldWorld(World):
     def fill_slot_data(self) -> Mapping[str, Any]:
         d = self.options.as_dict(
             # Plugin needs to know...
-            "which_game_version",  # ...which game version should be used.
             "is_msc_enabled",  # ...whether MSC should be enabled.
             "is_watcher_enabled",  # ...whether The Watcher should be enabled.
             "which_campaign",  # ...which campaign should be selected.
@@ -243,12 +247,13 @@ class RainWorldWorld(World):
 
             # External tracker needs to know...
             "difficulty_glow", "difficulty_monk", "difficulty_hunter", "difficulty_outlaw", "difficulty_chieftain",
-            "difficulty_nomad", "difficulty_extreme_threats", "checks_submerged", "checks_foodquest_expanded",
-            "logic_rotted_generation", "logic_ripplespace_min_req", "dynamic_warp_pool_size",
-            "predetermined_dynamic_warp_network_minimum_necklace_length"
+            "difficulty_nomad", "difficulty_extreme_threats", "checks_submerged", "difficulty_submerged",
+            "checks_foodquest_expanded", "logic_rotted_generation", "logic_ripplespace_min_req", "dynamic_warp_pool_size",
+            "predetermined_dynamic_warp_network_minimum_necklace_length", "expedition_perks", "daemon_keys"
         )
         # backwards compatibility
         d["which_gamestate"] = self.options.which_gamestate_integer
+        d["which_game_version"] = 1100400
         # ...which room to spawn in.  Empty string for default.
         d["starting_room"] = ("" if self.start_is_default
                               else ingame_capitalization.get(self.starting_room, self.starting_room))
@@ -273,12 +278,18 @@ class RainWorldWorld(World):
     def generate_output(self, output_directory: str) -> None:
         if self.options.debug_output:
             import json
+            from Utils import visualize_regions
             with open(f'{output_directory}/client_map.json', 'w') as f:
                 json.dump({"locations": locations.classes.location_client_map, "items": items.item_client_names}, f)
             with open(f'{output_directory}/player_{self.player}_debug.json', 'w') as f:
                 json.dump(fp=f, indent=2, obj={
                     "slot_data": self.fill_slot_data()
                 })
+            visualize_regions(self.multiworld.get_region("Menu", self.player), "rain_world.puml", show_locations=False)
+
+    def write_spoiler_header(self, spoiler_handle: TextIO) -> None:
+        if not self.start_is_default:
+            spoiler_handle.write(f"Starting Region: {self.options.starting_region_name}\n")
 
     @staticmethod
     def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:

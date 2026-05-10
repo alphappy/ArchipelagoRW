@@ -1,10 +1,13 @@
+from collections import Counter
 from dataclasses import dataclass
+from random import Random
 
 from Options import PerGameCommonOptions, Toggle, Range, OptionGroup, Choice, ProgressionBalancing, Accessibility, \
-    Visibility, DeathLinkMixin, DeathLink, FreeText, OptionList
+    Visibility, DeathLinkMixin, DeathLink, FreeText, OptionList, OptionCounter, OptionError
 from .conditions import GameStateFlag
 from .game_data import static_data
 from .game_data.bitflag import ScugFlagMap
+from .game_data.general import story_regions_watcher, story_regions_vanilla, all_regions
 
 
 #################################################################
@@ -37,34 +40,6 @@ class IsWatcherEnabled(Toggle):
     """Whether The Watcher is enabled, regardless of which campaign you plan to play."""
     display_name = "The Watcher?"
     default = 0
-
-
-class WhichGameVersion(Choice):
-    """Which Rain World version you are using."""
-    display_name = "Game version"
-    option_1_9_15b = 1091503
-    alias_1_9_15_3 = 1091503
-    alias_1_9_15 = 1091503
-    alias_1_9 = 1091503
-    option_1_10_4 = 1100400
-    alias_1_10 = 1100400
-    alias_1_10_1 = 1100400
-    alias_1_10_2 = 1100400
-    alias_1_10_3 = 1100400
-    default = 1100400
-
-    displaying = {
-        1091503: ("v1.9.15b / v1.9.15.3", "1.9.15.3"),
-        1100400: ("v1.10.0 - v1.11.1", "1.11.6"),
-    }
-
-    @property
-    def string(self) -> str: return self.displaying[self.value][1]
-
-    @classmethod
-    def get_option_name(cls, value: int) -> str: return cls.displaying[value][0]
-
-    visibility = Visibility.none
 
 
 class WhichCampaign(Choice):
@@ -320,113 +295,90 @@ class PriorityThrone(Choice):
     # visibility = Visibility.none
 
 
+class UseWatcherPassages(Toggle):
+    """Whether passage tokens will be added to the item pool when playing as Watcher.
+    You will need the mod "Watcher Region Art" enabled in order to use passage tokens in-game.
+    The mod can be found on the Steam workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3660768308
+    """
+    display_name = "Use Watcher Passages"
+    default = False
+
+
 #################################################################
 # GENERAL SETTINGS
 class RandomStartingRegion(Choice):
-    """Where Slugcat will initially spawn.
-    If not set to default, a random shelter in the region is selected."""
-    display_name = "Random starting shelter"
-    option_default_starting_point = 0
+    """Whether the starting region should be randomized.
 
-    option_outskirts = 1
-    option_industrial_complex = 2
-    option_drainage_system = 3
-    option_garbage_wastes = 4
-    option_shoreline = 5
-    option_shaded_citadel = 6
-    option_the_exterior = 7
-    option_five_pebbles = 8
-    option_chimney_canopy = 9
-    option_sky_islands = 10
-    option_farm_arrays = 11
-    option_subterranean = 12
-    option_pipeyard = 20
-    option_outer_expanse = 22
-    option_metropolis = 23
-    option_looks_to_the_moon = 24
+    **Default Start**: Do not randomize the starting region.
 
-    option_sunbaked_alley = 30
-    option_coral_caves = 31
-    option_torrential_railways = 32
-    option_aether_ridge = 33
-    option_badlands = 34
-    option_cold_storage = 35
-    option_desolate_tract = 36
-    option_fetid_glen = 37
-    option_fractured_gateways = 38
-    option_heat_ducts = 39
-    option_migration_path = 40
-    option_pillar_grove = 41
-    option_rusted_wrecks = 42
-    option_salination = 43
-    option_shrouded_stacks = 44
-    option_signal_spires = 45
-    option_stormy_coast = 46
-    option_the_surface = 47
-    option_torrid_desert = 48
-    option_turbulent_pump = 49
-    option_verdant_waterways = 50
+    **Weighted Choice**: Refer to "Possible Starting Regions" option to decide what starting regions can be chosen.
 
-    alias_undergrowth = 3
-    alias_waterfront_facility = 5
-    alias_silent_construct = 6
-    alias_the_rot = 8
+    **Any Valid**: The starting region is chosen among every accessible region in the selected game state.
+    """
+    display_name = "Randomize Starting Region"
+
+    option_default_start = 0
+    option_weighted_choice = 1
+    option_any_valid = 2
 
     default = 0
 
-    names = {
-        0: ("Default starting point", "!!!"),
-        1: ("Outskirts", "SU"),
-        2: ("Industrial Complex", "HI"),
-        3: ("Drainage System / Undergrowth", "DS"),
-        4: ("Garbage Wastes", "GW"),
-        5: ("Shoreline / Waterfront Facility", "SL"),
-        6: ("Shaded Citadel / Silent Construct", "SH"),
-        7: ("The Exterior", "UW"),
-        8: ("Five Pebbles / The Rot", "SS"),
-        9: ("Chimney Canopy", "CC"),
-        10: ("Sky Islands", "SI"),
-        11: ("Farm Arrays", "LF"),
-        12: ("Subterranean", "SB"),
-        20: ("Pipeyard", "VS"),
-        22: ("Outer Expanse", "OE"),
-        23: ("Metropolis", "LC"),
-        24: ("Looks to the Moon", "DM"),
 
-        30: ("Sunbaked Alley", "WSKB"),
-        31: ("Coral Caves", "WRFA"),
-        32: ("Torrential Railways", "WSKA"),
-        33: ("Aether Ridge", "WARF"),
-        34: ("Badlands", "WBLA"),
-        35: ("Cold Storage", "WARD"),
-        36: ("Desolate Tract", "WTDB"),
-        37: ("Fetid Glen", "WARC"),
-        38: ("Fractured Gateways", "WVWB"),
-        39: ("Heat Ducts", "WARE"),
-        40: ("Migration Path", "WMPA"),
-        41: ("Pillar Grove", "WPGA"),
-        42: ("Rusted Wrecks", "WRRA"),
-        43: ("Salination", "WARB"),
-        44: ("Shrouded Stacks", "WSKD"),
-        45: ("Signal Spires", "WPTA"),
-        46: ("Stormy Coast", "WSKC"),
-        47: ("The Surface", "WARG"),
-        48: ("Torrid Desert", "WTDA"),
-        49: ("Turbulent Pump", "WRFB"),
-        50: ("Verdant Waterways", "WVWA"),
+class PossibleStartingRegions(OptionCounter):
+    """Select which regions will be allowed as possible starting locations.
+    Only used when "Randomize Starting Region" option is set to "Weighted Choice".
+    The value on each region influences how likely it is to be selected.
+    Regions not in the list or with a value less than 1 are not selected.
+    """
+    display_name = "Possible Starting Regions"
+
+    resolved_name: str
+    resolved_code: str
+
+    names = {
+        "Outskirts": "SU",
+        "Industrial Complex": "HI",
+        "Drainage System / Undergrowth": "DS",
+        "Garbage Wastes": "GW",
+        "Shoreline / Waterfront Facility": "SL",
+        "Shaded Citadel / Silent Construct": "SH",
+        "The Exterior": "UW",
+        "Five Pebbles / The Rot": "SS",
+        "Chimney Canopy": "CC",
+        "Sky Islands": "SI",
+        "Farm Arrays": "LF",
+        "Subterranean": "SB",
+
+        "Pipeyard": "VS",
+        "Submerged Superstructure": "MS",
+        "Outer Expanse": "OE",
+        "Metropolis": "LC",
+        "Looks to the Moon": "DM",
+
+        "Sunbaked Alley": "WSKB",
+        "Coral Caves": "WRFA",
+        "Torrential Railways": "WSKA",
+        "Aether Ridge": "WARF",
+        "Badlands": "WBLA",
+        "Cold Storage": "WARD",
+        "Desolate Tract": "WTDB",
+        "Fetid Glen": "WARC",
+        "Fractured Gateways": "WVWB",
+        "Heat Ducts": "WARE",
+        "Migration Path": "WMPA",
+        "Pillar Grove": "WPGA",
+        "Rusted Wrecks": "WRRA",
+        "Salination": "WARB",
+        "Shrouded Stacks": "WSKD",
+        "Signal Spires": "WPTA",
+        "Stormy Coast": "WSKC",
+        "The Surface": "WARG",
+        "Torrid Desert": "WTDA",
+        "Turbulent Pump": "WRFB",
+        "Verdant Waterways": "WVWA",
     }
 
-    @classmethod
-    def get_option_name(cls, value: int) -> str:
-        return cls.names[value][0]
-
-    @property
-    def code(self) -> str:
-        return self.__class__.names[self.value][1]
-
-    @property
-    def name(self) -> str:
-        return self.__class__.names[self.value][0]
+    default = {name: 1 for name in names.keys()}
 
 
 class PassagePriority(Range):
@@ -743,6 +695,13 @@ class WtDandelionPeach(WtGeneric):
     default = 20
 
 
+class WtGooieduck(WtGeneric):
+    """The relative weight of gooieducks in the non-trap filler item pool."""
+    display_name = "Gooieduck (MSC)"
+    item_name = "Gooieduck"
+    default = 20
+
+
 class WtFruit(WtGeneric):
     """The relative weight of blue fruit in the non-trap filler item pool."""
     display_name = "Blue Fruit"
@@ -834,11 +793,26 @@ class WtVultureMask(WtGeneric):
     default = 9
 
 
+class WtPearl(WtGeneric):
+    """The relative weight of pearls in the non-trap filler item pool."""
+    display_name = "Pearl"
+    item_name = "Pearl"
+    default = 9
+
+
+class WtBeehive(WtGeneric):
+    """The relative weight of beehives in the non-trap filler item pool."""
+    display_name = "Beehive"
+    item_name = "Beehive"
+    default = 15
+
+
 class WtJokeRifle(WtGeneric):
     """The relative weight of joke rifles in the non-trap filler item pool."""
     display_name = "Joke Rifle (MSC)"
     item_name = "Joke Rifle"
     default = 1
+
 
 class WtBoomerang(WtGeneric):
     """The relative weight of boomerangs in the non-trap filler item pool."""
@@ -846,11 +820,13 @@ class WtBoomerang(WtGeneric):
     item_name = "Boomerang"
     default = 20
 
+
 class WtPoisonSpear(WtGeneric):
     """The relative weight of poison spears in the non-trap filler item pool."""
     display_name = "Poison Spear (Watcher)"
     item_name = "Poison Spear"
     default = 15
+
 
 class WtGraffitiBomb(WtGeneric):
     """The relative weight of graffiti bombs in the non-trap filler item pool."""
@@ -858,11 +834,13 @@ class WtGraffitiBomb(WtGeneric):
     item_name = "Graffiti Bomb"
     default = 20
 
+
 class WtRotFruit(WtGeneric):
     """The relative weight of rot fruits in the non-trap filler item pool."""
     display_name = "Rot Fruit (Watcher)"
     item_name = "Rot Fruit"
     default = 0
+
 
 class WtFireSpriteLarva(WtGeneric):
     """The relative weight of fire sprite larvae in the non-trap filler item pool."""
@@ -870,73 +848,92 @@ class WtFireSpriteLarva(WtGeneric):
     item_name = "Fire Sprite Larva"
     default = 30
 
+
 #################################################################
 # TRAP SETTINGS
 class WtTrapStun(WtGeneric):
-    """The relative weight of stun traps in the trap filler item pool."""
+    """The relative weight of stun traps in the trap filler item pool.
+    Stun traps will briefly stun the slugcat, as if they were hit with a rock."""
     display_name = "Stun trap"
     item_name = "Stun trap"
     default = 60
 
 
 class WtTrapZoomies(WtGeneric):
-    """The relative weight of zoomies traps in the trap filler item pool."""
+    """The relative weight of zoomies traps in the trap filler item pool.
+    Zoomies traps will make the slugcat update at double speed for a short time.
+    This will increase movement speed, but make platforming more difficult."""
     display_name = "Zoomies trap"
     item_name = "Zoomies trap"
     default = 50
 
 
 class WtTrapTimer(WtGeneric):
-    """The relative weight of timer traps in the trap filler item pool."""
+    """The relative weight of timer traps in the trap filler item pool.
+    Timer traps will reduce the remaining time left in the current cycle."""
     display_name = "Timer trap"
     item_name = "Timer trap"
     default = 50
 
 
 class WtTrapRedLizard(WtGeneric):
-    """The relative weight of red lizard traps in the trap filler item pool."""
+    """The relative weight of red lizard traps in the trap filler item pool.
+    Red lizard traps will spawn a red lizard in an adjacent room.
+    It will also know the slugcat's position for a short time."""
     display_name = "Red Lizard trap"
     item_name = "Red Lizard trap"
     default = 30
 
 
 class WtTrapRedCentipede(WtGeneric):
-    """The relative weight of red centipede traps in the trap filler item pool."""
+    """The relative weight of red centipede traps in the trap filler item pool.
+    Red centipede traps will spawn a red centipede in an adjacent room.
+    It will also know the slugcat's position for a short time."""
     display_name = "Red Centipede trap"
     item_name = "Red Centipede trap"
     default = 30
 
 
 class WtTrapSpitterSpider(WtGeneric):
-    """The relative weight of spitter spider traps in the trap filler item pool."""
+    """The relative weight of spitter spider traps in the trap filler item pool.
+    Spitter spider traps will spawn multiple spitter spiders in an adjacent room(s).
+    They will also know the slugcat's position for a short time."""
     display_name = "Spitter Spider trap"
     item_name = "Spitter Spider trap"
     default = 30
 
 
 class WtTrapBrotherLongLegs(WtGeneric):
-    """The relative weight of brother long legs traps in the trap filler item pool."""
+    """The relative weight of brother long legs traps in the trap filler item pool.
+    Brother long legs traps will spawn multiple BLLs in an adjacent room(s).
+    They will also know the slugcat's position for a short time."""
     display_name = "Brother Long Legs trap"
     item_name = "Brother Long Legs trap"
     default = 30
 
 
 class WtTrapDaddyLongLegs(WtGeneric):
-    """The relative weight of daddy long legs traps in the trap filler item pool."""
+    """The relative weight of daddy long legs traps in the trap filler item pool.
+    Daddy long legs traps will spawn a Daddy long legs in an adjacent room.
+    It will also know the slugcat's position for a short time."""
     display_name = "Daddy Long Legs trap"
     item_name = "Daddy Long Legs trap"
     default = 10
 
 
 class WtTrapRain(WtGeneric):
-    """The relative weight of rain traps in the trap filler item pool."""
+    """The relative weight of rain traps in the trap filler item pool.
+    Rain traps will activate strong pre-cycle rain for a short time.
+    If MSC is not enabled, this effect will only be visual."""
     display_name = "Rain trap"
     item_name = "Rain trap"
     default = 50
 
 
 class WtTrapGravity(WtGeneric):
-    """The relative *weight* of gravity traps in the trap filler item pool."""
+    """The relative *weight* of gravity traps in the trap filler item pool.
+    Gravity traps will disable gravity for a short time.
+    This has no effect in rooms with gravity effects already present (For example, in Five Pebbles)."""
     display_name = "Gravity trap"
     item_name = "Gravity trap"
     default = 10
@@ -959,29 +956,57 @@ class WtTrapKillSquad(WtGeneric):
 
 
 class WtTrapAlarm(WtGeneric):
-    """The relative weight of alarm traps in the trap filler item pool."""
+    """The relative weight of alarm traps in the trap filler item pool.
+    Alarm traps will alert every creature in the region to the slugcats position for some time."""
     display_name = "Alarm trap"
     item_name = "Alarm trap"
     default = 30
 
+class WtTrapResponsibility(WtGeneric):
+    """The relative weight of responsibility traps in the trap filler item pool.
+    Responsibility traps will spawn a slugpup in an adjacent room.
+    It will also know the slugcat's position for a short time."""
+    display_name = "Responsibility trap"
+    item_name = "Responsibility trap"
+    default = 30
+
+class WtTrapRippleSpawn(WtGeneric):
+    """The relative weight of ripple spawn traps in the trap filler item pool.
+    Ripple spawn traps will spawn a large amount of Ripple amoeba in the current room that chase the slugcat.
+    Before the Glow is obtained these will be invisible, making them much more dangerous."""
+    display_name = "Ripple Spawn trap"
+    item_name = "Ripple Spawn trap"
+    default = 0
+
+class WtTrapBlizzardLizard(WtGeneric):
+    """The relative weight of blizzard lizard traps in the trap filler item pool.
+    Blizzard Lizard traps will spawn a blizzard lizard in an adjacent room.
+    It will also know the slugcat's position for a short time."""
+    display_name = "Blizzard Lizard trap"
+    item_name = "Blizzard Lizard trap"
+    default = 10
+
 
 @dataclass
 class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
+    starting_region_name = ""
+    starting_region_code = ""
+
     #################################################################
     # IMPORTANT SETTINGS
-    which_game_version: WhichGameVersion
     is_msc_enabled: IsMSCEnabled
     is_watcher_enabled: IsWatcherEnabled
     which_campaign: WhichCampaign
     passage_progress_without_survivor: PassageProgressWithoutSurvivor
     which_victory_condition: WhichVictoryCondition
     which_gate_behavior: WhichGateBehavior
-    random_starting_region: RandomStartingRegion
+    randomize_starting_region: RandomStartingRegion
+    possible_starting_regions: PossibleStartingRegions
     debug_output: DebugOutput
 
     group_important = [
-        WhichGameVersion, IsMSCEnabled, IsWatcherEnabled, WhichCampaign, PassageProgressWithoutSurvivor,
-        WhichVictoryCondition, WhichGateBehavior, DeathLink, RandomStartingRegion, DebugOutput
+        IsMSCEnabled, IsWatcherEnabled, WhichCampaign, PassageProgressWithoutSurvivor,
+        WhichVictoryCondition, WhichGateBehavior, DeathLink, RandomStartingRegion, PossibleStartingRegions, DebugOutput
     ]
 
     #################################################################
@@ -1043,11 +1068,12 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     spinning_top_keys: SpinningTopKeys
     daemon_keys: DaemonKeys
     priority_throne: PriorityThrone
+    watcher_passages: UseWatcherPassages
 
     group_watcher = [
         LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
         DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, SpinningTopKeys, DaemonKeys,
-        PriorityThrone, PredeterminedDynamicWarpNetworkMinimumNecklaceLength,
+        PriorityThrone, UseWatcherPassages, PredeterminedDynamicWarpNetworkMinimumNecklaceLength,
     ]
 
     #################################################################
@@ -1062,8 +1088,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_bubble_weed: WtBubbleWeed
     wt_lanterns: WtLantern
     wt_vulture_masks: WtVultureMask
+    wt_pearls: WtPearl
+    wt_beehives: WtBeehive
     wt_lilypucks: WtLillyPuck
     wt_dandelion_peaches: WtDandelionPeach
+    wt_gooieducks: WtGooieduck
     wt_electric_spears: WtElectricSpear
     wt_singularity_bombs: WtSingularityBomb
     wt_joke_rifles: WtJokeRifle
@@ -1085,9 +1114,10 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     group_filler = [
         WtRock, WtSpear, WtExplosiveSpear, WtGrenade, WtFlashbang, WtSporePuff, WtCherrybomb, WtBubbleWeed, WtLantern,
-        WtVultureMask, WtFruit, WtBubbleFruit, WtEggbugEgg, WtJellyfish, WtMushroom, WtSlimeMold, WtKarmaFlower,
+        WtVultureMask, WtPearl, WtBeehive, WtFruit, WtBubbleFruit, WtEggbugEgg, WtJellyfish, WtMushroom, WtSlimeMold,
+        WtKarmaFlower,
 
-        WtLillyPuck, WtDandelionPeach, WtElectricSpear, WtSingularityBomb, WtJokeRifle,
+        WtLillyPuck, WtDandelionPeach, WtGooieduck, WtElectricSpear, WtSingularityBomb, WtJokeRifle,
         WtFireEgg, WtGlowWeed,
 
         WtBoomerang, WtPoisonSpear, WtGraffitiBomb, WtRotFruit, WtFireSpriteLarva
@@ -1110,13 +1140,17 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_spitterspider: WtTrapSpitterSpider
     wt_brotherlonglegs: WtTrapBrotherLongLegs
     wt_daddylonglegs: WtTrapDaddyLongLegs
+    wt_responsibility: WtTrapResponsibility
+    wt_ripplespawn: WtTrapRippleSpawn
+    wt_blizzardlizard: WtTrapBlizzardLizard
 
     group_traps = [
         WtTrapStun, WtTrapZoomies, WtTrapTimer, WtTrapAlarm, WtTrapKillSquad,
         WtTrapGravity, WtTrapRain, WtTrapFog,
 
         WtTrapRedLizard, WtTrapRedCentipede, WtTrapSpitterSpider,
-        WtTrapBrotherLongLegs, WtTrapDaddyLongLegs
+        WtTrapBrotherLongLegs, WtTrapDaddyLongLegs, WtTrapResponsibility,
+        WtTrapRippleSpawn, WtTrapBlizzardLizard
     ]
 
     @property
@@ -1141,18 +1175,60 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def starting_scug(self) -> str: return self.which_campaign.scug_id
 
     @property
-    def worldstate(self) -> tuple[str, str]: return self.which_game_version.string, self.dlcstate
-
-    @property
     def which_gamestate_integer(self) -> int:
         return int(self.which_campaign) + (10 if self.is_msc_enabled else 0)
 
-    def general_validity_check(self) -> str | None:
-        if self.is_watcher_enabled and self.which_game_version < 1100000:
-            return "The Watcher cannot be enabled with a game version before 1.10.0."
-        if self.is_msc_enabled and self.which_game_version < 1090000:
-            return "More Slugcats Expansion cannot be enabled with a game version before 1.9.0."
+    def find_starting_region(self, random: Random):
+        if self.randomize_starting_region == 0:
+            return
+        elif self.randomize_starting_region == 1:
+            choice_counter = Counter({reg: self.possible_starting_regions[reg] for reg in self.possible_starting_regions.keys()
+                 if reg in self.possible_starting_regions.names})
+        else:
+            choice_counter = Counter(self.possible_starting_regions.default)
+        valid_codes = {self.possible_starting_regions.names[reg] for reg in choice_counter.keys()}
 
+        def choose_weighted():
+            weighted_choices = [reg for reg in choice_counter.elements() if self.possible_starting_regions.names[reg] in valid_codes]
+            if not weighted_choices:
+                raise OptionError(f"None of the selected regions in \"Possible Starting Regions\" are valid with these options.")
+            self.starting_region_name = random.choice(weighted_choices)
+            self.starting_region_code = self.possible_starting_regions.names[self.starting_region_name]
+
+        # Filter Watcher regions
+        if self.starting_scug == "Watcher":
+            valid_codes.intersection_update(story_regions_watcher)
+            choose_weighted()
+            return
+        else:
+            valid_codes.difference_update(story_regions_watcher)
+
+        # No Shaded if difficulty_glow
+        if self.difficulty_glow:
+            valid_codes.difference_update({"SH"})
+
+        # Return vanilla regions if no MSC
+        if not self.msc_enabled:
+            valid_codes.intersection_update(story_regions_vanilla)
+            choose_weighted()
+            return
+
+        # Don't spawn in the final region for story endings
+        if self.which_victory_condition == "story":
+            if self.starting_scug == "Artificer":
+                valid_codes.difference_update({"LC"})
+            valid_codes.difference_update({"OE"})
+
+        if not self.submerged_should_populate:
+            valid_codes.difference_update({"MS"})
+        elif self.difficulty_submerged > (1 if self.starting_scug == "Rivulet" else 0):
+            valid_codes.difference_update({"MS"})
+
+        # Filter to slugcat's regions
+        valid_codes.intersection_update(all_regions["MSC"][self.starting_scug])
+        choose_weighted()
+
+    def general_validity_check(self) -> str | None:
         if not self.is_watcher_enabled and self.starting_scug == "Watcher":
             return "Watcher's campaign cannot be selected without The Watcher enabled."
         if not self.is_msc_enabled and self.starting_scug in [
@@ -1175,7 +1251,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         )
 
         if optional_check_score < 2:
-            start = self.random_starting_region.code
+            start = self.starting_region_code
             sphere_1_too_small = False
             solutions = [
                 "Pick a different starting region.",
@@ -1216,7 +1292,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         return None
 
     @property
-    def data_block(self) -> dict: return static_data[self.which_game_version.string][self.dlcstate]
+    def data_block(self) -> dict: return static_data[self.dlcstate]
 
     @property
     def submerged_should_populate(self) -> bool:
@@ -1226,11 +1302,11 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         ret = {a.item_name: a.value for a in [
             self.wt_rocks, self.wt_spears, self.wt_explosive_spears, self.wt_grenades,
             self.wt_flashbangs, self.wt_sporepuffs, self.wt_cherrybombs, self.wt_bubble_weed,
-            self.wt_lilypucks, self.wt_dandelion_peaches, self.wt_fruit, self.wt_bubblefruit,
+            self.wt_lilypucks, self.wt_dandelion_peaches, self.wt_gooieducks, self.wt_fruit, self.wt_bubblefruit,
             self.wt_eggbugeggs, self.wt_jellyfish, self.wt_mushrooms, self.wt_slimemold,
             self.wt_fireeggs, self.wt_glowweed, self.wt_electric_spears, self.wt_singularity_bombs,
-            self.wt_lanterns, self.wt_karma_flowers, self.wt_vulture_masks, self.wt_joke_rifles,
-            self.wt_boomerangs, self.wt_poison_spears, self.wt_graffiti_bombs, self.wt_rot_fruit,
+            self.wt_lanterns, self.wt_karma_flowers, self.wt_vulture_masks, self.wt_pearls, self.wt_beehives,
+            self.wt_joke_rifles, self.wt_boomerangs, self.wt_poison_spears, self.wt_graffiti_bombs, self.wt_rot_fruit,
             self.wt_fire_sprite_larva,
         ]}
         if not self.msc_enabled:
@@ -1240,24 +1316,32 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             for key in ("Boomerang", "Poison Spear", "Graffiti Bomb", "Rot Fruit", "Fire Sprite Larva"):
                 ret[f"{key}"] = 0
         if not self.any_dlc_enabled:
-            for key in ("Lilypuck", "Dandelion Peach", "Glow Weed", "Singularity Bomb"):
+            for key in ("Lilypuck", "Dandelion Peach", "Glow Weed", "Singularity Bomb", "Gooieduck"):
                 ret[f"{key}"] = 0
 
         return ret
 
     def get_trap_weight_dict(self) -> dict[str, float]:
-        return {a.item_name: a.value for a in [
+        ret = {a.item_name: a.value for a in [
             self.wt_stuns, self.wt_zoomies, self.wt_timers, self.wt_alarms, self.wt_killsquads,
             self.wt_gravity, self.wt_rains, self.wt_fogs,
 
             self.wt_redcentipede, self.wt_redlizard, self.wt_spitterspider,
-            self.wt_brotherlonglegs, self.wt_daddylonglegs
+            self.wt_brotherlonglegs, self.wt_daddylonglegs, self.wt_responsibility,
+            self.wt_ripplespawn, self.wt_blizzardlizard,
         ]}
+        if not self.msc_enabled:
+            ret["Responsibility"] = 0
+        if not self.is_watcher_enabled:
+            for key in ("Ripple Spawn", "BlizzardLizard"):
+                ret[f"{key}"] = 0
+
+        return ret
 
     def satisfies(self, flag: GameStateFlag): return flag[self.dlcstate, self.starting_scug]
 
     def satisfies_flagmap(self, d: ScugFlagMap) -> bool:
-        return self.starting_scug in d.get(self.which_game_version.string, self.dlcstate)
+        return self.starting_scug in d.get(self.dlcstate)
 
     @property
     def should_have_rot_spread_checks(self):

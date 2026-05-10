@@ -98,12 +98,16 @@ class PhysicalRegion(RegionData):
         match rcode:
             case "SU":
                 # HARDCODE
+                from_oe = options.msc_enabled and scug in ("Yellow", "White", "Gourmand")
                 if self.name in ("Spearmaster spawn area", "Outskirts filtration"):
                     if scug == "Spear":
-                        return options.random_starting_region == 0 and options.msc_enabled
-                    return scug in ("Yellow", "White", "Gourmand") and options.msc_enabled
+                        return options.randomize_starting_region == 0 and options.msc_enabled
+                    if self.name == "Outskirts filtration":
+                        return (from_oe or scug in ("Saint", "Artificer")
+                                or "Explosive Jump Perk" in options.expedition_perks.value)
+                    return from_oe
                 if self.name not in ("Outskirts", "Survivor tutorial area"):
-                    return options.msc_enabled and scug in ("Yellow", "White", "Gourmand")
+                    return from_oe
                 return True
             case "HI" | "GW" | "CC" | "SI" | "LF" | "SB":
                 return True
@@ -114,7 +118,10 @@ class PhysicalRegion(RegionData):
             case "SL":
                 # HARDCODE
                 if self.name == "Shoreline above puppet":
-                    return scug in ("Rivulet", "Saint")
+                    if options.submerged_should_populate:
+                        return scug in ("Rivulet", "Saint")
+                    else:
+                        return scug == "Saint"
                 if self.name == "Broken Precipice":
                     return options.msc_enabled and scug not in ("Artificer", "Spear", "Saint")
                 if self.name == "Shoreline near gate to Submerged":
@@ -142,5 +149,5 @@ class PhysicalRegion(RegionData):
             case "MS":
                 # HARDCODE
                 if self.name == "Bitter Aerie":
-                    return scug == "Rivulet"
+                    return options.submerged_should_populate and scug in ("Rivulet", "Saint")
                 return options.submerged_should_populate and scug not in ("Artificer", "Spear")

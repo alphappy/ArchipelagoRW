@@ -51,22 +51,14 @@ class GateData:
                 right_cost = ConditionBlank
 
             _l, _r = self.additional_conditions(options)
-            left_condition = AllOf(_l, Simple([f"Scug-{s}" for s in scugs], 1), left_cost)
-            right_condition = AllOf(_r, Simple([f"Scug-{s}" for s in scugs], 1), right_cost)
+            left_condition = AllOf(_l, left_cost)
+            right_condition = AllOf(_r, right_cost)
 
-            if left.populate and right.populate:
+            if left.populate and right.populate and options.starting_scug in scugs:
                 world.create_entrance(left, right, left_condition.get_rule(),
                                       f"{'west' if self.was_swapped else 'east'} through {self.name}")
                 world.create_entrance(right, left, right_condition.get_rule(),
                                       f"{'east' if self.was_swapped else 'west'} through {self.name}")
-                # left.connect(
-                #     right, f"{'west' if self.was_swapped else 'east'} through {self.name}",
-                #     rule=left_condition.check(player)
-                # )
-                # right.connect(
-                #     left, f"{'east' if self.was_swapped else 'west'} through {self.name}",
-                #     rule=right_condition.check(player)
-                # )
 
     @property
     def item_name(self) -> str:

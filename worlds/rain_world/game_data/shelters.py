@@ -37,6 +37,7 @@ start_shelters = {
     'LC': ['LC_SHELTER_ABOVE', 'LC_A05', 'LC_S03', 'LC_S01', 'LC_SHELTERTRAIN1', 'LC_S04'],
     'LF': ['LF_S02', 'LF_S01', 'LF_S07', 'LF_S05', 'LF_S03'],
     'LM': ['LM_S05', 'LM_S11', 'LM_S13', 'LM_S06'],
+    'MS': ['MS_S01', 'MS_S06', 'MS_S05', 'MS_S03', 'MS_S09'],
     'OE': ['OE_S01', 'OE_S04', 'OE_EXSHELTER', 'OE_S06'],
     'RM': ['RM_S01', 'RM_LCS2', 'RM_LCS1'],
     'SB': ['SB_S06', 'SB_S07', 'SB_S04', 'SB_S05', 'SB_S02'],
@@ -105,42 +106,16 @@ def get_default_start(scug: str) -> str:
 
 
 def get_starts(options: RainWorldOptions) -> list[str]:
-    code, name = options.random_starting_region.code, options.random_starting_region.name
+    code, name = options.starting_region_code, options.starting_region_name
     scug, scug_name = options.starting_scug, options.which_campaign.scug_name
 
-    if code == "!!!":
+    if code == "":
         return [get_default_start(scug)]
 
     code = alternate_regions.get(code, {}).get(scug, code)
 
     if code is None:
         raise OptionError(f"{scug_name} cannot start in {name}")
-
-    if code == "SH" and options.difficulty_glow:
-        raise OptionError("Cannot start in Shaded Citadel with 'Glow required for dark places' enabled")
-
-    if code not in story_regions_vanilla:
-        if code in story_regions_watcher:
-            if scug != "Watcher":
-                raise OptionError(f"Only Watcher may start in Watcher campaign regions")
-        elif not options.msc_enabled:
-            raise OptionError(f"Cannot start in {name} with MSC disabled")
-
-    if scug == "Watcher" and code not in story_regions_watcher:
-        raise OptionError(f"Watcher must start in a Watcher campaign region")
-
-    if code == "LC":
-        if scug != "Artificer":
-            raise OptionError(f"{scug_name} cannot start in Metropolis")
-        elif options.which_victory_condition == "story":
-            raise OptionError(f"Artificer starting in Metropolis with alternate victory condition is moot")
-    elif code == "OE":
-        if scug not in ["White", "Yellow", "Gourmand"]:
-            raise OptionError(f"{scug_name} cannot start in Outer Expanse")
-        elif options.which_victory_condition == "story":
-            raise OptionError(f"{scug_name} starting in {name} with alternate victory condition is moot")
-    elif code == "DM" and scug != "Spear":
-        raise OptionError(f"{scug_name} cannot start in Looks to the Moon")
 
     ret = list(start_shelters[code])
 

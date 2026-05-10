@@ -2,8 +2,9 @@ from typing import Optional, Callable
 
 from BaseClasses import MultiWorld, Location, LocationProgressType
 from ..game_data.bitflag import ScugFlagMap
+from ..game_data.watcher import watcher_high_up_shinies
 from ..options import RainWorldOptions
-from ..conditions.classes import ConditionBlank, Condition
+from ..conditions.classes import ConditionBlank, Condition, AnyOf, Simple
 from ..constants import FIRST_ID
 from worlds.generic.Rules import add_rule
 from ..regions.classes import room_to_region
@@ -77,14 +78,23 @@ class RoomLocation(LocationData):
             if self.region in ("Submerged Superstructure", "Bitter Aerie", "Shoreline above puppet room",
                                "Shoreline near gate to Submerged"):
                 return False
+        if options.starting_scug == "Watcher" and self.client_name in watcher_high_up_shinies:
+            self.access_condition = AnyOf(Simple("Ripple", 4), Simple("Explosive Jump Perk"))
 
         return super().pre_generate(player, multiworld, options)
 
 
 class AbstractLocation(LocationData):
     def __init__(self, name: str, client_name: str, alt_names: list[str], offset: int, region: str,
-                 access_condition: Condition = ConditionBlank):
+                 access_condition: Condition = ConditionBlank,
+                 access_condition_generator:  Optional[Callable[[RainWorldOptions], Condition]] = None):
         super().__init__(name, client_name, alt_names, offset, region, access_condition)
+        self.acc_gen = access_condition_generator
+
+    def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+        if self.acc_gen is not None:
+            self.access_condition = self.acc_gen(options)
+        return super().pre_generate(player, multiworld, options)
 
 
 class Passage(AbstractLocation):
@@ -92,8 +102,7 @@ class Passage(AbstractLocation):
                  access_condition: Condition = ConditionBlank,
                  access_condition_generator:  Optional[Callable[[RainWorldOptions], Condition]] = None):
         super().__init__(f"Passage - {self.proper_name(name)}", f"Passage-{name}", ["Passage"],
-                         offset, region, access_condition)
-        self.acc_gen = access_condition_generator
+                         offset, region, access_condition, access_condition_generator)
 
     @staticmethod
     def proper_name(name: str):
@@ -102,8 +111,3 @@ class Passage(AbstractLocation):
         elif name == "DragonSlayer":
             return "The Dragon Slayer"
         return f'The {name}'
-
-    def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-        if self.acc_gen is not None:
-            self.access_condition = self.acc_gen(options)
-        return super().pre_generate(player, multiworld, options)

@@ -66,14 +66,14 @@ class StaticWorldEvent:
 
 class StaticWorldEventDetached:
     def __init__(self, name: str, rooms: list[str]):
-        self.name, self.rooms = name, rooms
+        self.item_name, self.rooms = name, rooms
 
     def make(self, player: int, multiworld: MultiWorld, _: RainWorldOptions):
         regions = {try_get_region(multiworld, name, player) for name in {room_to_region[room] for room in self.rooms}}.difference({None})
         if regions := {r for r in regions if r.populate}:
-            multiworld.regions.append(event_region := RainWorldRegion(self.name, player, multiworld, True))
-            event_region.locations.append(location := Location(player, self.name, None, event_region))
-            location.place_locked_item(Item(self.name, ItemClassification.progression, None, player))
+            multiworld.regions.append(event_region := RainWorldRegion(self.item_name, player, multiworld, True))
+            event_region.locations.append(location := Location(player, self.item_name, None, event_region))
+            location.place_locked_item(Item(self.item_name, ItemClassification.progression, None, player))
             location.show_in_spoiler = False
             for region in regions:
-                region.connect(event_region, f"{self.name} in {region.name}")
+                region.connect(event_region, f"{self.item_name} in {region.name}")

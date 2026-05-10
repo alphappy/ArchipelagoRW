@@ -1,6 +1,8 @@
-from .classes import Passage, LocationData
+from typing import Callable
+
+from .classes import Passage, LocationData, AbstractLocation
 from .. import game_data
-from ..game_data.general import regions_all
+from ..game_data.general import regions_all, watcher_pearls
 from ..options import RainWorldOptions
 from ..conditions.classes import Condition, Simple, AnyOf, AllOf, ConditionBlank
 
@@ -54,10 +56,12 @@ def generate_cond_hunter(options: RainWorldOptions) -> Condition:
 def generate_cond_monk(options: RainWorldOptions) -> Condition:
     if options.starting_scug in ["Spear", "Artificer", "Red"]:
         return Simple(["Access-SI", "Access-LF", "Access-SS", "Access-DM"], 1)
-    return AnyOf(
-        Simple(game_data.general.monk_foods_vanilla, options.difficulty_monk.value),
-        AllOf(Simple('MSC'), Simple(game_data.general.monk_foods_msc, options.difficulty_monk.value))
-    )
+    foods = [
+        *game_data.general.monk_foods_vanilla,
+        *(game_data.general.monk_foods_msc if options.msc_enabled else []),
+        *(game_data.general.monk_foods_watcher if options.is_watcher_enabled else []),
+     ]
+    return Simple(foods, options.difficulty_monk.value)
 
 
 #################################################################
@@ -99,7 +103,9 @@ def generate_cond_pilgrim(options: RainWorldOptions) -> Condition:
 def generate_cond_scholar(options: RainWorldOptions) -> Condition:
     if options.starting_scug in ["Yellow", "White", "Gourmand"]:
         return Simple(["Access-SL", "The Mark"])
-    return Simple("The Mark")
+    if options.starting_scug == "Watcher":
+        return AllOf(Simple("The Mark"), Simple([f"Access-{r}" for r in watcher_pearls], 3))
+    return AllOf(Simple("The Mark"), wanderer_pip_factory_factory(3)(options))
 
 
 #################################################################
@@ -130,9 +136,10 @@ def wanderer_regions(scug: str, msc: bool) -> set[str]:
         }[scug]
 
 
-def wanderer_pip_factory(count: int) -> Condition:
-    # We just need access to some number of regions from this list, it's not necessary to filter by gamestate
-    return Simple([f"Access-{r}" for r in regions_all], count)
+def wanderer_pip_factory_factory(count: int) -> Callable[[RainWorldOptions], Condition]:
+    def wanderer_pip_factory(options: RainWorldOptions) -> Condition:
+        return Simple([f"Access-{r}" for r in wanderer_regions(options.starting_scug, options.msc_enabled)], count)
+    return wanderer_pip_factory
 
 
 #################################################################
@@ -156,9 +163,9 @@ locations: dict[str, LocationData] = {
     "Scholar": Passage("Scholar", "Late Passages", 5045, access_condition_generator=generate_cond_scholar),
     "Nomad": Passage("Nomad", "Late Passages", 5046, access_condition_generator=generate_cond_nomad),
     **{
-        f"Wanderer-{i}": LocationData(
+        f"Wanderer-{i}": AbstractLocation(
             f"The Wanderer - {i} pip{'s' if i > 1 else ''}",
-            f"Wanderer-{i}", [], 5049 + i, "PPwS Passages", wanderer_pip_factory(i)
+            f"Wanderer-{i}", [], 5049 + i, "PPwS Passages", access_condition_generator=wanderer_pip_factory_factory(i)
         ) for i in range(1, 15)
     }
 }
@@ -179,7 +186,7 @@ def generate(options: RainWorldOptions) -> list[LocationData]:
         keys.append("Martyr")
         if options.starting_scug != "Watcher":
             keys += ["Pilgrim", "Nomad"]
-        if options.starting_scug in ["White", "Red", "Gourmand"]:
+        if options.starting_scug in ["White", "Red", "Gourmand", "Inv"]:
             keys.append("Mother")
 
     if options.starting_scug != "Watcher":

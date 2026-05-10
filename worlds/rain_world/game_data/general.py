@@ -68,22 +68,22 @@ regions_all = list(region_code_to_name.keys())
 
 story_regions_vanilla = {"SU", "HI", "DS", "GW", "SL", "SH", "UW", "SS", "CC", "SI", "LF", "SB"}
 
-story_regions = {
+all_regions = {
     "Vanilla": {scug: story_regions_vanilla for scug in ["Yellow", "White", "Red"]},
     "MSC": {
-        "Yellow": story_regions_vanilla.union({"VS"}),
-        "White": story_regions_vanilla.union({"VS"}),
-        "Red": story_regions_vanilla.union({"VS"}),
-        "Gourmand": story_regions_vanilla.union({"OE"}),
-        "Artificer": story_regions_vanilla.union({"LC", "LM"}).difference({"SL"}),
-        "Rivulet": story_regions_vanilla.union({"RM", "MS"}).difference({"SS"}),
-        "Spear": story_regions_vanilla.union({"DM", "LM"}).difference({"SL"}),
-        "Saint": story_regions_vanilla.union({"UG", "CL", "HR"}).difference({"DS", "SH", "UW", "SS"}),
-        "Inv": story_regions_vanilla.union({"VS"}),
+        "Yellow": story_regions_vanilla.union({"VS", "OE", "MS"}),
+        "White": story_regions_vanilla.union({"VS", "OE", "MS"}),
+        "Red": story_regions_vanilla.union({"VS", "MS"}),
+        "Gourmand": story_regions_vanilla.union({"VS", "OE", "MS"}),
+        "Artificer": story_regions_vanilla.union({"VS", "LC"}),
+        "Rivulet": story_regions_vanilla.union({"VS", "MS"}),
+        "Spear": story_regions_vanilla.union({"VS", "DM"}),
+        "Saint": story_regions_vanilla.union({"VS", "HR", "MS"}).difference({"UW", "SS"}),
+        "Inv": story_regions_vanilla.union({"VS", "MS"}),
     }
 }
-story_regions["Watcher"] = story_regions["Vanilla"]
-story_regions["MSC_Watcher"] = story_regions["MSC"]
+all_regions["Watcher"] = all_regions["Vanilla"]
+all_regions["MSC_Watcher"] = all_regions["MSC"]
 
 gates_vanilla = {
     "SU_HI", "SU_DS", "LF_SU", "HI_GW", "HI_CC", "HI_SH", "DS_GW", "GW_SL", "DS_SB",
@@ -106,7 +106,7 @@ accessible_gates = {
         "Rivulet": gates_vanilla.union(gates_msc_red),
         "Spear": gates_vanilla.union(gates_msc_red).union({"SL_DM", "DM_SL"}).difference({"SL_MS", "MS_SL"}),
         "Saint": gates_vanilla.union(gates_msc_red).union({"SL_CL"}).difference(
-            {"SH_SL", "UW_SS", "SS_UW", "CC_UW", "SH_UW"}
+            {"SH_SL", "UW_SS", "SS_UW", "CC_UW", "SH_UW", "UW_SL"}
         ),
         "Inv": gates_vanilla.union(gates_msc_red),
         "Watcher": set()
@@ -166,6 +166,7 @@ echoes_vanilla = ['CC', 'SI', 'LF', 'SB', 'SH', 'UW']
 
 monk_foods_vanilla = ['DangleFruit', 'BubbleFruit', 'SeedCob', 'SlimeMold', 'SSOracleSwarmer']
 monk_foods_msc = ['LillyPuck', 'GlowWeed', 'DandelionPeach', 'GooieDuck', 'Seed', 'FireEgg']
+monk_foods_watcher = ['Pomegranate']
 
 slugpup_normal_regions = ['HI', 'DS', 'GW', 'SH', 'CC', 'SI', 'LF', 'SB', 'VS']
 
@@ -175,6 +176,9 @@ outlaw_whitelist = lizards_any.union({
 })
 
 scavenger_tolls = ["SU", "GW", "LF", "LC", "CL", "OE", "UG"]
+
+# Certain hard to reach pearls omitted to not overcomplicate scholar with location access rules (WTDB, WMPA, WARG)
+watcher_pearls = ["WBLA", "WARD", "WARC", "WARE", "WARB", "WSKD", "WPTA", "WTDA", "WRFB", "WVWA"]
 
 #################################################################
 # FOOD QUEST DATA
@@ -266,7 +270,7 @@ wiki_names = {
     "Slugcat": ["Slugcat"],
     "Snail": ["Snail"],
     "CicadaA": ["White Squidcada"],
-    "FireBug": ["Firebug", "Hellbug"],
+    "FireBug": ["Fire Egg", "Firebug", "Hellbug"],
     "StowawayBug": ["Stowaway"],
     "Yeek": ["Yeek"],
     "BigJelly": ["Giant Jellyfish", "Big Jellyfish"],

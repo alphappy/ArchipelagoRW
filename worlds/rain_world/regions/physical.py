@@ -7,7 +7,7 @@ from .classes import ConnectionData, PhysicalRegion
 
 def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData]:
     ret = []
-    for region, region_data in static_data["1.11.6"]["MSC_Watcher"].items():
+    for region, region_data in static_data["MSC_Watcher"].items():
         rooms = set(region_data.keys())
 
         match region:
@@ -25,11 +25,18 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     PhysicalRegion("Spearmaster spawn area", "SU^3", spearspawn),
 
                     ConnectionData("Survivor tutorial area", "Outskirts", "Eastward from SU_A43 to SU_A22"),
-                    ConnectionData("Outskirts", "Survivor tutorial area", "Westward from SU_A22 to SU_A43", Simple("Scug-Saint")),
+
                     ConnectionData("Outskirts filtration", "Survivor tutorial area", "Eastward from SU_CAVE01 to SU_C04"),
-                    ConnectionData("Survivor tutorial area", "Outskirts filtration", "Westward from SU_C04 to SU_CAVE01", Simple("Scug-Saint")),
+
                     ConnectionData("Spearmaster spawn area", "Outskirts filtration", "Upward from SU_INTRO01 to SU_PMPSTATION01"),
                 ]
+
+                if options.starting_scug in ("Saint", "Artificer") or "Explosive Jump Perk" in options.expedition_perks.value:
+                    cond = Simple("Explosive Jump Perk") if "Explosive Jump Perk" in options.expedition_perks.value else ConditionBlank
+                    ret += [
+                        ConnectionData("Outskirts", "Survivor tutorial area", "Westward from SU_A22 to SU_A43", cond),
+                        ConnectionData("Survivor tutorial area", "Outskirts filtration", "Westward from SU_C04 to SU_CAVE01", cond),
+                    ]
 
             case "OE":
                 filt = {r for r in rooms if "PUMP" in r or r in ("OE_S03", "GATE_OE_SU[OE]")}
@@ -45,13 +52,19 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                 # Not in logic to access Bitter Aerie except as Rivulet.
                 bitter = {name for name in rooms if "BITTER" in name or "SEWER" in name or "AERIE" in name
                           or name in ("MS_WILLSNAGGING01", "MS_S07", "MS_PUMPS", "MS_SCAVTRADER", "MS_JTRAP",
-                                      "MS_COMMS", "GATE_SL_MS[MS]")}
+                                      "MS_COMMS", "GATE_SL_MS[MS]", "MS_X02", "MS_S10")}
                 ret += [
                     PhysicalRegion("Submerged Superstructure", "MS", rooms.difference(bitter)),
                     PhysicalRegion("Bitter Aerie", "MS^", bitter),
-                    ConnectionData("Submerged Superstructure", "Bitter Aerie", "Rarefaction cell deposit cutscene",
-                                   Simple(["Scug-Rivulet", "Rarefaction Cell"])),
                 ]
+
+                if options.starting_scug == "Rivulet":
+                    ret.append(ConnectionData("Submerged Superstructure", "Bitter Aerie",
+                                              "Rarefaction cell deposit cutscene", Simple(["Rarefaction Cell"])))
+                elif options.starting_scug == "Saint":
+                    ret += [ConnectionData("Submerged Superstructure", "Bitter Aerie", "Enter Bitter Aerie"),
+                            ConnectionData("Bitter Aerie", "Submerged Superstructure", "Leave Bitter Aerie")]
+
 
             case "SB":
                 # Not in logic (except for Saint) to go back up the SB ravine.
@@ -65,8 +78,6 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     PhysicalRegion("Subterranean", "SB", rooms.difference(ravine.union(filt).union(depths))),
                     PhysicalRegion("Subterranean ravine", "SB^", ravine),
                     ConnectionData("Subterranean ravine", "Subterranean", "Down the ravine"),
-                    ConnectionData("Subterranean", "Subterranean ravine", "Up the ravine",
-                                   Simple("Scug-Saint")),
 
                     PhysicalRegion("Filtration System", "SB^2", filt),
                     ConnectionData("Subterranean", "Filtration System", "Enter Filtration System",
@@ -76,6 +87,10 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     PhysicalRegion("Subterranean Depths", "SB^3", depths),
                     ConnectionData("Filtration System", "Subterranean Depths", "Enter Depths")
                 ]
+
+                if options.starting_scug == "Saint":
+                    ret.append(ConnectionData("Subterranean", "Subterranean ravine", "Up the ravine"))
+
 
             case "SS":
                 # Not in logic to go backwards through Five Pebbles puppet room.
@@ -92,19 +107,14 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                         "VS_B18", "VS_D05", "VS_C08", "VS_E01", "VS_B05", "VS_D02", "VS_S02", "GATE_SL_VS[VS]"}
                 filt = {"VS_C10", "VS_C12", "VS_C11", "VS_E02", "VS_B06", "BS_S03", "VS_H01", "GATE_SB_VS[VS]",
                         "VS_S03"}
+
+                sump_cond = Simple("Aquatic Perk") if options.starting_scug == "Artificer" else ConditionBlank
+
                 ret += [
                     PhysicalRegion("Pipeyard", "VS", rooms.difference(sump.union(filt))),
                     PhysicalRegion("Sump Tunnel", "VS^", sump),
-                    ConnectionData("Pipeyard", "Sump Tunnel", "Enter Sump Tunnel",
-                                   AnyOf(
-                                       Simple(list(set(scugs_all).difference({"Artificer"})), 1),
-                                       Simple("Aquatic Perk")
-                                   )),
-                    ConnectionData("Sump Tunnel", "Pipeyard", "Exit Sump Tunnel",
-                                   AnyOf(
-                                       Simple(list(set(scugs_all).difference({"Artificer"})), 1),
-                                       Simple("Aquatic Perk")
-                                   )),
+                    ConnectionData("Pipeyard", "Sump Tunnel", "Enter Sump Tunnel", sump_cond),
+                    ConnectionData("Sump Tunnel", "Pipeyard", "Exit Sump Tunnel", sump_cond),
                     PhysicalRegion("Pipeyard filtration", "VS^2", filt),
                     ConnectionData("Pipeyard", "Pipeyard filtration", "Enter dark filtration area",
                                    Simple("The Glow") if options.difficulty_glow else ConditionBlank),
@@ -162,7 +172,7 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
 
                 # If Submerged has no checks, swimming down towards the gate is not in logic.
                 if options.submerged_should_populate:
-                    if options.difficulty_submerged >= 1 and options.starting_scug != "Rivulet" and "Aquatic" in options.expedition_perks.value:
+                    if options.difficulty_submerged >= 1 and options.starting_scug != "Rivulet" and "Aquatic Perk" in options.expedition_perks.value:
                         ret += [ConnectionData("Shoreline", "Shoreline near gate to Submerged",
                                                "Entering towards Submerged", Simple("Aquatic Perk"))]
                     else:
@@ -206,7 +216,7 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     "DESERT11", "START"
                 }}
                 # Egg
-                egg = {f"WORA_{r}" for r in {"STARCATCHER08, STARCATCHER06, STARCATCHER07, EGG03, EGG04, EGG02x, EGG"}}
+                egg = {f"WORA_{r}" for r in {"STARCATCHER08", "STARCATCHER06", "STARCATCHER07", "EGG03", "EGG04", "EGG02x", "EGG"}}
                 # Throne rooms locked by ripple requirements
                 ripple_locked_3 = {"WORA_THRONE10"}
                 ripple_locked_5 = {"WORA_THRONE05"}
@@ -249,8 +259,8 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
             case _:
                 ret.append(PhysicalRegion(region_code_to_name[region], region, rooms))
 
-    ret.append(ConnectionData("Subterranean", "Rubicon", "Enter Rubicon",
-                              AllOf(Simple("Karma", 8), Simple("Scug-Saint"))))
+    if options.starting_scug == "Saint":
+        ret.append(ConnectionData("Subterranean", "Rubicon", "Enter Rubicon", Simple("Karma", 8)))
 
     return ret
 

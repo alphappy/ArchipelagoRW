@@ -13,7 +13,6 @@ Other Watcher-specific player YAML settings are discussed on this page.
 Some non-Watcher-specific settings still apply to Watcher worlds;
 some, like `which_gate_behavior`, are ignored.
 
-
 ### Terminology
 A few pieces of terminology are used in this documentation for brevity:
 * **Watcherspace**: All regions added in The Watcher.  There are 27 Watcherspace regions.
@@ -86,6 +85,15 @@ if they contain any remaining checks.
 TLDR: Dynamic warps can only reach regions in logic, and will attempt to send you to regions where you have a lot of checks to do or otherwise
 are important to reach for a goal condition.
 
+### Passage Tokens
+Passage tokens are normally excluded from Watcher's item pool, as passages are non-functional in the base Watcher campaign.
+However, thanks to Shrub and many talented artists, there exists a mod that adds passages for Watcher. 
+When the option `watcher_passages` is enabled, passage tokens will be shuffled into the item pool and will be able to be used 
+if and only if the Watcher Region Art mod is enabled in-game.
+
+You can find Watcher Region Art on the Steam workshop:
+https://steamcommunity.com/sharedfiles/filedetails/?id=3660768308
+
 ## Checks
 
 Most of Watcher's checks fall into one of a few categories.
@@ -122,8 +130,8 @@ Each of 4 unique encounters with The Prince up to his awakening are checks.
 These checks are awarded upon visiting The Prince's room (`WORA_AI`).
 
 ### Other
-* (UNIMPLEMENTED) Currently, Watcher can only earn the Survivor passage. ~~Watcher can earn some passages.
-Watcher cannot earn The Pilgrim, The Nomad, The Scholar, The Wanderer, or The Mother.~~
+* Watcher can earn some passages.
+Watcher cannot earn The Pilgrim, The Nomad, The Wanderer, or The Mother.
 * Watcher can collect sandbox token and pearl checks, same as all other campaigns.
 * If `sheltersanity` is enabled, every shelter is a check when visited.
 * If `checks_food_quest` is enabled, Watcher can earn certain food quest checks.
