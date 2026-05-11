@@ -1,4 +1,5 @@
 from BaseClasses import ItemClassification, Item, Location
+from rule_builder.rules import True_
 from ..options import RainWorldOptions
 from ..game_data.general import scugs_all
 from ..conditions.classes import Condition, ConditionBlank
@@ -75,4 +76,5 @@ class StaticWorldEventDetached:
             location.place_locked_item(Item(self.item_name, ItemClassification.progression, None, world.player))
             location.show_in_spoiler = False
             for region in regions:
-                region.connect(event_region, f"{self.item_name} in {region.name}")
+                world.create_entrance(region, event_region, True_(), f"{self.item_name} in {region.name}")
+                # region.connect(event_region, f"{self.item_name} in {region.name}")

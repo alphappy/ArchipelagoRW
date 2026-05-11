@@ -42,6 +42,7 @@ class LocationData:
         if self.access_condition is not ConditionBlank:
             world.set_rule(self.loc, self.access_condition.get_rule())
             # add_rule(loc, self.access_condition.check(player))
+        self.loc = None # Clear reference to location to avoid memory leak
 
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         """Create the location, or return False if the location should not be generated."""
