@@ -6,7 +6,6 @@ from ..game_data.watcher import watcher_high_up_shinies
 from ..options import RainWorldOptions
 from ..conditions.classes import ConditionBlank, Condition, AnyOf, Simple
 from ..constants import FIRST_ID
-from worlds.generic.Rules import add_rule
 from ..regions.classes import room_to_region
 from ..game_data.general import region_code_to_name
 from ..utils_ap import try_get_region
@@ -18,48 +17,50 @@ location_client_map: dict[str, str] = {}
 
 
 class LocationData:
-    def __init__(self, full_name: str, client_name: str, alt_names: list[str] | None, offset: Optional[int],
-                 region: str = "Menu",access_condition: Condition = ConditionBlank):
+    def __init__(self, full_name: str, client_name: str, alt_names: list[str] | None, offset: int,
+                 region: str = "Menu", access_condition: Condition = ConditionBlank):
         """Represents a location of any type."""
         self.full_name = full_name
         self.client_name = client_name
         self.alt_names = alt_names or []
-        self.id = None
+        self.loc = None
         self.region = region
         self.access_condition: Condition = access_condition
         self.progress_type: LocationProgressType = LocationProgressType.DEFAULT
         self.whitelist: ScugFlagMap | None = None
-        if offset is not None:
-            self.id = offset + FIRST_ID
-            location_map[full_name] = self.id
-            for alt_name in self.alt_names + [client_name]:
-                if alt_name != full_name:
-                    location_hints.setdefault(alt_name, set()).update({full_name})
-            location_client_map[client_name] = self.full_name
 
-    def make(self, player: int, world: World, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-        if self.pre_generate(player, multiworld, options):
-            if (region := try_get_region(multiworld, self.region, player)) and region.populate:
-                loc = Location(player, self.full_name, self.id, region)
-                loc.progress_type = self.progress_type
-                region.locations.append(loc)
-                if self.access_condition is not ConditionBlank:
-                    world.set_rule(loc, self.access_condition.get_rule())
-                    # add_rule(loc, self.access_condition.check(player))
-                return self.id is not None
-        return False
+        self.id = offset + FIRST_ID
+        location_map[full_name] = self.id
+        for alt_name in self.alt_names + [client_name]:
+            if alt_name != full_name:
+                location_hints.setdefault(alt_name, set()).update({full_name})
+        location_client_map[client_name] = self.full_name
+
+    def make(self, world: World, options: RainWorldOptions):
+        """Resolve the rules on the location"""
+        # self.loc is not None and
+        if self.access_condition is not ConditionBlank:
+            world.set_rule(self.loc, self.access_condition.get_rule())
+            # add_rule(loc, self.access_condition.check(player))
 
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-        """Prepare to generate the location, or return False if the location should not be generated."""
+        """Create the location, or return False if the location should not be generated."""
         if self.whitelist is not None and not options.satisfies_flagmap(self.whitelist):
             return False
-        return True
+
+        if (region := try_get_region(multiworld, self.region, player)) and region.populate:
+            self.loc = Location(player, self.full_name, self.id, region)
+            self.loc.progress_type = self.progress_type
+            region.locations.append(self.loc)
+            return True
+
+        return False
 
     def use_whitelist(self): self.whitelist = ScugFlagMap()
 
 
 class RoomLocation(LocationData):
-    def __init__(self, description: str, client_name: str, alt_names: list[str] | None, offset: Optional[int],
+    def __init__(self, description: str, client_name: str, alt_names: list[str] | None, offset: int,
                  room: str):
         """
         Represents a location that exists in a specific room.

@@ -14,7 +14,7 @@ class GateData:
         self.right = right
         self.was_swapped = was_swapped
 
-    def make(self, player: int, world: World, multiworld: MultiWorld, options: RainWorldOptions):
+    def make(self, world: World, options: RainWorldOptions):
         dlcstate = "MSC" if options.msc_enabled else "Vanilla"
         if self.name[5:] not in accessible_gates[dlcstate][options.starting_scug]:
             return
@@ -22,8 +22,8 @@ class GateData:
         for effective_name, scugs in self.effective_names(options).items():
             _, left_name, right_name = effective_name.split("_")
 
-            left = try_get_region(multiworld, room_to_region[f'{self.name}[{left_name}]'], player)
-            right = try_get_region(multiworld, room_to_region[f'{self.name}[{right_name}]'], player)
+            left = try_get_region(world.multiworld, room_to_region[f'{self.name}[{left_name}]'], world.player)
+            right = try_get_region(world.multiworld, room_to_region[f'{self.name}[{right_name}]'], world.player)
 
             if not left or not right:
                 continue

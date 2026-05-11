@@ -80,8 +80,17 @@ class Simple(Condition):
             return HasFromList(*self.items, count=self.count)
 
 
+class Direct(Condition):
+    """Create a Condition from a Rule directly. Allows for better utilizing Rule Builder's API."""
+    def __init__(self, rule: Rule):
+        self.rule = rule
+
+    def get_rule(self) -> Rule:
+        return self.rule
+
+
 class Compound(Condition):
-    """Represents multiple checks against a CollectionState, some specified number of which must be satsified."""
+    """Represents multiple checks against a CollectionState, some specified number of which must be satisfied."""
     def __init__(self, count: int, *conditions: Condition):
         self.conditions = conditions
         self.count = count
@@ -113,13 +122,13 @@ class Compound(Condition):
 
 
 class AnyOf(Compound):
-    """Represents multiple checks against a CollectionState, at least one of which must be satsified."""
+    """Represents multiple checks against a CollectionState, at least one of which must be satisfied."""
     def __init__(self, *conditions: Condition):
         super().__init__(1, *conditions)
 
 
 class AllOf(Compound):
-    """Represents multiple checks against a CollectionState, all of which must be satsified."""
+    """Represents multiple checks against a CollectionState, all of which must be satisfied."""
     def __init__(self, *conditions: Condition):
         super().__init__(len(conditions), *conditions)
 

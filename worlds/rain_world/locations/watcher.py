@@ -30,9 +30,9 @@ class PrinceEncounter(RoomLocation):
         super().__init__(f"Prince encounter #{num}", f"Prince-{num}", ["Prince", "The Prince", "Prince Encounter"], offset, "WORA_AI")
         self.access_condition = Simple("Ripple", 2 * num)
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+    def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         self.progress_type = options.priority_throne.value
-        return super().make(player, multiworld, options)
+        return super().pre_generate(player, multiworld, options)
 
 
 # class ThroneWarp(RoomLocation):

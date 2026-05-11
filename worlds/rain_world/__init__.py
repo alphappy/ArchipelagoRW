@@ -93,19 +93,27 @@ class RainWorldWorld(World):
                 if start_room == "" else start_room.upper()
 
     def create_regions(self):
+        # Create and resolve regions and entrances
         for data in regions.generate(self.options, self.random):
-            data.make(self.player, self, self.multiworld, self.options)
+            data.make(self, self.options)
 
-        # return for each datum is a bool for whether that location was actually generated
-        locs = [data.make(self.player, self, self.multiworld, self.options) for data in locations.generate(self.options)]
-        foodquest_locs = [
-            data.make(self.player, self, self.multiworld, self.options) for data in locations.generate_foodquest(self.options)
-        ]
-        self.location_count = sum(locs + foodquest_locs)
-        self.foodquest_accessibility_flag = sum(e << i for i, e in enumerate(foodquest_locs))
+        # Create locations
+        locs = [data for data in locations.generate(self.options)
+                if data.pre_generate(self.player, self.multiworld, self.options)]
+        # Need to remember which food quest locs were generated for accessibility flag
+        foodquest_locs = [(data, data.pre_generate(self.player, self.multiworld, self.options))
+                          for data in locations.generate_foodquest(self.options)]
 
+        # Resolve locations
+        genned_locs = locs + [l for l, v in foodquest_locs if v]
+        for loc in genned_locs: loc.make(self, self.options)
+
+        self.location_count = len(genned_locs)
+        self.foodquest_accessibility_flag = sum(e << i for i, (_, e) in enumerate(foodquest_locs))
+
+        # Create and resolve events
         for data in get_events(self.options, self.multiworld.get_regions(self.player)):
-            data.make(self.player, self.multiworld, self.options)
+            data.make(self, self.options)
 
         #################################################################
         # STARTING REGION

@@ -18,8 +18,8 @@ class RegionData:
     def __init__(self, name: str, populate: bool = True):
         self.name, self.populate = name, populate
 
-    def make(self, player: int, world: World, multiworld: MultiWorld, _: RainWorldOptions):
-        multiworld.regions.append(RainWorldRegion(self.name, player, multiworld, self.populate))
+    def make(self, world: World, _: RainWorldOptions):
+        world.multiworld.regions.append(RainWorldRegion(self.name, world.player, world.multiworld, self.populate))
 
 
 class ConnectionData:
@@ -29,9 +29,9 @@ class ConnectionData:
     def __init__(self, source: str, dest: str, name: str, condition: Condition = ConditionBlank):
         self.source, self.dest, self.name, self.condition = source, dest, name, condition
 
-    def make(self, player: int, world: World, multiworld: MultiWorld, options: RainWorldOptions):
-        source = try_get_region(multiworld, self.source, player)
-        dest = try_get_region(multiworld, self.dest, player)
+    def make(self, world: World, options: RainWorldOptions):
+        source = try_get_region(world.multiworld, self.source, world.player)
+        dest = try_get_region(world.multiworld, self.dest, world.player)
         if source and dest:
             world.create_entrance(source, dest, self.condition.get_rule(), self.name)
             # source.connect(dest, self.name, rule=self.condition.check(player))
@@ -47,9 +47,9 @@ class Gate(ConnectionData):
         self.gate_name = gate_name
         self.condition = condition
 
-    def make(self, player: int, world: World, multiworld: MultiWorld, options: RainWorldOptions):
-        source = multiworld.get_region(self.source, player)
-        dest = multiworld.get_region(self.dest, player)
+    def make(self, world: World, options: RainWorldOptions):
+        source = world.multiworld.get_region(self.source, world.player)
+        dest = world.multiworld.get_region(self.dest, world.player)
 
         karma_items = self.cost - (1 if self.cost < 6 else 2)
 
@@ -78,12 +78,12 @@ class PhysicalRegion(RegionData):
         super().__init__(name, True)
         self.prefix, self.rooms = prefix, rooms
 
-    def make(self, player: int, world: World, multiworld: MultiWorld, options: RainWorldOptions):
+    def make(self, world: World, options: RainWorldOptions):
         self.populate = self._gen(options)
         room_to_region.update({room: self.name for room in self.rooms})
         if self.populate:
-            region = RainWorldRegion(self.name, player, multiworld, self.populate, self.rooms, self.prefix)
-            multiworld.regions.append(region)
+            region = RainWorldRegion(self.name, world.player, world.multiworld, self.populate, self.rooms, self.prefix)
+            world.multiworld.regions.append(region)
 
     def _gen(self, options: RainWorldOptions) -> bool:
         rcode, scug = self.prefix.split("^")[0], options.starting_scug
