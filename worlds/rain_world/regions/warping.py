@@ -38,7 +38,7 @@ class PredeterminedNormalDynamic(DynamicWarpConnection):
             self.condition = AllOf(self.condition, Simple(f"Dynamic: {self.region_code}"))
 
     def make(self, world: World, options: RainWorldOptions):
-        world.multiworld.worlds[world.player].predetermined_warps[self.region_code] = self.dest
+        world.predetermined_warps[self.region_code] = self.dest
         super().make(world, options)
 
 
@@ -50,7 +50,7 @@ class PredeterminedThroneDynamic(DynamicWarpConnection):
     names = ["Lower east", "Lower west", "Upper east", "Upper west"]
 
     def make(self, world: World, options: RainWorldOptions):
-        world.multiworld.worlds[world.player].predetermined_warps[self.source] = self.dest
+        world.predetermined_warps[self.source] = self.dest
         super().make(world, options)
 
 
@@ -63,7 +63,7 @@ class PoolNormalDynamic(DynamicWarpConnection):
             self.condition = AllOf(self.condition, Simple(f"Dynamic: {self.dest_region}"))
 
     def make(self, world: World, options: RainWorldOptions):
-        world.multiworld.worlds[world.player].warp_pool.add(self.dest_region if self.unlockable else self.dest)
+        world.warp_pool.add(self.dest_region if self.unlockable else self.dest)
         super().make(world, options)
 
 cond_can_dynamic_warp = AnyOf(Simple("Ripple", 2), Simple("Dial Warp Ability"))
