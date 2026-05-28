@@ -18,6 +18,11 @@ class SpinningTop(RoomLocation):
         room = data.source_room.upper()
         super().__init__("Spinning Top", f"SpinningTop-{room.split('_')[0]}", ["Spinning Top"], offset, room)
 
+    def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+        if self.room == "WARA_P09":
+            self.access_condition = Simple("Ripple", 8)
+        return super().pre_generate(player, multiworld, options)
+
 
 class Rottening(LocationData):
     def __init__(self, num: int, offset: int):
