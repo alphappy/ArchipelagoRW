@@ -1331,9 +1331,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             self.wt_ripplespawn, self.wt_blizzardlizard,
         ]}
         if not self.msc_enabled:
-            ret["Responsibility"] = 0
+            ret["Responsibility trap"] = 0
         if not self.is_watcher_enabled:
-            for key in ("Ripple Spawn", "BlizzardLizard"):
+            for key in ("Ripple Spawn trap", "Blizzard Lizard trap"):
                 ret[f"{key}"] = 0
 
         return ret
