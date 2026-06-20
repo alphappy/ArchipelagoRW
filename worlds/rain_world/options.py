@@ -746,8 +746,15 @@ class WtSlimeMold(WtGeneric):
 
 class WtFireEgg(WtGeneric):
     """The relative weight of firebug eggs in the non-trap filler item pool."""
-    display_name = "Firebug egg (MSC)"
+    display_name = "Firebug Egg (MSC)"
     item_name = "Fire Egg"
+    default = 5
+
+
+class WtHellSpear(WtGeneric):
+    """The relative weight of hell spears in the non-trap filler item pool."""
+    display_name = "Hell Spear (MSC)"
+    item_name = "Hell Spear"
     default = 5
 
 
@@ -1108,6 +1115,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     wt_slimemold: WtSlimeMold
     wt_karma_flowers: WtKarmaFlower
     wt_fireeggs: WtFireEgg
+    wt_hellspears: WtHellSpear
     wt_glowweed: WtGlowWeed
     wt_rot_fruit: WtRotFruit
     wt_fire_sprite_larva: WtFireSpriteLarva
@@ -1118,7 +1126,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         WtKarmaFlower,
 
         WtLillyPuck, WtDandelionPeach, WtGooieduck, WtElectricSpear, WtSingularityBomb, WtJokeRifle,
-        WtFireEgg, WtGlowWeed,
+        WtFireEgg, WtHellSpear, WtGlowWeed,
 
         WtBoomerang, WtPoisonSpear, WtGraffitiBomb, WtRotFruit, WtFireSpriteLarva
     ]
@@ -1304,13 +1312,13 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             self.wt_flashbangs, self.wt_sporepuffs, self.wt_cherrybombs, self.wt_bubble_weed,
             self.wt_lilypucks, self.wt_dandelion_peaches, self.wt_gooieducks, self.wt_fruit, self.wt_bubblefruit,
             self.wt_eggbugeggs, self.wt_jellyfish, self.wt_mushrooms, self.wt_slimemold,
-            self.wt_fireeggs, self.wt_glowweed, self.wt_electric_spears, self.wt_singularity_bombs,
+            self.wt_fireeggs, self.wt_hellspears, self.wt_glowweed, self.wt_electric_spears, self.wt_singularity_bombs,
             self.wt_lanterns, self.wt_karma_flowers, self.wt_vulture_masks, self.wt_pearls, self.wt_beehives,
             self.wt_joke_rifles, self.wt_boomerangs, self.wt_poison_spears, self.wt_graffiti_bombs, self.wt_rot_fruit,
             self.wt_fire_sprite_larva,
         ]}
         if not self.msc_enabled:
-            for key in ("Fire Egg", "Electric Spear", "Joke Rifle"):
+            for key in ("Fire Egg", "Electric Spear", "Joke Rifle", "Hell Spear"):
                 ret[f"{key}"] = 0
         if not self.is_watcher_enabled:
             for key in ("Boomerang", "Poison Spear", "Graffiti Bomb", "Rot Fruit", "Fire Sprite Larva"):

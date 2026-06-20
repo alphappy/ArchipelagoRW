@@ -100,8 +100,9 @@ all_items: Dict[str, RainWorldItemData] = {
     "Cherrybomb": FillerItemData("Cherrybomb", "Object-FirecrackerPlant", 207 + offset),
     "Singularity Bomb": FillerItemData("Singularity Bomb", "Object-SingularityBomb", 208 + offset, ["MSC"]),
     "Lilypuck": FillerItemData("Lilypuck", "Object-LillyPuck", 209 + offset, ["MSC"]),
-    "Poison Spear": FillerItemData("Poison Spear", "Object-PoisonSpear", 210 + offset, ["Watcher"]),
-    "Boomerang": FillerItemData("Boomerang", "Object-Boomerang", 211 + offset, ["Watcher"]),
+    "Hell Spear": FillerItemData("Hell Spear", "Object-HellSpear", 210 + offset, ["MSC"]),
+    "Poison Spear": FillerItemData("Poison Spear", "Object-PoisonSpear", 211 + offset, ["Watcher"]),
+    "Boomerang": FillerItemData("Boomerang", "Object-Boomerang", 212 + offset, ["Watcher"]),
 
     #################################################################
     # FILLER - FOOD
