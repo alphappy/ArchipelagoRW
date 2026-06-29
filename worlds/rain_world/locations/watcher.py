@@ -12,6 +12,11 @@ class FixedWarpPoint(RoomLocation):
         room = data.source_room.upper()
         super().__init__(f"Fixed Warp - {room}", f"Warp-{room}", ["Warp", "Fixed Warp"], offset, room)
 
+    def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
+        if self.room == "WARA_P09":
+            self.access_condition = Simple("Ripple", 3 + options.logic_ripplespace_min_req)
+        return super().pre_generate(player, multiworld, options)
+
 
 class SpinningTop(RoomLocation):
     def __init__(self, data: PortalData, offset: int):
@@ -20,7 +25,7 @@ class SpinningTop(RoomLocation):
 
     def pre_generate(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         if self.room == "WARA_P09":
-            self.access_condition = Simple("Ripple", 8)
+            self.access_condition = Simple("Ripple", 3 + options.logic_ripplespace_min_req)
         return super().pre_generate(player, multiworld, options)
 
 

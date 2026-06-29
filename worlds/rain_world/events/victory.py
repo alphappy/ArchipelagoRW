@@ -18,7 +18,7 @@ def generate(options: RainWorldOptions) -> list[EventData]:
             return [VictoryEvent("Spinning Top", "Ancient Urban")]
         if story:
             cond = AllOf(
-                Simple("Ripple", 8),
+                Simple("Ripple", 3 + options.logic_ripplespace_min_req),
                 # For now, I'm just assuming that if you can access a region, you can rot it.
                 # I can't think of any circumstance where this isn't the case,
                 # even considering all the different dynamic warp options,
@@ -31,7 +31,7 @@ def generate(options: RainWorldOptions) -> list[EventData]:
                 # With these conditions you should be able to get the Weaver ability
                 # and close all the warps. This will have to change when Weaver ability gets randomized.
                 # Ripple not technically required, but is needed to find Weaver spots "naturally" rather than looking at a map
-                Simple("Ripple", 8),
+                Simple("Ripple", 3 + options.logic_ripplespace_min_req),
                 Simple([f"Access-{r}" for r in [*normal_regions, "WARA"]])
             )
             return [VictoryEvent("An Understanding", "Events", cond)]
