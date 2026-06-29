@@ -134,25 +134,25 @@ all_items: Dict[str, RainWorldItemData] = {
 
     #################################################################
     # FILLER - NON-CREATURE TRAPS
-    "Stun trap": TrapItemData("Stun trap", "Trap-Stun", 300 + offset),
-    "Zoomies trap": TrapItemData("Zoomies trap", "Trap-Zoomies", 301 + offset),
-    "Timer trap": TrapItemData("Timer trap", "Trap-Timer", 302 + offset),
-    "Rain trap": TrapItemData("Rain trap", "Trap-Rain", 303 + offset),
-    "Gravity trap": TrapItemData("Gravity trap", "Trap-Gravity", 304 + offset),
-    "Fog trap": TrapItemData("Fog trap", "Trap-Fog", 305 + offset),
-    "Killsquad trap": TrapItemData("Killsquad trap", "Trap-KillSquad", 306 + offset),
-    "Alarm trap": TrapItemData("Alarm trap", "Trap-Alarm", 307 + offset),
+    "Stun Trap": TrapItemData("Stun Trap", "Trap-Stun", 300 + offset),
+    "Zoomies Trap": TrapItemData("Zoomies Trap", "Trap-Zoomies", 301 + offset),
+    "Timer Trap": TrapItemData("Timer Trap", "Trap-Timer", 302 + offset),
+    "Rain Trap": TrapItemData("Rain Trap", "Trap-Rain", 303 + offset),
+    "Gravity Trap": TrapItemData("Gravity Trap", "Trap-Gravity", 304 + offset),
+    "Fog Trap": TrapItemData("Fog Trap", "Trap-Fog", 305 + offset),
+    "Killsquad Trap": TrapItemData("Killsquad Trap", "Trap-KillSquad", 306 + offset),
+    "Alarm Trap": TrapItemData("Alarm Trap", "Trap-Alarm", 307 + offset),
 
     #################################################################
     # FILLER - CREATURE TRAPS
-    "Red Lizard trap": TrapItemData("Red Lizard trap", "Trap-RedLizard", 330 + offset),
-    "Red Centipede trap": TrapItemData("Red Centipede trap", "Trap-RedCentipede", 331 + offset),
-    "Spitter Spider trap": TrapItemData("Spitter Spider trap", "Trap-SpitterSpider", 332 + offset),
-    "Brother Long Legs trap": TrapItemData("Brother Long Legs trap", "Trap-BrotherLongLegs", 333 + offset),
-    "Daddy Long Legs trap": TrapItemData("Daddy Long Legs trap", "Trap-DaddyLongLegs", 334 + offset),
-    "Responsibility trap": TrapItemData("Responsibility trap", "Trap-Responsibility", 335 + offset),
-    "Ripple Spawn trap": TrapItemData("Ripple Spawn trap", "Trap-RippleSpawn", 336 + offset),
-    "Blizzard Lizard trap": TrapItemData("Blizzard Lizard trap", "Trap-BlizzardLizard", 337 + offset),
+    "Red Lizard Trap": TrapItemData("Red Lizard Trap", "Trap-RedLizard", 330 + offset),
+    "Red Centipede Trap": TrapItemData("Red Centipede Trap", "Trap-RedCentipede", 331 + offset),
+    "Spitter Spider Trap": TrapItemData("Spitter Spider Trap", "Trap-SpitterSpider", 332 + offset),
+    "Brother Long Legs Trap": TrapItemData("Brother Long Legs Trap", "Trap-BrotherLongLegs", 333 + offset),
+    "Daddy Long Legs Trap": TrapItemData("Daddy Long Legs Trap", "Trap-DaddyLongLegs", 334 + offset),
+    "Responsibility Trap": TrapItemData("Responsibility Trap", "Trap-Responsibility", 335 + offset),
+    "Ripple Spawn Trap": TrapItemData("Ripple Spawn Trap", "Trap-RippleSpawn", 336 + offset),
+    "Blizzard Lizard Trap": TrapItemData("Blizzard Lizard Trap", "Trap-BlizzardLizard", 337 + offset),
 
     #################################################################
     # FILLER - UPGRADES

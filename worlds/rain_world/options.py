@@ -861,8 +861,8 @@ class WtFireSpriteLarva(WtGeneric):
 class WtTrapStun(WtGeneric):
     """The relative weight of stun traps in the trap filler item pool.
     Stun traps will briefly stun the slugcat, as if they were hit with a rock."""
-    display_name = "Stun trap"
-    item_name = "Stun trap"
+    display_name = "Stun Trap"
+    item_name = "Stun Trap"
     default = 60
 
 
@@ -870,16 +870,16 @@ class WtTrapZoomies(WtGeneric):
     """The relative weight of zoomies traps in the trap filler item pool.
     Zoomies traps will make the slugcat update at double speed for a short time.
     This will increase movement speed, but make platforming more difficult."""
-    display_name = "Zoomies trap"
-    item_name = "Zoomies trap"
+    display_name = "Zoomies Trap"
+    item_name = "Zoomies Trap"
     default = 50
 
 
 class WtTrapTimer(WtGeneric):
     """The relative weight of timer traps in the trap filler item pool.
     Timer traps will reduce the remaining time left in the current cycle."""
-    display_name = "Timer trap"
-    item_name = "Timer trap"
+    display_name = "Timer Trap"
+    item_name = "Timer Trap"
     default = 50
 
 
@@ -887,8 +887,8 @@ class WtTrapRedLizard(WtGeneric):
     """The relative weight of red lizard traps in the trap filler item pool.
     Red lizard traps will spawn a red lizard in an adjacent room.
     It will also know the slugcat's position for a short time."""
-    display_name = "Red Lizard trap"
-    item_name = "Red Lizard trap"
+    display_name = "Red Lizard Trap"
+    item_name = "Red Lizard Trap"
     default = 30
 
 
@@ -896,8 +896,8 @@ class WtTrapRedCentipede(WtGeneric):
     """The relative weight of red centipede traps in the trap filler item pool.
     Red centipede traps will spawn a red centipede in an adjacent room.
     It will also know the slugcat's position for a short time."""
-    display_name = "Red Centipede trap"
-    item_name = "Red Centipede trap"
+    display_name = "Red Centipede Trap"
+    item_name = "Red Centipede Trap"
     default = 30
 
 
@@ -905,8 +905,8 @@ class WtTrapSpitterSpider(WtGeneric):
     """The relative weight of spitter spider traps in the trap filler item pool.
     Spitter spider traps will spawn multiple spitter spiders in an adjacent room(s).
     They will also know the slugcat's position for a short time."""
-    display_name = "Spitter Spider trap"
-    item_name = "Spitter Spider trap"
+    display_name = "Spitter Spider Trap"
+    item_name = "Spitter Spider Trap"
     default = 30
 
 
@@ -914,8 +914,8 @@ class WtTrapBrotherLongLegs(WtGeneric):
     """The relative weight of brother long legs traps in the trap filler item pool.
     Brother long legs traps will spawn multiple BLLs in an adjacent room(s).
     They will also know the slugcat's position for a short time."""
-    display_name = "Brother Long Legs trap"
-    item_name = "Brother Long Legs trap"
+    display_name = "Brother Long Legs Trap"
+    item_name = "Brother Long Legs Trap"
     default = 30
 
 
@@ -923,8 +923,8 @@ class WtTrapDaddyLongLegs(WtGeneric):
     """The relative weight of daddy long legs traps in the trap filler item pool.
     Daddy long legs traps will spawn a Daddy long legs in an adjacent room.
     It will also know the slugcat's position for a short time."""
-    display_name = "Daddy Long Legs trap"
-    item_name = "Daddy Long Legs trap"
+    display_name = "Daddy Long Legs Trap"
+    item_name = "Daddy Long Legs Trap"
     default = 10
 
 
@@ -932,8 +932,8 @@ class WtTrapRain(WtGeneric):
     """The relative weight of rain traps in the trap filler item pool.
     Rain traps will activate strong pre-cycle rain for a short time.
     If MSC is not enabled, this effect will only be visual."""
-    display_name = "Rain trap"
-    item_name = "Rain trap"
+    display_name = "Rain Trap"
+    item_name = "Rain Trap"
     default = 50
 
 
@@ -941,23 +941,23 @@ class WtTrapGravity(WtGeneric):
     """The relative *weight* of gravity traps in the trap filler item pool.
     Gravity traps will disable gravity for a short time.
     This has no effect in rooms with gravity effects already present (For example, in Five Pebbles)."""
-    display_name = "Gravity trap"
-    item_name = "Gravity trap"
+    display_name = "Gravity Trap"
+    item_name = "Gravity Trap"
     default = 10
 
 
 class WtTrapFog(WtGeneric):
     """The relative weight of fog traps in the trap filler item pool."""
-    display_name = "Fog trap"
-    item_name = "Fog trap"
+    display_name = "Fog Trap"
+    item_name = "Fog Trap"
     default = 0
     visibility = Visibility.none
 
 
 class WtTrapKillSquad(WtGeneric):
     """The relative weight of kill squad traps in the trap filler item pool."""
-    display_name = "Killsquad trap"
-    item_name = "Killsquad trap"
+    display_name = "Killsquad Trap"
+    item_name = "Killsquad Trap"
     default = 0
     visibility = Visibility.none
 
@@ -965,32 +965,32 @@ class WtTrapKillSquad(WtGeneric):
 class WtTrapAlarm(WtGeneric):
     """The relative weight of alarm traps in the trap filler item pool.
     Alarm traps will alert every creature in the region to the slugcats position for some time."""
-    display_name = "Alarm trap"
-    item_name = "Alarm trap"
+    display_name = "Alarm Trap"
+    item_name = "Alarm Trap"
     default = 30
 
 class WtTrapResponsibility(WtGeneric):
     """The relative weight of responsibility traps in the trap filler item pool.
     Responsibility traps will spawn a slugpup in an adjacent room.
     It will also know the slugcat's position for a short time."""
-    display_name = "Responsibility trap"
-    item_name = "Responsibility trap"
+    display_name = "Responsibility Trap"
+    item_name = "Responsibility Trap"
     default = 30
 
 class WtTrapRippleSpawn(WtGeneric):
     """The relative weight of ripple spawn traps in the trap filler item pool.
     Ripple spawn traps will spawn a large amount of Ripple amoeba in the current room that chase the slugcat.
     Before the Glow is obtained these will be invisible, making them much more dangerous."""
-    display_name = "Ripple Spawn trap"
-    item_name = "Ripple Spawn trap"
+    display_name = "Ripple Spawn Trap"
+    item_name = "Ripple Spawn Trap"
     default = 0
 
 class WtTrapBlizzardLizard(WtGeneric):
     """The relative weight of blizzard lizard traps in the trap filler item pool.
     Blizzard Lizard traps will spawn a blizzard lizard in an adjacent room.
     It will also know the slugcat's position for a short time."""
-    display_name = "Blizzard Lizard trap"
-    item_name = "Blizzard Lizard trap"
+    display_name = "Blizzard Lizard Trap"
+    item_name = "Blizzard Lizard Trap"
     default = 10
 
 
@@ -1339,9 +1339,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             self.wt_ripplespawn, self.wt_blizzardlizard,
         ]}
         if not self.msc_enabled:
-            ret["Responsibility trap"] = 0
+            ret["Responsibility Trap"] = 0
         if not self.is_watcher_enabled:
-            for key in ("Ripple Spawn trap", "Blizzard Lizard trap"):
+            for key in ("Ripple Spawn Trap", "Blizzard Lizard Trap"):
                 ret[f"{key}"] = 0
 
         return ret
