@@ -85,8 +85,9 @@ all_items: Dict[str, RainWorldItemData] = {
     #################################################################
     # UNIQUE
     "The Glow": RainWorldItemData("The Glow", "The Glow", offset + 50, ItemClassification.progression),
-    "Longer cycles": RainWorldItemData("Longer cycles", "Disconnect_FP", offset + 51, ItemClassification.progression),
-    "Dial Warp Ability": RainWorldItemData("Dial Warp Ability", "Dial_Warp", offset + 52, ItemClassification.progression),
+    "Longer Cycles": RainWorldItemData("Longer Cycles", "Longer_Cycles", offset + 51, ItemClassification.progression),
+    "Disable Five Pebbles": RainWorldItemData("Disable Five Pebbles", "Disable_Pebbles", offset + 52, ItemClassification.trap),
+    "Dial Warp Ability": RainWorldItemData("Dial Warp Ability", "Dial_Warp", offset + 53, ItemClassification.progression),
 
     #################################################################
     # FILLER - WEAPONS

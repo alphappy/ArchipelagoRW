@@ -150,7 +150,8 @@ class RainWorldWorld(World):
                 "The Glow": 1,
                 "Slag Key": 1 if self.options.starting_scug == "Red" else 0,
                 "Citizen ID Drone": 1 if self.options.starting_scug == "Artificer" else 0,
-                "Longer cycles": 1 if self.options.starting_scug == "Rivulet" else 0,
+                "Longer Cycles": 1 if self.options.starting_scug == "Rivulet" else 0,
+                "Disable Five Pebbles": 1 if self.options.starting_scug == "Rivulet" else 0,
                 "Rarefaction Cell": 1 if self.options.starting_scug == "Rivulet" else 0,
                 "Moon's Final Message": 1 if self.options.starting_scug == "Spear" else 0,
                 "Spearmaster's Pearl": 1 if self.options.starting_scug == "Spear" else 0,
@@ -166,8 +167,8 @@ class RainWorldWorld(World):
             if self.options.watcher_passages:
                 pool.update({f"Passage Token - {passage_proper_names[p]}": 1
                              for p in (passages_all if self.options.msc_enabled else passages_vanilla)})
-            if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:
-                pool.update({f"Dynamic: {k}": 1 for k in (normal_regions if ndwb.predetermined else self.warp_pool)})
+            # if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:
+            #     pool.update({f"Dynamic: {k}": 1 for k in (normal_regions if ndwb.predetermined else self.warp_pool)})
 
         if self.options.damage_upgrades > 0:
             pool.update({"Spear Damage Increase" : self.options.damage_upgrades})
