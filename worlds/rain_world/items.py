@@ -38,7 +38,8 @@ class PortalKeyItemData(RainWorldItemData):
         super().__init__(data.name, data.client_name, code, ItemClassification.progression)
         _, left_code, right_code = data.client_name.split("-")
         self.spinning_top = data.spinning_top
-        self.hints = [data.client_name, region_code_to_name[left_code], region_code_to_name[right_code]]
+        self.hints = [data.client_name, region_code_to_name[left_code], region_code_to_name[right_code],
+                      f'Warp: {region_code_to_name[right_code]} / {region_code_to_name[left_code]}']
 
 
 class PassageTokenItemData(RainWorldItemData):
