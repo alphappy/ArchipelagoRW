@@ -72,6 +72,7 @@ all_items: Dict[str, RainWorldItemData] = {
     "Moon's Final Message": RainWorldItemData("Moon's Final Message", "Rewrite_Spear_Pearl", offset + 5, ItemClassification.progression),
     "Slag Key": RainWorldItemData("Slag Key", "Object-NSHSwarmer", offset + 6, ItemClassification.progression),
     "Ripple": RainWorldItemData("Ripple", "Ripple", offset + 7, ItemClassification.progression),
+    "Progressive Weaver": RainWorldItemData("Progressive Weaver", "Weaver_Increment", offset + 8, ItemClassification.progression),
 
     #################################################################
     # PASSAGE TOKENS

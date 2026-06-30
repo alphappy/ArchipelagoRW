@@ -34,6 +34,8 @@ def generate(options: RainWorldOptions) -> list[EventData]:
                 Simple("Ripple", 3 + options.logic_ripplespace_min_req),
                 Simple([f"Access-{r}" for r in [*normal_regions, "WARA"]])
             )
+            if options.weaver_randomized:
+                cond = AllOf(cond, Simple("Progressive Weaver", 4))
             return [VictoryEvent("An Understanding", "Events", cond)]
         if true_ending:
             cond = AllOf(
@@ -43,6 +45,8 @@ def generate(options: RainWorldOptions) -> list[EventData]:
                 # Ripple requirement handled by Daemon access
                 Simple([f"Access-{r}" for r in [*normal_regions, "WARA", "WAUA", "WORA"]])
             )
+            if options.weaver_randomized:
+                cond = AllOf(cond, Simple("Progressive Weaver", 4))
             return [VictoryEvent("The Choice", "Daemon", cond)]
 
 

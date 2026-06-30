@@ -161,6 +161,7 @@ class RainWorldWorld(World):
                 "Ripple": 12 + self.options.extra_karma_cap_increases.value,
                 **{k: 1 for k, v in portal_keys.items() if (not v.spinning_top or self.options.spinning_top_keys)
                    and ("Daemon" not in v.name or self.options.daemon_keys)},
+                "Progressive Weaver": 4 if self.options.weaver_randomized else 0,
                 "Dial Warp Ability": 1,
                 "The Mark": 1,
             }
@@ -242,14 +243,13 @@ class RainWorldWorld(World):
             "difficulty_echo_low_karma",  # ...how low-karma echo appearances should be handled.
             "rotted_region_target",  # ...how many regions must be rotted for Watcher's alt ending.
             "spinning_top_keys",  # ...whether Spinning Top should appear without a key.
-            "normal_dynamic_warp_behavior", "throne_dynamic_warp_behavior",
             "checks_spread_rot",
 
             # External tracker needs to know...
             "difficulty_glow", "difficulty_monk", "difficulty_hunter", "difficulty_outlaw", "difficulty_chieftain",
             "difficulty_nomad", "difficulty_extreme_threats", "checks_submerged", "difficulty_submerged",
-            "checks_foodquest_expanded", "logic_rotted_generation", "logic_ripplespace_min_req", "dynamic_warp_pool_size",
-            "predetermined_dynamic_warp_network_minimum_necklace_length", "expedition_perks", "daemon_keys"
+            "checks_foodquest_expanded", "logic_rotted_generation", "logic_ripplespace_min_req",
+            "expedition_perks", "daemon_keys"
         )
         # backwards compatibility
         d["which_gamestate"] = self.options.which_gamestate_integer

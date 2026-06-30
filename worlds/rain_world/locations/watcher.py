@@ -3,6 +3,7 @@ from .classes import LocationData, RoomLocation
 from ..conditions.classes import Simple, AllOf
 from ..options import RainWorldOptions
 from ..game_data.watcher import portals, PortalData, normal_regions
+from ..regions.warping import cond_can_dynamic_warp
 
 INITIAL_OFFSET = 6000
 
@@ -35,9 +36,15 @@ class Rottening(LocationData):
         super().__init__(f"Spread the Rot - Region #{num}", f"SpreadRot-{num}", ["Spread the Rot"], offset, "Menu", cond)
 
 
+class WeaverEncounter(LocationData):
+    def __init__(self, num: int, offset: int):
+        cond = AllOf(Simple([f"Access-{r}" for r in normal_regions], 2), cond_can_dynamic_warp)
+        super().__init__(f"Weaver Encounter #{num}", f"Weaver-{num}", ["Weaver", "Weaver Encounter"], offset, "Menu", cond)
+
+
 class PrinceEncounter(RoomLocation):
     def __init__(self, offset: int, num: int):
-        super().__init__(f"Prince encounter #{num}", f"Prince-{num}", ["Prince", "The Prince", "Prince Encounter"], offset, "WORA_AI")
+        super().__init__(f"Prince Encounter #{num}", f"Prince-{num}", ["Prince", "The Prince", "Prince Encounter"], offset, "WORA_AI")
         self.access_condition = Simple("Ripple", 2 * num)
 
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
@@ -45,22 +52,25 @@ class PrinceEncounter(RoomLocation):
         return super().make(player, multiworld, options)
 
 
-def initialize() -> tuple[list[FixedWarpPoint], list[SpinningTop], list[Rottening], list[PrinceEncounter], list[LocationData]]:
+def initialize() -> tuple[list[FixedWarpPoint], list[SpinningTop], list[Rottening], list[WeaverEncounter], list[PrinceEncounter], list[LocationData]]:
     return ([FixedWarpPoint(data, INITIAL_OFFSET + i) for i, data in enumerate(portals) if data.check_warp],
             [SpinningTop(data, INITIAL_OFFSET + 100 + i) for i, data in enumerate(portals) if data.check_spinning_top],
             [Rottening(i + 1, INITIAL_OFFSET + 150 + i) for i in range(len(normal_regions))],
+            [WeaverEncounter(i + 1, INITIAL_OFFSET + 140 + i) for i in range(4)],
             [PrinceEncounter(INITIAL_OFFSET + 120 + i, i + 1) for i in range(4)],
             [RoomLocation("Meet Elder Ripple Spawn", "Meet_Ripple_Elder", [],
                           INITIAL_OFFSET + 130, "WORA_EGG")])
 
 
-fixed_warps, spinning_tops, rottenings, encounters, unique = initialize()
+fixed_warps, spinning_tops, rottenings, weaver_encounters, prince_encounters, unique = initialize()
 
 
 def select(options: RainWorldOptions) -> list[LocationData]:
     if options.starting_scug != "Watcher":
         return []
-    ret = fixed_warps + spinning_tops + encounters + unique
+    ret = fixed_warps + spinning_tops + prince_encounters + unique
     if options.should_have_rot_spread_checks:
         ret += rottenings
+    if options.checks_weaver_encounters:
+        ret += weaver_encounters
     return ret

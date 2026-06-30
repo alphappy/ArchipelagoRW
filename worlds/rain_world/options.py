@@ -176,7 +176,6 @@ class LogicRottedGeneration(Choice):
     alias_true = 2
     alias_false = 0
     default = 1
-    # visibility = Visibility.none
 
 
 class LogicMinRippleTarget(Range):
@@ -186,7 +185,6 @@ class LogicMinRippleTarget(Range):
     range_start = 5
     range_end = 9
     default = 5
-    # visibility = Visibility.none
 
 
 class RottedRegionTarget(Range):
@@ -196,27 +194,54 @@ class RottedRegionTarget(Range):
     range_start = 2
     range_end = 21
     default = 21
-    # visibility = Visibility.none
+
+
+class RandomizeWeaverAbility(Choice):
+    """Adds 4 progressive Weaver ability items to the item pool instead of gaining the ability naturally through Weaver encounters.
+    For related ending only, the endings in question are Weaver or True Ending."""
+    display_name = "Randomize Weaver ability"
+    option_false = 0
+    option_related_ending_only = 1
+    option_true = 2
+
+    alias_off = 0
+    alias_on = 2
+    default = 0
 
 
 class ChecksSpreadRot(Choice):
-    """Whether spreading the Rot to a new region is a check.
-    When Weaver or True ending is chosen, rot checks will not generate regardless of chosen value"""
+    """Whether spreading the Rot to new regions are checks.
+    This option will be force-disabled if "Randomize Weaver Ability" is set to true, or Weaver / True Ending is chosen.
+    For related ending only, the ending in question is the Prince ending."""
     display_name = "Rot spread checks"
-    option_off = 0
-    option_prince_ending_only = 1
-    option_on = 2
-    alias_true = 2
-    alias_false = 0
+    option_false = 0
+    option_related_ending_only = 1
+    option_true = 2
+
+    alias_off = 0
+    alias_prince_ending_only = 1
+    alias_on = 2
     default = 1
-    # visibility = Visibility.none
+
+
+class ChecksWeaverEncounters(Choice):
+    """Whether each of the 4 Weaver encounters are checks.
+    This is separate from whether the ability itself is randomized.
+    For related ending only, the endings in question are Weaver or True Ending."""
+    display_name = "Weaver encounter checks"
+    option_false = 0
+    option_related_ending_only = 1
+    option_true = 2
+
+    alias_off = 0
+    alias_on = 2
+    default = 1
 
 
 class SpinningTopKeys(Toggle):
     """Whether keys are required to travel through Spinning Top warps."""
     display_name = "Spinning Top keys"
     default = True
-    # visibility = Visibility.none
 
 
 class DaemonKeys(Toggle):
@@ -1007,15 +1032,17 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     logic_rotted_generation: LogicRottedGeneration
     logic_ripplespace_min_req: LogicMinRippleTarget
     rotted_region_target: RottedRegionTarget
+    randomize_weaver: RandomizeWeaverAbility
     checks_spread_rot: ChecksSpreadRot
+    checks_weaver_encounters: ChecksWeaverEncounters
     spinning_top_keys: SpinningTopKeys
     daemon_keys: DaemonKeys
     priority_throne: PriorityThrone
     watcher_passages: UseWatcherPassages
 
     group_watcher = [
-        LogicRottedGeneration, LogicMinRippleTarget, RottedRegionTarget, ChecksSpreadRot, SpinningTopKeys, DaemonKeys,
-        PriorityThrone, UseWatcherPassages,
+        LogicRottedGeneration, LogicMinRippleTarget, RottedRegionTarget, RandomizeWeaverAbility, ChecksSpreadRot,
+        ChecksWeaverEncounters, SpinningTopKeys, DaemonKeys, PriorityThrone, UseWatcherPassages,
     ]
 
     #################################################################
@@ -1288,13 +1315,22 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     @property
     def should_have_rot_spread_checks(self):
+        """Whether spread rot checks are included, considering chosen victory condition."""
         return (self.starting_scug == "Watcher" and not self.will_be_weaving and
                 (self.checks_spread_rot + (self.which_victory_condition == "story")) > 1)
 
     @property
     def will_be_weaving(self):
-        """Whether the player will need to seal portals during this run (Watcher with Weaver or True Ending goal)"""
-        return self.starting_scug == "Watcher" and (self.which_victory_condition == 4 or self.which_victory_condition == 5)
+        """Whether the player will end up sealing portals during this run
+        (Watcher with Weaver or True Ending goal or randomized Weaver ability)"""
+        return self.starting_scug == "Watcher" and (self.which_victory_condition == 4 or self.which_victory_condition == 5
+                                                    or self.randomize_weaver == 2)
+
+    @property
+    def weaver_randomized(self):
+        """Whether Weaver ability is randomized, considering chosen victory condition."""
+        return (self.starting_scug == "Watcher" and
+                (self.randomize_weaver + (self.which_victory_condition == 4 or self.which_victory_condition == 5) > 1))
 
 
 option_groups = [

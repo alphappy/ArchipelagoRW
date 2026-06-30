@@ -62,7 +62,7 @@ class PoolNormalDynamic(DynamicWarpConnection):
         multiworld.worlds[player].warp_pool.add(self.dest_region if self.unlockable else self.dest)
         super().make(player, multiworld, options)
 
-cond_can_dynamic_warp = AnyOf(Simple("Ripple", 2), Simple("Dial Warp Ability"))
+cond_can_dynamic_warp = AnyOf(Simple("Ripple", 2), Simple("Dial Warp Ability"), Simple("Progressive Weaver", 4))
 
 def generate(options: RainWorldOptions, rng: Random):
     if options.starting_scug != "Watcher":
