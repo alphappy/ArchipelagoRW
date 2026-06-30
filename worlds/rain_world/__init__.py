@@ -55,8 +55,6 @@ class RainWorldWorld(World):
     start_is_default = True
     start_is_connected = False
     foodquest_accessibility_flag = 0
-    predetermined_warps = {}
-    warp_pool = set()
 
     ut_can_gen_without_yaml = True
 
@@ -233,17 +231,19 @@ class RainWorldWorld(World):
             "passage_progress_without_survivor",  # ...if this setting doesn't match Remix.
             "death_link",  # ...whether to listen for death link notifications.
             "checks_foodquest",  # ...whether the food quest should be available.
-            "checks_broadcasts",  # ...whether broadcasts should be avilable.
+            "checks_broadcasts",  # ...whether broadcasts should be available.
             "checks_tokens_pearls",  # ...whether all tokens should be available.
-            "checks_sheltersanity",  # ...whether sheltersanity is enabled.
+            "checks_sheltersanity",  # ...whether shelters are checks.
             "checks_flowersanity",  # ...whether karma flowers are checks.
-            "checks_devtokens",  # ...whether devtokens should be checks.
+            "checks_devtokens",  # ...whether dev tokens should be checks.
             "which_victory_condition",  # ...which victory condition is a win.
             "which_gate_behavior",  # ...how gates should behave.
             "difficulty_echo_low_karma",  # ...how low-karma echo appearances should be handled.
             "rotted_region_target",  # ...how many regions must be rotted for Watcher's alt ending.
             "spinning_top_keys",  # ...whether Spinning Top should appear without a key.
-            "checks_spread_rot",
+            "checks_spread_rot", # ...whether spreading rot should be checks.
+            "checks_weaver_encounters", # ...whether encountering the Weaver should be checks.
+            "randomize_weaver", # ...whether the Weaver ability is randomized.
 
             # External tracker needs to know...
             "difficulty_glow", "difficulty_monk", "difficulty_hunter", "difficulty_outlaw", "difficulty_chieftain",
@@ -260,9 +260,6 @@ class RainWorldWorld(World):
         # ...which food quest checks are accessible.
         d["checks_foodquest_accessibility"] = (
             self.foodquest_accessibility_flag if self.options.checks_foodquest_expanded else 0)
-
-        d["predetermined_warps"] = self.predetermined_warps
-        d["warp_pool"] = list(self.warp_pool)
 
         # temp override
         d["which_campaign"] = self.options.starting_scug

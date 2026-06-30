@@ -118,8 +118,8 @@ class WhichVictoryCondition(Choice):
     When playing as the Watcher, these options are different:
     **Ascension** / **Spinning Top**: Complete the Spinning Top ending.
     **Story** / **Prince**: Complete the Prince ending.
-    **Weaver**: Complete the Weaver ending.
-    **True Ending**: Complete the True ending.
+    **Echoes** / **Weaver**: Complete the Weaver ending.
+    **True Ending**: Complete the True ending. If this is chosen on a non-Watcher slugcat, it will be interpreted as ascension.
     """
     display_name = "Victory condition"
     option_ascension = 0
@@ -129,8 +129,8 @@ class WhichVictoryCondition(Choice):
 
     alias_spinning_top = 0
     alias_prince = 1
-    option_weaver = 4
-    option_true_ending = 5
+    alias_weaver = 2
+    option_true_ending = 4
 
 
 class WhichGateBehavior(Choice):
@@ -1253,11 +1253,8 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
             if (self.starting_scug == "Gourmand") + self.checks_foodquest.value < 2:
                 return "Food quest checks must be enabled to use food quest victory condition."
 
-        if self.starting_scug != "Watcher" and (self.which_victory_condition == 4 or self.which_victory_condition == 5):
-            return "Victory conditions 'Weaver' and 'True Ending' are not valid for any slugcat other than Watcher."
-
-        if self.which_victory_condition == 2 and self.starting_scug == "Watcher":
-            return f"Watcher cannot currently use Echoes victory condition."
+        if self.starting_scug != "Watcher" and self.which_victory_condition == 4:
+            return "Victory condition 'True Ending' is not valid for any slugcat other than Watcher."
 
         return None
 
@@ -1323,14 +1320,14 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     def will_be_weaving(self):
         """Whether the player will end up sealing portals during this run
         (Watcher with Weaver or True Ending goal or randomized Weaver ability)"""
-        return self.starting_scug == "Watcher" and (self.which_victory_condition == 4 or self.which_victory_condition == 5
+        return self.starting_scug == "Watcher" and (self.which_victory_condition == 2 or self.which_victory_condition == 4
                                                     or self.randomize_weaver == 2)
 
     @property
     def weaver_randomized(self):
         """Whether Weaver ability is randomized, considering chosen victory condition."""
         return (self.starting_scug == "Watcher" and
-                (self.randomize_weaver + (self.which_victory_condition == 4 or self.which_victory_condition == 5) > 1))
+                (self.randomize_weaver + (self.which_victory_condition == 2 or self.which_victory_condition == 4) > 1))
 
 
 option_groups = [
