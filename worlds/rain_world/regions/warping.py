@@ -1,13 +1,10 @@
-from itertools import cycle, pairwise
 from random import Random
 
 from BaseClasses import MultiWorld
 from .classes import RegionData, ConnectionData, room_to_region
 from ..options import RainWorldOptions
 from ..conditions.classes import Simple, ConditionBlank, AllOf, AnyOf
-from ..game_data.watcher import targets, normal_regions, abnormal_regions
 from ..game_data.general import region_code_to_name
-from ..utils import necklace_derangement
 
 
 class DynamicWarpConnection(ConnectionData):
@@ -86,53 +83,6 @@ def generate(options: RainWorldOptions, rng: Random):
     if options.logic_rotted_generation == 1:
         ret.append(ConnectionData("From any normal region", "Western Outer Rim", "Bad dynamic warp to Outer Rim",
                                   Simple("Ripple", 2)))
-
-    # Everything below this appears to be for the extra dynamic warp options.
-    # Looks like the case for the "visited" option isn't covered, just return early for now
-    return ret
-
-    ####################################################################################################################
-    pool_size = int(options.dynamic_warp_pool_size)
-    pool = normal_regions if pool_size == 18 else rng.sample(normal_regions, pool_size)
-    mnl = options.predetermined_dynamic_warp_network_minimum_necklace_length.value
-
-    if (bhv := options.normal_dynamic_warp_behavior).predetermined:
-        # Map targets not in the pool to targets in the pool for replacement.
-        # Cycle the pool to get an even distribution of replacements for small pools.
-        # Pairwise the pool so there is a second option if it would replace a region's target with itself.
-        pool_sampler = pairwise(cycle(pool))
-        replacing = dict(zip(list(set(normal_regions).difference(set(pool))), pool_sampler))
-
-        # Generate a derangement of the normal regions.  Add the abnormal regions to the mapping.
-        mapping = necklace_derangement(normal_regions, rng, mnl)
-        mapping.update({k: v[0] for k, v in zip(abnormal_regions, pool_sampler)})
-
-        for source, target_region in mapping.items():
-            # Get the potential replacements for this target if it is not in the pool.
-            rep1, rep2 = replacing.get(target_region, (target_region, target_region))
-            # Replace the target region, but not with the source region.
-            target_region = rep1 if rep1 != source else rep2
-            # Pick a random DynamicWarpTarget in the region and create the connection.
-            target = rng.sample([t for t in targets if t.room.startswith(target_region)], 1)[0]
-            ret.append(PredeterminedNormalDynamic(source, target.room, target.ripple, bhv.unlockable))
-
-    else:
-        # For static pool, ensure that at least one target region is ripple level 1.
-        if not (bhv.unlockable or set(pool).intersection(ripple_one_targets := ['WRFA', 'WSKB', 'WARF', 'WSKA'])):
-            pool[0] = rng.choice(ripple_one_targets)
-
-        for target in [t for t in targets if any(t.room.startswith(r) for r in pool)]:
-            ret.append(PoolNormalDynamic(target.room, target.ripple, bhv.unlockable))
-
-    ####################################################################################################################
-    if options.throne_dynamic_warp_behavior == "static_predetermined":
-        # Choose 4 regions.  Pick a target in each.  Sort them by their Ripple level requirement.
-        chosen = rng.sample(normal_regions, 4)
-        chosen = [rng.choice([t for t in targets if t.room.startswith(reg)]) for reg in chosen]
-        chosen = sorted([c for c in chosen], key=lambda x: x.ripple)
-
-        for i, target in enumerate(chosen):
-            ret.append(PredeterminedThroneDynamic(target.room, i + 2, i))
 
     return ret
 

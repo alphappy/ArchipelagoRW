@@ -160,66 +160,6 @@ class DebugOutput(Toggle):
     visibility = Visibility.none
 
 
-#################################################################
-# WATCHER SETTINGS
-class RippleWarpBehavior(Choice):
-    """How ripple warps behave.  See the settings documentation for explanation."""
-    display_name = "Ripple warp behavior"
-    option_unaltered = 0
-    option_no_ripple_warps = 1
-    alias_true = 1
-    alias_false = 0
-    default = 0
-    # visibility = Visibility.none
-
-
-class NormalDynamicWarpBehavior(Choice):
-    """How normal dynamic warps behave.  See the Watcher documentation for explanation."""
-    display_name = "Normal dynamic warp behavior"
-    option_ignored = 0
-    option_visited = 1
-    option_static_pool = 2
-    option_unlockable_pool = 4
-    option_static_predetermined = 5
-    option_unlockable_predetermined = 6
-    default = 1
-    visibility = Visibility.none
-
-    @property
-    def unlockable(self) -> bool: return self.value in (4, 6)
-
-    @property
-    def predetermined(self) -> bool: return self.value in (5, 6)
-
-
-class PredeterminedDynamicWarpNetworkMinimumNecklaceLength(Range):
-    """The minimum length of a necklace in the derangement generator for the predetermined dynamic warp network."""
-    display_name = "Warp network parameter"
-    range_start = 2
-    range_end = 18
-    default = 3
-    visibility = Visibility.none
-
-
-class ThroneDynamicWarpBehavior(Choice):
-    """How Throne dynamic warps behave.  See the Watcher documentation for explanation."""
-    display_name = "Throne dynamic warp behavior"
-    option_ignored = 0
-    option_visited = 1
-    option_static_predetermined = 5
-    default = 5
-    visibility = Visibility.none
-
-
-class DynamicWarpPoolSize(Range):
-    """Number of regions in the dynamic warp pool.  See the Watcher documentation for explanation."""
-    display_name = "Normal pool size"
-    range_start = 1
-    range_end = 18
-    default = 18
-    visibility = Visibility.none
-
-
 class LogicRottedGeneration(Choice):
     """Controls the generation of Crumbling Fringes, Corrupted Factories, Decaying Tunnels, and Infested Wastes.
 
@@ -1066,10 +1006,6 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     # WATCHER-SPECIFIC SETTINGS
     logic_rotted_generation: LogicRottedGeneration
     logic_ripplespace_min_req: LogicMinRippleTarget
-    normal_dynamic_warp_behavior: NormalDynamicWarpBehavior
-    throne_dynamic_warp_behavior: ThroneDynamicWarpBehavior
-    predetermined_dynamic_warp_network_minimum_necklace_length: PredeterminedDynamicWarpNetworkMinimumNecklaceLength
-    dynamic_warp_pool_size: DynamicWarpPoolSize
     rotted_region_target: RottedRegionTarget
     checks_spread_rot: ChecksSpreadRot
     spinning_top_keys: SpinningTopKeys
@@ -1078,9 +1014,8 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     watcher_passages: UseWatcherPassages
 
     group_watcher = [
-        LogicRottedGeneration, LogicMinRippleTarget, NormalDynamicWarpBehavior, ThroneDynamicWarpBehavior,
-        DynamicWarpPoolSize, RottedRegionTarget, ChecksSpreadRot, SpinningTopKeys, DaemonKeys,
-        PriorityThrone, UseWatcherPassages, PredeterminedDynamicWarpNetworkMinimumNecklaceLength,
+        LogicRottedGeneration, LogicMinRippleTarget, RottedRegionTarget, ChecksSpreadRot, SpinningTopKeys, DaemonKeys,
+        PriorityThrone, UseWatcherPassages,
     ]
 
     #################################################################

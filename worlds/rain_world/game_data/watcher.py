@@ -28,7 +28,6 @@ class PortalData:
                 self.target_room = "WAUA_E01"  # first WAUA spawn
             elif self.source_room.startswith("WAUA"):
                 # WAUA STs logically don't go anywhere.
-                # At time of writing, not sure what's up with the SB_D07 target. TODO
                 self.target_room = self.source_room
             elif self.ripple:
                 self.target_room = "WRSA_L01"  # Daemon

@@ -2,7 +2,7 @@ from BaseClasses import MultiWorld
 from .classes import LocationData, RoomLocation
 from ..conditions.classes import Simple, AllOf
 from ..options import RainWorldOptions
-from ..game_data.watcher import portals, PortalData, normal_regions, targets, WarpTargetData
+from ..game_data.watcher import portals, PortalData, normal_regions
 
 INITIAL_OFFSET = 6000
 
@@ -43,19 +43,6 @@ class PrinceEncounter(RoomLocation):
     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
         self.progress_type = options.priority_throne.value
         return super().make(player, multiworld, options)
-
-
-# class ThroneWarp(RoomLocation):
-#     def __init__(self, offset: int, num: int):
-#         super().__init__(f"Create {self.names[num]} warp", f"ThroneWarp-{self.rooms[num]}", ["Throne Warp"], offset,
-#                          f"WORA_THRONE{self.rooms[num]}")
-#
-#     rooms = [f"{a:0>2}" for a in (10, 5, 7, 9)]
-#     names = ["lower east", "lower west", "upper east", "upper west"]
-#
-#     def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions) -> bool:
-#         self.progress_type = options.priority_throne.value
-#         return super().make(player, multiworld, options)
 
 
 def initialize() -> tuple[list[FixedWarpPoint], list[SpinningTop], list[Rottening], list[PrinceEncounter], list[LocationData]]:
