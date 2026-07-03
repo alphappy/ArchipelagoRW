@@ -198,7 +198,8 @@ class RottedRegionTarget(Range):
 
 class RandomizeWeaverAbility(Choice):
     """Adds 4 progressive Weaver ability items to the item pool instead of gaining the ability naturally through Weaver encounters.
-    For related ending only, the endings in question are Weaver or True Ending."""
+    For related ending only, the endings in question are Weaver or True Ending.
+    The Weaver cannot be randomized if the Prince ending is chosen."""
     display_name = "Randomize Weaver ability"
     option_false = 0
     option_related_ending_only = 1
@@ -1326,8 +1327,9 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
     @property
     def weaver_randomized(self):
         """Whether Weaver ability is randomized, considering chosen victory condition."""
-        return (self.starting_scug == "Watcher" and
-                (self.randomize_weaver + (self.which_victory_condition == 2 or self.which_victory_condition == 4) > 1))
+        return (self.starting_scug == "Watcher"
+                and (self.randomize_weaver + (self.which_victory_condition == 2 or self.which_victory_condition == 4) > 1)
+                and self.which_victory_condition != 1)
 
 
 option_groups = [
