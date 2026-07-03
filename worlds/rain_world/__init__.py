@@ -55,8 +55,6 @@ class RainWorldWorld(World):
     start_is_default = True
     start_is_connected = False
     foodquest_accessibility_flag = 0
-    predetermined_warps = {}
-    warp_pool = set()
 
     ut_can_gen_without_yaml = True
 
@@ -158,7 +156,8 @@ class RainWorldWorld(World):
                 "The Glow": 1,
                 "Slag Key": 1 if self.options.starting_scug == "Red" else 0,
                 "Citizen ID Drone": 1 if self.options.starting_scug == "Artificer" else 0,
-                "Longer cycles": 1 if self.options.starting_scug == "Rivulet" else 0,
+                "Longer Cycles": 1 if self.options.starting_scug == "Rivulet" else 0,
+                "Disable Five Pebbles": 1 if self.options.starting_scug == "Rivulet" else 0,
                 "Rarefaction Cell": 1 if self.options.starting_scug == "Rivulet" else 0,
                 "Moon's Final Message": 1 if self.options.starting_scug == "Spear" else 0,
                 "Spearmaster's Pearl": 1 if self.options.starting_scug == "Spear" else 0,
@@ -168,14 +167,15 @@ class RainWorldWorld(World):
                 "Ripple": 12 + self.options.extra_karma_cap_increases.value,
                 **{k: 1 for k, v in portal_keys.items() if (not v.spinning_top or self.options.spinning_top_keys)
                    and ("Daemon" not in v.name or self.options.daemon_keys)},
+                "Progressive Weaver": 4 if self.options.weaver_randomized else 0,
                 "Dial Warp Ability": 1,
                 "The Mark": 1,
             }
             if self.options.watcher_passages:
                 pool.update({f"Passage Token - {passage_proper_names[p]}": 1
                              for p in (passages_all if self.options.msc_enabled else passages_vanilla)})
-            if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:
-                pool.update({f"Dynamic: {k}": 1 for k in (normal_regions if ndwb.predetermined else self.warp_pool)})
+            # if (ndwb := self.options.normal_dynamic_warp_behavior).unlockable:
+            #     pool.update({f"Dynamic: {k}": 1 for k in (normal_regions if ndwb.predetermined else self.warp_pool)})
 
         if self.options.damage_upgrades > 0:
             pool.update({"Spear Damage Increase" : self.options.damage_upgrades})
@@ -240,24 +240,25 @@ class RainWorldWorld(World):
             "passage_progress_without_survivor",  # ...if this setting doesn't match Remix.
             "death_link",  # ...whether to listen for death link notifications.
             "checks_foodquest",  # ...whether the food quest should be available.
-            "checks_broadcasts",  # ...whether broadcasts should be avilable.
+            "checks_broadcasts",  # ...whether broadcasts should be available.
             "checks_tokens_pearls",  # ...whether all tokens should be available.
-            "checks_sheltersanity",  # ...whether sheltersanity is enabled.
+            "checks_sheltersanity",  # ...whether shelters are checks.
             "checks_flowersanity",  # ...whether karma flowers are checks.
-            "checks_devtokens",  # ...whether devtokens should be checks.
+            "checks_devtokens",  # ...whether dev tokens should be checks.
             "which_victory_condition",  # ...which victory condition is a win.
             "which_gate_behavior",  # ...how gates should behave.
             "difficulty_echo_low_karma",  # ...how low-karma echo appearances should be handled.
             "rotted_region_target",  # ...how many regions must be rotted for Watcher's alt ending.
             "spinning_top_keys",  # ...whether Spinning Top should appear without a key.
-            "normal_dynamic_warp_behavior", "throne_dynamic_warp_behavior",
-            "checks_spread_rot",
+            "checks_spread_rot", # ...whether spreading rot should be checks.
+            "checks_weaver_encounters", # ...whether encountering the Weaver should be checks.
+            "randomize_weaver", # ...whether the Weaver ability is randomized.
 
             # External tracker needs to know...
             "difficulty_glow", "difficulty_monk", "difficulty_hunter", "difficulty_outlaw", "difficulty_chieftain",
             "difficulty_nomad", "difficulty_extreme_threats", "checks_submerged", "difficulty_submerged",
-            "checks_foodquest_expanded", "logic_rotted_generation", "logic_ripplespace_min_req", "dynamic_warp_pool_size",
-            "predetermined_dynamic_warp_network_minimum_necklace_length", "expedition_perks", "daemon_keys"
+            "checks_foodquest_expanded", "logic_rotted_generation", "logic_ripplespace_min_req",
+            "expedition_perks", "daemon_keys"
         )
         # backwards compatibility
         d["which_gamestate"] = self.options.which_gamestate_integer
@@ -268,9 +269,6 @@ class RainWorldWorld(World):
         # ...which food quest checks are accessible.
         d["checks_foodquest_accessibility"] = (
             self.foodquest_accessibility_flag if self.options.checks_foodquest_expanded else 0)
-
-        d["predetermined_warps"] = self.predetermined_warps
-        d["warp_pool"] = list(self.warp_pool)
 
         # temp override
         d["which_campaign"] = self.options.starting_scug

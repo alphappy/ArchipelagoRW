@@ -10,39 +10,36 @@ def generate(options: RainWorldOptions) -> list[EventData]:
     story = options.which_victory_condition == 1
     echoes = options.which_victory_condition == 2
     food_quest = options.which_victory_condition == 3
-    weaver = options.which_victory_condition == 4
-    true_ending = options.which_victory_condition == 5
+    true_ending = options.which_victory_condition == 4
 
     if options.starting_scug == "Watcher":
-        if ascension:
+        if ascension: # Spinning Top
             return [VictoryEvent("Spinning Top", "Ancient Urban")]
-        if story:
+        if story: # Rot
             cond = AllOf(
-                Simple("Ripple", 8),
-                # For now, I'm just assuming that if you can access a region, you can rot it.
-                # I can't think of any circumstance where this isn't the case,
-                # even considering all the different dynamic warp options,
-                # but I'm leaving this note here as a thing to investigate later just in case.
+                Simple("Ripple", 3 + options.logic_ripplespace_min_req),
                 Simple([f"Access-{r}" for r in normal_regions], options.rotted_region_target.value)
             )
             return [VictoryEvent("The Prince", "Outer Rim", cond)]
-        if weaver:
-            cond = AllOf(
-                # With these conditions you should be able to get the Weaver ability
-                # and close all the warps. This will have to change when Weaver ability gets randomized.
-                # Ripple not technically required, but is needed to find Weaver spots "naturally" rather than looking at a map
-                Simple("Ripple", 8),
-                Simple([f"Access-{r}" for r in [*normal_regions, "WARA"]])
-            )
+        if echoes: # Weaver
+            cond = Simple([f"Access-{r}" for r in [*normal_regions, "WARA"]])
+            if options.weaver_randomized:
+                cond = AllOf(cond, Simple("Progressive Weaver", 4))
+            else:
+                # Ripple 9 not technically required, but is needed to find Weaver spots "naturally" rather than looking at a map
+                cond = AllOf(cond, Simple("Ripple", 3 + options.logic_ripplespace_min_req))
+
             return [VictoryEvent("An Understanding", "Events", cond)]
-        if true_ending:
-            cond = AllOf(
-                # Must be able to reach Ancient Urban for Spinning Top ending,
-                # Outer Rim and enough Ripple to wake the Prince,
-                # And every normal region for warp sealing.
-                # Ripple requirement handled by Daemon access
-                Simple([f"Access-{r}" for r in [*normal_regions, "WARA", "WAUA", "WORA"]])
-            )
+        if true_ending: # True Ending
+            # Must be able to reach Ancient Urban for Spinning Top ending,
+            # Outer Rim and enough Ripple to wake the Prince,
+            # Weaver ability if it was randomized,
+            # And every normal region for warp sealing.
+            # Ripple requirement handled by Daemon access
+            cond = Simple([f"Access-{r}" for r in [*normal_regions, "WARA", "WAUA", "WORA"]])
+            if options.weaver_randomized:
+                cond = AllOf(cond, Simple("Progressive Weaver", 4))
+
             return [VictoryEvent("The Choice", "Daemon", cond)]
 
 

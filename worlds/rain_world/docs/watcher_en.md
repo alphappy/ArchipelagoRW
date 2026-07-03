@@ -5,9 +5,6 @@ Any documentation details that are specific to The Watcher are detailed here.
 ## This necessarily contains major spoilers!
 
 ## General
-### Beta testing state
-Watcher worlds are currently in a beta testing state, both for the APWorld and the client.
-Logic elements and settings are subject to change.
 
 Other Watcher-specific player YAML settings are discussed on this page.
 Some non-Watcher-specific settings still apply to Watcher worlds;
@@ -29,13 +26,12 @@ When stated this way, there are nine Ripple levels, numbered 1 through 9,
 and Ripple level 9 is required to enter Ripplespace. 
 
 ### Start in Watcherspace
-A Watcher world always starts in Watcherspace (that is, not on the Five Pebbles facility grounds).
-Max Ripple starts at level 1, as if all three of the first Spinning Tops have already been encountered,
-which means the ability to camouflage is already unlocked.
+When entering the second room of Hydroponics, Watcher will be warped into the chosen starting region in Watcherspace.
+This means the prologue section is skipped, and Watcher will start the game with a max Ripple of 1.
 
 By default, the starting region is in Sunbaked Alley -
 but this can be changed by the `random_starting_region` player YAML setting.
-Any Five Pebbles facility grounds regions are invalid values for this setting.
+Any Five Pebbles facility grounds regions are invalid values for this setting and will be ignored.
 
 ## Items
 ### Fixed warp keys
@@ -45,8 +41,11 @@ There are several exceptions which do not require keys:
 * All warps leaving a permarotted region (except Outer Rim to Daemon).
 * The warp from Daemon to Shattered Terrace.
 
-Spinning Top warps may also have keys (except for the encounter in the BWP regions), 
-if the setting `spinning_top_keys` is enabled. Spinning Top will still appear in these locations when the warp is locked.
+Spinning Top warps will only have keys (except for the encounter in the BWP regions), 
+if the setting `spinning_top_keys` is enabled (enabled by default).
+Spinning Top will still appear in these locations when the warp is locked.
+
+Daemon warps will only have keys if `daemon_keys` is enabled. (disabled by default)
 
 ### Ripple
 Twelve progressive Ripple items are placed in the pool rather than being awarded by visiting Spinning Top.
@@ -59,8 +58,8 @@ At this point, it is possible to enter ripplespace (but see `logic_ripplespace_m
 The final four Ripple items increase the minimum by one level,
 after which current Ripple is fixed at level 9.
 
-Effects which are tied to current Ripple level, such as the behavior of the camouflage ability
-and the creation of Ripple spawn, remain tied to current Ripple level.
+Effects which are tied to current Ripple level such as the behavior of the camouflage ability,
+the ability to dynamic warp, and the creation of Ripple spawn remain tied to current Ripple level.
 
 ### Dynamic Warp Behavior
 Watcher's dynamic warp ability behaves differently than it does in vanilla.
@@ -107,23 +106,23 @@ See [the naming subpage](/tutorial/Rain%20World/naming/en) for naming of checks 
 | The Prince         |     4 | `Outer Rim - Prince encounter #N` where `N` is `1`, `2`, `3`, or `4`                                          |
 
 ### Fixed warp points
-Visting a warp point, which puts it on the map, is a check. 
+Visiting a warp point, which puts it on the map, is a check. 
 The check is awarded upon entering a certain radius of the warp.
 A pair of two-way warp points is two separate checks.
 The check is earned even if the warp is not currently usable
-(e.g., cannot enter Ripplespace or don't have the key).
+(e.g. cannot enter Ripplespace or don't have the key).
 
 ### Spinning Top
 Visiting Spinning Top in a _normal_ region is a check.
 
 All Spinning Top checks are immediately released when the `WAUA_BATH` Spinning Top is visited,
-even if `which_victory_condition` is `ascension`,
-since Spinning Top no longer appears after they ascend.
+regardless of victory condition, since Spinning Top no longer appears after they ascend.
 
 ### Spread the Rot
 Spreading the Rot to a new region is a check.
 The check is earned upon hibernation if the region is sufficiently infected.
 By default (see `checks_spread_rot`), these checks are only generated for the `alternate` victory condition.
+These checks are never present if the chosen victory condition involves the Weaver.
 
 ### The Prince
 Each of 4 unique encounters with The Prince up to his awakening are checks.
@@ -170,7 +169,7 @@ The `weaver` victory condition is the Weaver ending.
 This requires obtaining the ability to seal warps from the Weaver, 
 which needs 8 Ripple items in order to follow the thread trails to find them*, 
 and subsequently sealing every fixed warp. To accelerate progress towards this,
-sealing a warp by travelling through it will seal all warps in the region you left.
+sealing a warp by traveling through it will seal all warps in the region you left.
 Additionally, warps can still be sealed if you don't have their key by using the dynamic warp
 keybind while in the same room as one.
 
@@ -200,6 +199,11 @@ This has no effect if `which_victory_condition` is not `prince`.
 
 ### Spinning Top keys
 `spinning_top_keys` controls whether each Spinning Top warp requires a key as most warp points do.
+If enabled and the key has not been collected, the warp will not be usable.
+If disabled, the associated warp does not require a key.
+
+### Daemon keys
+`daemon_keys` controls whether each Daemon warp requires a key as most warp points do.
 If enabled and the key has not been collected, the warp will not be usable.
 If disabled, the associated warp does not require a key.
 
