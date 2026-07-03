@@ -1,5 +1,5 @@
 from .classes import ConnectionData
-from ..conditions.classes import AllOf, Simple
+from ..conditions.classes import AllOf, Simple, ConditionBlank
 from ..game_data.watcher import portals, PortalData
 from ..options import RainWorldOptions
 from ..regions.classes import room_to_region
@@ -15,7 +15,7 @@ class PortalConnection(ConnectionData):
     def make(self, world: World, options: RainWorldOptions):
         self.source, self.dest = room_to_region[self.data.source_room], room_to_region[self.data.target_room]
 
-        conds = []
+        conds = [ConditionBlank]
 
         if self.data.source_room[:4] in ["WHIR", "WDSR", "WGWR", "WSUR"]:
             if options.logic_rotted_generation != 2:
