@@ -1322,7 +1322,7 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
         """Whether the player will end up sealing portals during this run
         (Watcher with Weaver or True Ending goal or randomized Weaver ability)"""
         return self.starting_scug == "Watcher" and (self.which_victory_condition == 2 or self.which_victory_condition == 4
-                                                    or self.randomize_weaver == 2)
+                                                    or self.weaver_randomized)
 
     @property
     def weaver_randomized(self):
