@@ -1,5 +1,6 @@
 {
   "game": "Rain World",
+  "minimum_ap_version": "0.6.7",
   "world_version": "1.6.0",
   "authors": "alphappy, SaltySyrup"
 }
