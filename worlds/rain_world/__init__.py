@@ -272,12 +272,7 @@ class RainWorldWorld(World):
 
         # temp override
         d["which_campaign"] = self.options.starting_scug
-
-        # TODO: Change this when an official way to fetch world version from manifest exists
-        import pkgutil
-        from orjson import orjson
-        apworld_manifest = orjson.loads(pkgutil.get_data(__name__, "archipelago.json").decode("utf-8"))
-        d["apworld_version"] = apworld_manifest["world_version"]
+        d["apworld_version"] = self.world_version.as_simple_string()
 
         return d
 
