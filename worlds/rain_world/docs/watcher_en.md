@@ -119,10 +119,20 @@ All Spinning Top checks are immediately released when the `WAUA_BATH` Spinning T
 regardless of victory condition, since Spinning Top no longer appears after they ascend.
 
 ### Spread the Rot
-Spreading the Rot to a new region is a check.
-The check is earned upon hibernation if the region is sufficiently infected.
-By default (see `checks_spread_rot`), these checks are only generated for the `alternate` victory condition.
-These checks are never present if the chosen victory condition involves the Weaver.
+Spreading the Rot to each possible region can be checks.
+Each check is earned upon hibernation if a new region has been infected.
+
+By default (see `checks_spread_rot`), these checks are only generated for the `prince` victory condition.
+These checks are never present if the chosen victory condition involves the Weaver, or the Weaver ability was randomized.
+
+### Weaver
+Each of the 4 encounters with the Weaver can be checks.
+These checks are awarded upon finishing each dialogue cutscene.
+If the Weaver ability was randomized, all 4 of these checks will be auto sent if you receive the full
+Weaver ability before collecting them. This is because once you have the Weaver ability, 
+encountering the Weaver again becomes impossible.
+
+By default (see `checks_weaver_encounters`), these checks are only generated for the `weaver` or `true_ending` victory condition.
 
 ### The Prince
 Each of 4 unique encounters with The Prince up to his awakening are checks.
@@ -147,11 +157,27 @@ Some yaml settings are no longer applicable when playing as Watcher.
 
 `extra_karma_cap_increases` *will* apply - extra Ripple is added to the pool instead of Karma. 
 
+### Randomize Weaver
+`randomize_weaver` controls whether progressive Weaver ability items are added to the item pool, and is disabled by default.
+When disabled, the mechanics for obtaining the Weaver ability function as normal, requiring encountering the Weaver 4 times.
+When enabled, 4 Progressive Weaver items are added to the item pool, and Weaver encounters do not progress towards the ability.
+
+If the `prince` victory condition was chosen, this option will be automatically disabled. 
+Otherwise, this option will automatically disable `checks_spread_rot`.
+
+The implications of randomizing the Weaver is something to be aware of. With this option, you will no longer have control of when you obtain the ability.
+Once all 4 items are obtained you will start to seal warps behind you, and after all accessible warps are sealed the only method of travel between regions will be random dynamic warps.
+To avoid softlocks, obtaining the Weaver ability will also grant the ability to dynamic warp.
+
 ### Rot spread checks
 `checks_spread_rot` controls whether spreading the Rot to a new region is a check.
-Its default setting, `alternate_only`, only generates the checks if `which_victory_condition` is `prince`.
-This setting will be ignored if `which_victory_condition` is `weaver` or `true_ending`, 
+Its default setting, `related_ending_only`, only generates the checks if `which_victory_condition` is `prince`.
+This setting will be ignored if `randomize_weaver` is enabled or `which_victory_condition` is `weaver` or `true_ending`, 
 as obtaining the Weaver ability makes these checks impossible.
+
+### Weaver Encounter Checks
+`checks_weaver_encounters` controls whether encountering the Weaver is a check.
+Its default setting, `related_ending_only`, only generates the checks if `which_victory_condition` is `weaver` or `true_ending`.
 
 ### Victory condition
 The `ascension` / `spinning_top` victory condition is the Toys/Driedel/Spinning Top ending.
@@ -166,15 +192,15 @@ and several visits to Outer Rim, creating all four Throne warps in the process,
 and spreading sentient rot to all 21 infectable regions (but see `rotted_region_target` below).
 
 The `weaver` victory condition is the Weaver ending.
-This requires obtaining the ability to seal warps from the Weaver, 
-which needs 8 Ripple items in order to follow the thread trails to find them*, 
+This requires obtaining the ability to seal warps from the Weaver,
 and subsequently sealing every fixed warp. To accelerate progress towards this,
 sealing a warp by traveling through it will seal all warps in the region you left.
 Additionally, warps can still be sealed if you don't have their key by using the dynamic warp
 keybind while in the same room as one.
 
-*Max ripple is not technically required to encounter the Weaver, but is included in
-logic as a convenience.
+If the Weaver ability is randomized, you will need to be sent all 4 progressive Weaver items to begin sealing.
+Otherwise, logic expects access to Ripplespace to follow the threads towards the Weaver encounters 
+(technically this is not required, but is used in logic for convenience). 
 
 The `true_ending` victory condition is the True Ending.
 This requires completing both the Spinning Top and Weaver ending, as well as encountering 
@@ -217,4 +243,5 @@ It only affects logic and the check pool.
 | `passthrough` (default)  | No                       | Yes                                    |
 | `full`                   | Yes                      | Yes                                    |
 
-If set to `none`, the only ways to logically access Outer Rim are through Unfortunate Evolution or Daemon.
+If set to `none`, the only ways to logically access Outer Rim are through Unfortunate Evolution, Daemon,
+or dynamic warping after obtaining the Weaver ability.
