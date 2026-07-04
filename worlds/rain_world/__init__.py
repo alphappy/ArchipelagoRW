@@ -260,9 +260,6 @@ class RainWorldWorld(World):
             "checks_foodquest_expanded", "logic_rotted_generation", "logic_ripplespace_min_req",
             "expedition_perks", "daemon_keys"
         )
-        # backwards compatibility
-        d["which_gamestate"] = self.options.which_gamestate_integer
-        d["which_game_version"] = 1100400
         # ...which room to spawn in.  Empty string for default.
         d["starting_room"] = ("" if self.start_is_default
                               else ingame_capitalization.get(self.starting_room, self.starting_room))
