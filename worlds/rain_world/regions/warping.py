@@ -5,6 +5,7 @@ from .classes import RegionData, ConnectionData, room_to_region
 from ..options import RainWorldOptions
 from ..conditions.classes import Simple, ConditionBlank, AllOf, AnyOf
 from ..game_data.general import region_code_to_name
+from ...AutoWorld import World
 
 
 class DynamicWarpConnection(ConnectionData):
@@ -14,10 +15,10 @@ class DynamicWarpConnection(ConnectionData):
         cond = Simple("Ripple", int((ripple - 1) * 2)) if ripple is not None else ConditionBlank
         super().__init__(source, dest, f"{sort} dynamic warp from {source} to {dest} ({ripple})", cond)
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
+    def make(self, world: World, options: RainWorldOptions):
         self.source = room_to_region[self.source] if self.source_room else self.source
         self.dest = room_to_region[self.dest] if self.target_room else self.dest
-        super().make(player, multiworld, options)
+        super().make(world, options)
 
 
 class NormalDynamic(DynamicWarpConnection):
@@ -33,9 +34,9 @@ class PredeterminedNormalDynamic(DynamicWarpConnection):
         if unlockable:
             self.condition = AllOf(self.condition, Simple(f"Dynamic: {self.region_code}"))
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
-        multiworld.worlds[player].predetermined_warps[self.region_code] = self.dest
-        super().make(player, multiworld, options)
+    def make(self, world: World, options: RainWorldOptions):
+        world.predetermined_warps[self.region_code] = self.dest
+        super().make(world, options)
 
 
 class PredeterminedThroneDynamic(DynamicWarpConnection):
@@ -45,9 +46,9 @@ class PredeterminedThroneDynamic(DynamicWarpConnection):
     rooms = [f"WORA_THRONE{a:0>2}" for a in (10, 5, 9, 7)]
     names = ["Lower east", "Lower west", "Upper east", "Upper west"]
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
-        multiworld.worlds[player].predetermined_warps[self.source] = self.dest
-        super().make(player, multiworld, options)
+    def make(self, world: World, options: RainWorldOptions):
+        world.predetermined_warps[self.source] = self.dest
+        super().make(world, options)
 
 
 class PoolNormalDynamic(DynamicWarpConnection):
@@ -58,9 +59,9 @@ class PoolNormalDynamic(DynamicWarpConnection):
         if unlockable:
             self.condition = AllOf(self.condition, Simple(f"Dynamic: {self.dest_region}"))
 
-    def make(self, player: int, multiworld: MultiWorld, options: RainWorldOptions):
-        multiworld.worlds[player].warp_pool.add(self.dest_region if self.unlockable else self.dest)
-        super().make(player, multiworld, options)
+    def make(self, world: World, options: RainWorldOptions):
+        world.warp_pool.add(self.dest_region if self.unlockable else self.dest)
+        super().make(world, options)
 
 cond_can_dynamic_warp = AnyOf(Simple("Ripple", 2), Simple("Dial Warp Ability"), Simple("Progressive Weaver", 4))
 

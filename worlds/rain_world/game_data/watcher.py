@@ -108,7 +108,7 @@ abnormal_regions = {"WSUR", "WHIR", "WGWR", "WDSR", "WSSR", "WORA", "WRSA", "WAR
 watcher_blacklisted_flowers = {
     "WORA_CITY2X", "WORA_CITY10X", "WORA_DESERT4X", "WORA_DESERT8", "WORA_EGG02X", # Post rot ending
     "WTDA_B12", # Inaccessible ogscule room
-    "WARB_F01", "WSKD_B01", "WPTA_B10", "WBLA_C01", # Flowers that vanish when a static warp is created
+    # "WARB_F01", "WSKD_B01", "WPTA_B10", "WBLA_C01", # Flowers that vanish when a static warp is created
 }
 
 # Defines tokens and pearls that require float or some other vertical mobility to reach

@@ -1,6 +1,6 @@
-from .classes import RainWorldRegion, RegionData, ConnectionData
+from .classes import RegionData, ConnectionData
+from ..locations.passages import generate_cond_survivor
 from ..options import RainWorldOptions
-from ..conditions.classes import Simple
 
 
 def generate(options: RainWorldOptions):
@@ -16,7 +16,7 @@ def generate(options: RainWorldOptions):
         ConnectionData("Menu", "Events", "Unique event checks"),
         ConnectionData("Menu", "Early Passages", "Early Passages"),
         ConnectionData("Early Passages", "Late Passages", "Late Passages",
-                       Simple("Passage - The Survivor", locations=True)),
+                       generate_cond_survivor(options)),
         ConnectionData("Late Passages", "PPwS Passages", "PPwS Passages"),
         ConnectionData("Menu", "Food Quest", "Food Quest"),
     ]
