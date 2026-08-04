@@ -27,3 +27,7 @@ def apply_hardcoded_exceptions(data: dict):
 
             # This token is ridiculous to get as Spearmaster.
             dlcstate_data["LM"]["LM_LEGENTRANCE"]["shinies"]["LM"]["filter"].update({"Spear"})
+
+        if "Watcher" in dlcstate:
+            # This lizard is caged and not easily killed
+            del dlcstate_data["WARD"]["WARD_E06"]["spawners"]["normal"]["GreenLizard"]
