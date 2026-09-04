@@ -4,12 +4,12 @@ from typing import Mapping, Any, TextIO
 
 from Options import OptionError
 from worlds.AutoWorld import World, WebWorld
-from BaseClasses import Tutorial, LocationProgressType
+from BaseClasses import Tutorial, LocationProgressType, MultiWorld, Item
 from .game_data.shelters import get_starts, ingame_capitalization, get_default_start
 from .game_data.watcher import normal_regions
 from .options import RainWorldOptions
 from .conditions.classes import Simple
-from .game_data.general import region_code_to_name, all_regions, passage_proper_names
+from .game_data.general import region_code_to_name, all_regions, passage_proper_names, subregion_to_region
 from .events import get_events
 from .regions.classes import room_to_region
 from .regions.gates import gates
@@ -229,7 +229,68 @@ class RainWorldWorld(World):
         # ascension_item = Item("Ascension", ItemClassification.progression, None, self.player)
         # self.multiworld.get_location("Ascension", self.player).place_locked_item(ascension_item)
         self.set_completion_rule(Simple("Victory").get_rule())
-        # self.multiworld.completion_condition[self.player] = Simple("Victory").check(self.player)
+        # self.multiworld.completion_condition[self.player] = Simple("Victory").check(self.player)\
+
+    @classmethod
+    def stage_fill_hook(cls, multiworld: MultiWorld, progitempool: list[Item], usefulitempool, filleritempool, fill_locations):
+        depth = 5
+
+        import time
+        from pprint import pprint
+        start = time.perf_counter()
+
+        def split_gate_name(name):
+            return name[6:].split(" to ") if name[:4] == "Gate" else name[6:].split(" / ")
+        
+        # Organize all gate items into tiers based on distance from starting region
+        gates_by_depth : list[list[Item]] = [[] for _ in range(depth)]
+        all_gates = []
+        for p in multiworld.get_game_players(cls.game):
+            start_reg = region_code_to_name[multiworld.worlds[p].options.starting_region_code]
+            cur_regions = {start_reg}
+            player_gates = {item for item in progitempool if item.player == p and item.name[:4] in ("Gate", "Warp")}
+            all_gates.extend(player_gates)
+            # Up to the maximum depth, search for gates spreading outwards from start
+            for i in range(depth):
+                # All gates that connect to a region in our stored list
+                new_gates = [item for item in player_gates if
+                             any({subregion_to_region[g] if g in subregion_to_region else g
+                                  for g in split_gate_name(item.name)}.intersection(cur_regions))]
+                # Remove the new gates so they aren't added multiple times
+                player_gates.difference_update(new_gates)
+                # If no new connections found, break
+                if not new_gates:
+                    gates_by_depth[i].extend(player_gates) # Failsafe for gates that aren't detected as connected
+                    break
+                # Add new gates to this depth level
+                gates_by_depth[i].extend(new_gates)
+                # Update accessible regions. Do not add Daemon because the warps will be considered two-way and open everything
+                cur_regions.update({subregion_to_region[r] if r in subregion_to_region else r
+                                    for item in new_gates for r in split_gate_name(item.name) if r != "Daemon"})
+            # Any gates deeper than the searched depth appended to the end
+            if any(player_gates):
+                gates_by_depth[depth-1].extend(player_gates)
+
+        # Reverse so early gates go to end of list, late gates go to start
+        gates_by_depth.reverse()
+
+        # Pull gates out of prog pool, and re-insert them at desired positions
+        item_pool_without_gates = [i for i in progitempool if i not in all_gates]
+        new_prog_pool = []
+        for i in range(depth):
+            j = int(len(item_pool_without_gates) / depth)
+            new_prog_pool.extend(gates_by_depth[i])
+            new_prog_pool.extend(item_pool_without_gates[j * i : len(new_prog_pool) if i == depth - 1 else j * (i+1)])
+
+        # pprint(gates_by_depth)
+        pprint(progitempool)
+        pprint(new_prog_pool)
+
+        # Assign new list back to item pool, maintaining the reference
+        progitempool.clear()
+        progitempool.extend(new_prog_pool)
+
+        print("TIME", time.perf_counter() - start)
 
     def fill_slot_data(self) -> Mapping[str, Any]:
         d = self.options.as_dict(

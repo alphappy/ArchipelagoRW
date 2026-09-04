@@ -1151,6 +1151,10 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
 
     def find_starting_region(self, random: Random):
         if self.randomize_starting_region == 0:
+            from . import region_code_to_name
+            from .game_data.shelters import get_default_start_reg
+            self.starting_region_code = get_default_start_reg(self.starting_scug)
+            self.starting_region_name = region_code_to_name[self.starting_region_code]
             return
         elif self.randomize_starting_region == 1:
             choice_counter = Counter({reg: self.possible_starting_regions[reg] for reg in self.possible_starting_regions.keys()

@@ -236,7 +236,6 @@ def _generate(options: RainWorldOptions) -> list[PhysicalRegion | ConnectionData
                     ConnectionData("Outer Rim", "Western Outer Rim", "WORA_DESERT5 TO WORA_DESERT8"),
                     # Kinda jank, but this handles the logic of warp target into WORA changing as you open more throne rooms
                     # Second encounter requires Ripple 5, at which point warps will go to central WORA
-                    # TODO: If warps are changed to be able to send player to WORA more often, this will only need first encounter
                     ConnectionData("Western Outer Rim", "Outer Rim", "Prince encounter opens middle WORA",
                                    Simple("Ripple", 4)),
                     # Crossing the bridge doesn't technically require float, but reaching WORA_EGG does

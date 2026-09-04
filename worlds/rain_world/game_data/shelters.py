@@ -104,12 +104,30 @@ def get_default_start(scug: str) -> str:
     else:
         return "SU_C04"
 
+def get_default_start_reg(scug: str) -> str:
+    if scug == "Gourmand":
+        return "SH"
+    elif scug == "Artificer":
+        return "GW"
+    elif scug == "Rivulet":
+        return "DS"
+    elif scug == "Saint":
+        return "SI"
+    elif scug == "Red":
+        return "LF"
+    elif scug == "Inv":
+        return "SH"
+    elif scug == "Watcher":
+        return "WSKB"
+    else:
+        return "SU"
+
 
 def get_starts(options: RainWorldOptions) -> list[str]:
     code, name = options.starting_region_code, options.starting_region_name
     scug, scug_name = options.starting_scug, options.which_campaign.scug_name
 
-    if code == "":
+    if options.randomize_starting_region == 0:
         return [get_default_start(scug)]
 
     code = alternate_regions.get(code, {}).get(scug, code)

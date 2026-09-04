@@ -64,6 +64,15 @@ region_code_to_name = {
     'WVWB': 'Fractured Gateways'
 }
 
+subregion_to_region = {
+    "The Wall": "The Exterior",
+    "Underhang": "The Exterior",
+    "Bitter Aerie": "Submerged Superstructure",
+    "The Precipice": "Shoreline",
+    "The Struts": "Looks to the Moon",
+    "Waterfront Facility": "Shoreline"
+}
+
 regions_all = list(region_code_to_name.keys())
 
 story_regions_vanilla = {"SU", "HI", "DS", "GW", "SL", "SH", "UW", "SS", "CC", "SI", "LF", "SB"}
