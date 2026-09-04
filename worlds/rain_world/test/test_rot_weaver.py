@@ -12,6 +12,12 @@ class RotWeaverTestBase(RainWorldTestBase):
     def assert_no_rot_checks(self):
         self.assertNotIn("Spread the Rot - Region #1", [loc.name for loc in self.multiworld.get_locations(self.player)])
 
+    def assert_weaver_checks(self):
+        self.assertIn("Weaver Encounter #1", [loc.name for loc in self.multiworld.get_locations(self.player)])
+
+    def assert_no_weaver_checks(self):
+        self.assertNotIn("Weaver Encounter #1", [loc.name for loc in self.multiworld.get_locations(self.player)])
+
     def assert_weaver_items(self):
         self.assertIn("Progressive Weaver", [item.name for item in self.multiworld.get_items()])
 
@@ -25,12 +31,14 @@ class TestRotEndingRotChecksWeaverOn(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "prince",
         "checks_spread_rot": "true",
-        "randomize_weaver": "true"
+        "randomize_weaver": "true",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_rot_checks()
         self.assert_no_weaver_items()
+        self.assert_no_weaver_checks()
 
 
 class TestRotEndingRotChecksWeaverOff(RotWeaverTestBase):
@@ -39,12 +47,14 @@ class TestRotEndingRotChecksWeaverOff(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "prince",
         "checks_spread_rot": "true",
-        "randomize_weaver": "false"
+        "randomize_weaver": "false",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_rot_checks()
         self.assert_no_weaver_items()
+        self.assert_no_weaver_checks()
 
 
 class TestRotEndingNoRotChecksWeaverOn(RotWeaverTestBase):
@@ -53,12 +63,14 @@ class TestRotEndingNoRotChecksWeaverOn(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "prince",
         "checks_spread_rot": "false",
-        "randomize_weaver": "true"
+        "randomize_weaver": "true",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_no_rot_checks()
         self.assert_no_weaver_items()
+        self.assert_no_weaver_checks()
 
 
 class TestRotEndingNoRotChecksWeaverOff(RotWeaverTestBase):
@@ -67,12 +79,14 @@ class TestRotEndingNoRotChecksWeaverOff(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "prince",
         "checks_spread_rot": "false",
-        "randomize_weaver": "false"
+        "randomize_weaver": "false",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_no_rot_checks()
         self.assert_no_weaver_items()
+        self.assert_no_weaver_checks()
 
 
 class TestWeaverEndingRotChecksWeaverOn(RotWeaverTestBase):
@@ -81,12 +95,14 @@ class TestWeaverEndingRotChecksWeaverOn(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "weaver",
         "checks_spread_rot": "true",
-        "randomize_weaver": "true"
+        "randomize_weaver": "true",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_no_rot_checks()
         self.assert_weaver_items()
+        self.assert_weaver_checks()
 
 
 class TestWeaverEndingRotChecksWeaverOff(RotWeaverTestBase):
@@ -95,12 +111,14 @@ class TestWeaverEndingRotChecksWeaverOff(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "weaver",
         "checks_spread_rot": "true",
-        "randomize_weaver": "false"
+        "randomize_weaver": "false",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_no_rot_checks()
         self.assert_no_weaver_items()
+        self.assert_weaver_checks()
 
 
 class TestWeaverEndingNoRotChecksWeaverOn(RotWeaverTestBase):
@@ -109,12 +127,14 @@ class TestWeaverEndingNoRotChecksWeaverOn(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "weaver",
         "checks_spread_rot": "false",
-        "randomize_weaver": "true"
+        "randomize_weaver": "true",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_no_rot_checks()
         self.assert_weaver_items()
+        self.assert_weaver_checks()
 
 
 class TestWeaverEndingNoRotChecksWeaverOff(RotWeaverTestBase):
@@ -123,12 +143,14 @@ class TestWeaverEndingNoRotChecksWeaverOff(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "weaver",
         "checks_spread_rot": "false",
-        "randomize_weaver": "false"
+        "randomize_weaver": "false",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_no_rot_checks()
         self.assert_no_weaver_items()
+        self.assert_weaver_checks()
 
 
 class TestTopEndingRotChecksWeaverOn(RotWeaverTestBase):
@@ -137,12 +159,14 @@ class TestTopEndingRotChecksWeaverOn(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "spinning_top",
         "checks_spread_rot": "true",
-        "randomize_weaver": "true"
+        "randomize_weaver": "true",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_no_rot_checks()
         self.assert_weaver_items()
+        self.assert_no_weaver_checks()
 
 
 class TestTopEndingRotChecksWeaverOff(RotWeaverTestBase):
@@ -151,12 +175,14 @@ class TestTopEndingRotChecksWeaverOff(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "spinning_top",
         "checks_spread_rot": "true",
-        "randomize_weaver": "false"
+        "randomize_weaver": "false",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_rot_checks()
         self.assert_no_weaver_items()
+        self.assert_no_weaver_checks()
 
 
 class TestTopEndingNoRotChecksWeaverOn(RotWeaverTestBase):
@@ -165,12 +191,14 @@ class TestTopEndingNoRotChecksWeaverOn(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "spinning_top",
         "checks_spread_rot": "false",
-        "randomize_weaver": "true"
+        "randomize_weaver": "true",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_no_rot_checks()
         self.assert_weaver_items()
+        self.assert_no_weaver_checks()
 
 
 class TestTopEndingNoRotChecksWeaverOff(RotWeaverTestBase):
@@ -179,9 +207,11 @@ class TestTopEndingNoRotChecksWeaverOff(RotWeaverTestBase):
         "which_campaign": "watcher",
         "which_victory_condition": "spinning_top",
         "checks_spread_rot": "false",
-        "randomize_weaver": "false"
+        "randomize_weaver": "false",
+        "checks_weaver_encounters": "related_ending_only",
     }
 
     def test_logic(self):
         self.assert_no_rot_checks()
         self.assert_no_weaver_items()
+        self.assert_no_weaver_checks()

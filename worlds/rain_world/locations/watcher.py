@@ -71,6 +71,6 @@ def select(options: RainWorldOptions) -> list[LocationData]:
     ret = fixed_warps + spinning_tops + prince_encounters + unique
     if options.should_have_rot_spread_checks:
         ret += rottenings
-    if options.checks_weaver_encounters:
+    if options.should_have_weaver_checks:
         ret += weaver_encounters
     return ret

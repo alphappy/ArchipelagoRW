@@ -1318,6 +1318,12 @@ class RainWorldOptions(PerGameCommonOptions, DeathLinkMixin):
                 (self.checks_spread_rot + (self.which_victory_condition == "story")) > 1)
 
     @property
+    def should_have_weaver_checks(self):
+        """Whether weaver encounter checks are included, considering chosen victory condition."""
+        return (self.starting_scug == "Watcher" and self.will_be_weaving and
+                (self.checks_weaver_encounters + (self.which_victory_condition == "echoes")) > 1)
+
+    @property
     def will_be_weaving(self):
         """Whether the player will end up sealing portals during this run
         (Watcher with Weaver or True Ending goal or randomized Weaver ability)"""
